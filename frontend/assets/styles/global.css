@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Fonts */
+/* 
+@font-face {
+    font-family: 'ABCDiatype';
+    src: url('/fonts/ABCDiatype-Regular-Trial.woff2') format('woff2'),
+        url('/fonts/ABCDiatype-Regular-Trial.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+} */

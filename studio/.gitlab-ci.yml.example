@@ -1,0 +1,12 @@
+stages:
+  - deploy
+
+deploy_sanity_studio:
+  image: node:latest
+  stage: deploy
+  only:
+    - main  # Ensure this matches the branch you want to deploy from
+  script:
+    - npm install -g @sanity/cli  # Install Sanity CLI globally
+    - sanity install  # Install packages
+    - sanity deploy --token $SANITY_AUTH_TOKEN  # Deploy your Sanity project

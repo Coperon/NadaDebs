@@ -1,0 +1,1 @@
+#redirect example: https://llos-nuxt.netlify.app/* https://llos.xyz/:splat 301!

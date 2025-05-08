@@ -1,0 +1,42 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build && npm run validate-env",
+    "dev": "nuxt dev -o",
+    "validate-env": "node validateEnv.js",
+    "generate": "nuxt generate && npm run validate-env",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "nuxt": "^3.17.2"
+  },
+  "dependencies": {
+    "@nuxtjs/robots": "^5.2.10",
+    "@nuxtjs/sitemap": "^7.2.10",
+    "@nuxtjs/tailwindcss": "^6.10.1",
+    "@pinia/nuxt": "^0.11.0",
+    "@portabletext/vue": "^1.0.12",
+    "@sanity/client": "^7.1.0",
+    "@sanity/image-url": "^1.1.0",
+    "@shopify/storefront-api-client": "^1.0.7",
+    "@tailwindcss/postcss": "^4.1.5",
+    "autoprefixer": "^10.4.21",
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "groq": "^3.87.1",
+    "gsap": "npm:@gsap/shockingly@latest",
+    "pinia": "^3.0.2",
+    "postcss": "^8.5.3",
+    "postcss-pxtorem": "^6.1.0",
+    "postcss-viewport-unit-fallback": "^1.0.1",
+    "swiper": "^11.2.6",
+    "tailwindcss": "^3.4.0",
+    "vanilla-cookieconsent": "^3.1.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1"
+  }
+}
