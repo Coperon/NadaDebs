@@ -18,7 +18,7 @@
 <script setup>
 import { siteSettings } from '@/data/siteSettings'
 import { getFileExtension } from '@/utils'
-import { initShopify } from './composables/shopify'
+// import { initShopify } from './composables/shopify'
 let siteSettingsData = await siteSettings()
 const runtimeConfig = useRuntimeConfig()
 const isProduction = runtimeConfig?.public?.appEnv === 'production'
@@ -38,7 +38,7 @@ const faviconType = getFileExtension(favicon)
 // Google Tag Manager ID. Update environment variable in .env file to enable GTM.
 const gtmID = siteSettingsData?.value?.gtmID
 
-const shopiClient = await initShopify()
+// const shopiClient = await initShopify()
 
 
 provide('siteSettingsData', siteSettingsData)
