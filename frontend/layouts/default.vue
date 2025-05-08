@@ -12,7 +12,7 @@
         <!-- Main content -->
         <main
             id="main-content"
-            class="relative flex flex-1 flex-col h-full max-w-full p-2"
+            class="bg-sand relative flex flex-1 flex-col h-full max-w-full p-2"
         >
             <slot />
         </main>

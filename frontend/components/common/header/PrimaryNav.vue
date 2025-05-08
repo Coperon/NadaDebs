@@ -19,7 +19,7 @@ const mainNav = ref(null)
 </script>
 
 <style scoped>
-.current-nav-item {
+/* .current-nav-item {
     @apply text-blue;
-}
+} */
 </style>

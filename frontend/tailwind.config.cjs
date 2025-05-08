@@ -19,6 +19,12 @@ module.exports = {
                 '25': '6.25rem',
                 '30': '7.5rem',
             },
+            colors: {
+                black: '#151515',
+                sand: '#E0DCD6',
+                beige: '#F1EAE4',
+                'light-gray': '#EFEFEF'
+            },
             // Typography styles
             fontSize: {
                 'h1': ['1.375rem', {
@@ -87,11 +93,6 @@ module.exports = {
                     fontWeight: '700',
                 }],
             },
-            fontWeight: {
-                light: '300',
-                medium: '500',
-                bold: '700',
-            },
             letterSpacing: {
                 '1': '1%',
                 '2': '2%',
@@ -106,12 +107,6 @@ module.exports = {
             screens: {
               md: '640px',
             },
-        },
-        colors: {
-            white: '#ffffff',
-            black: '#000000',
-            blue: '#0000ff',
-            gray: '#f8f8f8',
         },
     },
     future: {
