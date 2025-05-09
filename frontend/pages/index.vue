@@ -1,34 +1,25 @@
 <template>
-    <div class="fixed inset-0 bg-sand">
-        <div class="fixed inset-0">
-            <CommonImageOrVideo
+    <div class="fixed inset-0 bg-sand transition-colors duration-500" :class="isBgWhite ? 'lg:bg-white' : 'lg:bg-beige'">
+        <div class="fixed inset-0 lg:top-1/2 lg:-translate-y-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:w-[52vw] lg:h-[72vh]">
+            <HomeMedia
                 :image="homeData?.ourWorld?.image"
                 :videoUrl="homeData?.ourWorld?.video"
-                width="1536"
-                mobileWidth="768"
-                class="h-full w-full object-cover absolute inset-0 transition-opacity duration-1000"
                 :class="{ 'opacity-100 z-20': activeImage === 'ourWorld', 'opacity-0 z-10': previousImage === 'ourWorld', 'opacity-0 z-0': activeImage !== 'ourWorld' && previousImage !== 'ourWorld' }"
             />
-            <CommonImageOrVideo
+            <HomeMedia
                 :image="homeData?.shop?.image"
                 :videoUrl="homeData?.shop?.video"
-                width="1536"
-                mobileWidth="768"
-                class="h-full w-full object-cover absolute inset-0 transition-opacity duration-1000"
                 :class="{ 'opacity-100 z-20': activeImage === 'shop', 'opacity-0 z-10': previousImage === 'shop', 'opacity-0 z-0': activeImage !== 'shop' && previousImage !== 'shop' }"
             />
-            <CommonImageOrVideo
+            <HomeMedia
                 :image="homeData?.studio?.image"
                 :videoUrl="homeData?.studio?.video"
-                width="1536"
-                mobileWidth="768"
-                class="h-full w-full object-cover absolute inset-0 transition-opacity duration-1000"
                 :class="{ 'opacity-100 z-20': activeImage === 'studio', 'opacity-0 z-10': previousImage === 'studio', 'opacity-0 z-0': activeImage !== 'studio' && previousImage !== 'studio' }"
             />
         </div>
 
         <!-- Mobile-->
-        <nav id="mobile-menu" class="fixed inset-x-0 top-1/2 -translate-y-1/2">
+        <nav id="mobile-menu" class="lg:hidden fixed inset-x-0 top-1/2 -translate-y-1/2">
             <ul class="flex flex-col items-center text-center gap-2.5">
                 <li class="flex flex-col">
                     <button @click="toggleMenu('shop')" class="text-a1-bold uppercase">Shop</button>
@@ -61,6 +52,47 @@
                 </li>
             </ul>
         </nav>
+
+        <!-- Desktop -->
+        <nav id="desktop-menu" class="hidden lg:block fixed inset-x-20 xl:inset-x-32 top-1/2 -translate-y-1/2">
+            <ul class="flex items-center">
+                <li class="flex-1 flex justify-start">
+                    <div @mouseenter="toggleMenu('shop'); isBgWhite = true; hoveredMenu = 'shop'" @mouseleave="toggleMenu('ourWorld'); isBgWhite = false; hoveredMenu = null" class="relative">
+                        <NuxtLink to="" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'shop' }">Shop</NuxtLink>
+                        <Transition name="fade">
+                            <ul v-if="activeMenu === 'shop'" class="absolute top-full left-0 pt-2 flex flex-col items-start text-a2">
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'objects'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'objects' }">Objects</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'furniture'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'furniture' }">Furniture</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'collections'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'collections' }">Collections</NuxtLink></li>
+                            </ul>
+                        </Transition>
+                    </div>
+                </li>
+                <li class="flex-1 flex justify-center text-white">
+                    <div @mouseenter="showOurWorldMenu = true; hoveredMenu = 'ourWorld'" @mouseleave="showOurWorldMenu = false; hoveredMenu = null" class="relative">
+                        <NuxtLink to="" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'ourWorld' }">Our World</NuxtLink>
+                        <Transition name="fade">
+                            <ul v-if="showOurWorldMenu" class="absolute top-full left-1/2 -translate-x-1/2 pt-2 flex flex-col items-center text-center text-a2">
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'about'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'about' }">About Nada Debs</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'crafts'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'crafts' }">Contemporary Crafts</NuxtLink></li>
+                            </ul>
+                        </Transition>
+                    </div>
+                </li>
+                <li class="flex-1 flex justify-end">
+                    <div @mouseenter="toggleMenu('studio'); isBgWhite = true; hoveredMenu = 'studio'" @mouseleave="toggleMenu('ourWorld'); isBgWhite = false; hoveredMenu = null" class="relative">
+                        <NuxtLink to="" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'studio' }">Studio</NuxtLink>
+                        <Transition name="fade">
+                            <ul v-if="activeMenu === 'studio'" class="absolute top-full right-0 pt-2 flex flex-col items-end text-right text-a2">
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'collaborations'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'collaborations' }">Collaborations</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'interiors'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'interiors' }">Interiors</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'bespoke'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'bespoke' }">Bespoke</NuxtLink></li>
+                            </ul>
+                        </Transition>
+                    </div>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 
@@ -78,6 +110,10 @@ const menuHeights = ref({
     ourWorld: 0,
     studio: 0
 })
+const showOurWorldMenu = ref(false)
+const isBgWhite = ref(false)
+const hoveredMenu = ref(null)
+const hoveredSubmenu = ref(null)
 
 const calculateMenuHeights = () => {
     const menus = document.querySelectorAll('#mobile-menu ul li div')
@@ -96,21 +132,15 @@ const toggleMenu = (menu) => {
 
     if (activeMenu.value) {
         activeMenu.value = null
-        setTimeout(() => {
-            previousImage.value = activeImage.value
-            activeMenu.value = menu
-            activeImage.value = menu
-            setTimeout(() => {
-                previousImage.value = null
-            }, 500)
-        }, 300)
+        previousImage.value = activeImage.value
+        activeMenu.value = menu
+        activeImage.value = menu
+        previousImage.value = null
     } else {
         previousImage.value = activeImage.value
         activeMenu.value = menu
         activeImage.value = menu
-        setTimeout(() => {
-            previousImage.value = null
-        }, 500)
+        previousImage.value = null
     }
 }
 
@@ -125,3 +155,15 @@ definePageMeta({
 
 useSeoObject(homeData?.value?.seo, homeData?.value?.title)
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>
