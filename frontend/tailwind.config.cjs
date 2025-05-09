@@ -11,7 +11,7 @@ module.exports = {
         extend: {
             fontFamily: {
                 // use font family here. Default is for the main font of the site, secondary usually for headings or other featured elements
-                default: 'system-ui, sans-serif'
+                default: 'helvetica-neue-lt-pro, sans-serif'
                 // secondary: ['ABCDiatype', 'sans-serif'],
             },
             spacing: {

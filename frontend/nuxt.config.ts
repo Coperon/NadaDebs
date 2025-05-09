@@ -25,6 +25,7 @@ export default defineNuxtConfig({
                 lang: 'en',
             },
             link: [
+                { rel: "stylesheet", href: "https://use.typekit.net/wyn2rmt.css" },
                 // { rel: "dns-prefetch", href: "//player.vimeo.com" },
                 // { rel: "preconnect", href: "//player.vimeo.com" },
             ],
