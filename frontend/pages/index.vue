@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed inset-0 bg-sand transition-colors duration-500" :class="isBgWhite ? 'lg:bg-white' : 'lg:bg-beige'">
+    <div class="fixed inset-0 transition-colors duration-500" :class="isBgWhite ? 'bg-white' : 'bg-beige'">
         <div class="fixed inset-0 lg:top-1/2 lg:-translate-y-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:w-[52vw] lg:h-[72vh]">
             <HomeMedia
                 :image="homeData?.ourWorld?.image"
@@ -81,7 +81,7 @@
                 </li>
                 <li class="flex-1 flex justify-end">
                     <div @mouseenter="toggleMenu('studio'); isBgWhite = true; hoveredMenu = 'studio'" @mouseleave="toggleMenu('ourWorld'); isBgWhite = false; hoveredMenu = null" class="relative">
-                        <NuxtLink to="" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'studio' }">Studio</NuxtLink>
+                        <NuxtLink to="/studio" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'studio' }">Studio</NuxtLink>
                         <Transition name="fade">
                             <ul v-if="activeMenu === 'studio'" class="absolute top-full right-0 pt-2 flex flex-col items-end text-right text-a2">
                                 <li><NuxtLink @mouseenter="hoveredSubmenu = 'collaborations'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'collaborations' }">Collaborations</NuxtLink></li>

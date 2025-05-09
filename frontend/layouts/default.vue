@@ -2,29 +2,28 @@
     <div id="main-content-wrapper" class="flex flex-col min-h-svh">
 
         <!-- Header -->
-        <CommonHeader
-            class="sticky top-0 left-0 w-full z-10"
-            :siteName="siteSettingsData?.siteTitle"
-            :siteLogo="siteSettingsData?.siteLogo"
-            :navItems="siteSettingsData?.mainNav?.items"
-        />
+        <CommonHeader />
 
         <!-- Main content -->
         <main
             id="main-content"
-            class="bg-sand relative flex flex-1 flex-col h-full max-w-full p-2"
+            class="relative flex flex-1 flex-col h-full max-w-full p-2"
         >
             <slot />
         </main>
+
         <!-- Footer -->
-            <CommonFooter
-                class="relative"
-                :contact="siteSettingsData?.contact"
-                :socialLinks="siteSettingsData?.socialLinks"
-                :legalLinks="siteSettingsData?.legalLinks"
-                :credits="siteSettingsData?.credits"
-            />
-        <ShopCartDrawer :cart="cartStore.cart" :isOpen="cartStore.isCartOpen" @close="cartStore.setCartOpen(false)" />
+        <CommonFooter
+            class="relative"
+            :contact="siteSettingsData?.contact"
+            :socialLinks="siteSettingsData?.socialLinks"
+            :legalLinks="siteSettingsData?.legalLinks"
+            :credits="siteSettingsData?.credits"
+        />
+
+        <!-- Shop Cart Drawer -->
+        <!-- <ShopCartDrawer :cart="cartStore.cart" :isOpen="cartStore.isCartOpen" @close="cartStore.setCartOpen(false)" /> -->
+        
         <!-- Cookie Banner -->
         <ClientOnly>
             <CommonCookieBanner

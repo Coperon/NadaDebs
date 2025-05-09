@@ -1,6 +1,6 @@
 <template>
     <Html class="text-base">
-        <Body class="antialiased font-default text-black text-p1 font-light">
+        <Body class="antialiased font-default bg-sand text-black text-p1 font-light">
             <NuxtLoadingIndicator
                 :throttle="200"
                 :height="3"
