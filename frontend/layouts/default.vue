@@ -13,13 +13,7 @@
         </main>
 
         <!-- Footer -->
-        <CommonFooter
-            class="relative"
-            :contact="siteSettingsData?.contact"
-            :socialLinks="siteSettingsData?.socialLinks"
-            :legalLinks="siteSettingsData?.legalLinks"
-            :credits="siteSettingsData?.credits"
-        />
+        <CommonFooter />
 
         <!-- Shop Cart Drawer -->
         <!-- <ShopCartDrawer :cart="cartStore.cart" :isOpen="cartStore.isCartOpen" @close="cartStore.setCartOpen(false)" /> -->

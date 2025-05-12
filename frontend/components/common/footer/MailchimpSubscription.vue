@@ -1,20 +1,20 @@
 <template>
-    <div class="newsletter">
+    <div class="newsletter max-w-xs">
+        <h2 class="text-a2 font-medium uppercase">Stay up to date with our Newsletter</h2>
+
         <form
             name="newsletter-subscribes"
             method="POST"
             action="/"
-            class="flex mc-form mt-2"
+            class="mc-form mt-5"
             @submit="submitForm"    
         >
-            <label class="mr-2">Newsletter</label>
-            <div class="flex gap-x-2 items-baseline">
-                <label class="sr-only lg:col-span-5">Email:</label>
+            <div class="flex gap-3 items-center border-b border-black/20">
                 <input
                     ref="emailInput"
-                    class="border-b bg-[transparent] appearance-none outline-none focus:outline-none focus:ring-0"
+                    class="flex-1 py-2 border-none bg-[transparent] appearance-none outline-none focus:outline-none focus:ring-0 lowercase placeholder:text-a2-light placeholder:text-black/30"
                     type="email"
-                    placeholder=""
+                    placeholder="Your email here"
                     name="mc-email"
                     required
                 />
@@ -22,9 +22,8 @@
                 <button
                     ref="submitButton"
                     type="submit"
-                    class="flex normal-case hover:underline"
                 >
-                    ok
+                    <IconsArrow class="w-3 h-auto" />
                 </button>
             </div>
         </form>

@@ -41,13 +41,11 @@ module.exports = {
                     lineHeight: '1.09090909',
                     letterSpacing: '0.04em',
                     fontWeight: '700',
-                    textTransform: 'uppercase',
                 }],
                 'h3-upper-light': ['1.375rem', {
                     lineHeight: '1.09090909',
                     letterSpacing: '0.04em',
                     fontWeight: '300',
-                    textTransform: 'uppercase',
                 }],
                 'h3-lower-bold': ['1.375rem', {
                     lineHeight: '1.09090909',
@@ -81,7 +79,6 @@ module.exports = {
                     lineHeight: '1',
                     letterSpacing: '0.05em',
                     fontWeight: '700',
-                    textTransform: 'uppercase',
                 }],
                 'a2': ['0.75rem', {
                     lineHeight: '1.16666667',

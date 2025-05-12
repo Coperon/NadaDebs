@@ -1,50 +1,59 @@
 <template>
-    <footer
-        id="footer"
-        class="grid grid-cols-12 p-2 border-t gap-y-2 lg:gap-y-0 lg:gap-x-1 bg-white"
-    >
-        <ul class="col-span-12 lg:col-span-4 flex gap-x-1 lg:flex-col gap-y-1 lg:gap-y-0 justify-between lg:justify-start">
-            <li v-if="contact?.email">
-                <a :href="'mailto:' + contact.email" class="hover:underline block py-1 lg:py-0">{{
-                    contact.email
-                }}</a>
-            </li>
-            <li v-if="contact?.address" class="py-1 lg:py-0 text-right lg:text-left">
-                <div class="not-italic whitespace-pre-line" v-html="contact.address" />
-            </li>
-        </ul>
-        <ul
-            class="col-span-6 lg:col-span-2 flex flex-col gap-y-1 lg:gap-y-0"
-        >
-            <li v-for="item in legalLinks">
-                <a :href="`/${item?.slug?.current}/`" class="hover:underline block py-1 lg:py-0">{{
-                    item?.title
-                }}</a>
-            </li>
-        </ul>
-        <ul
-            class="col-span-6 lg:col-span-2 lg:ml-auto flex flex-col gap-x-4 lg:gap-x-0 gap-y-1 lg:gap-y-0 items-end lg:items-start"
-        >
-            <li v-for="item in socialLinks">
-                <a target="_blank" :href="item?.url" class="hover:underline block py-1 lg:py-0">{{
-                    item?.title
-                }}</a>
-            </li>
-        </ul>
-        <div class="col-span-12 lg:col-span-4 flex-col flex mt-4 lg:mt-0">
-            <CommonFooterMailchimpSubscription class="lg:text-right w-fit lg:ml-auto" />
-            <div class="lg:ml-auto lg:text-right lg:whitespace-pre-line mt-1">
-                <CommonTextContent :blocks="credits" />
+    <footer class="px-4 py-8 sm:px-6 lg:px-8 lg:py-12 xl:px-12 xl:py-16">
+        <div class="flex justify-center">
+            <CommonFooterMailchimpSubscription />
+        </div>
+
+        <div class="mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-12 gap-x-8 sm:text-center">
+            <div class="flex flex-col gap-3">
+                <h2 class="text-a2 font-medium uppercase">News</h2>
+                <ul class="flex flex-col gap-1.5">
+                    <li><NuxtLink to="" class="lowercase">Latest</NuxtLink></li>
+                    <li><NuxtLink to="" class="lowercase">Press</NuxtLink></li>
+                    <li><NuxtLink to="" class="lowercase">Awards</NuxtLink></li>
+                </ul>
+            </div>
+            <div class="flex flex-col gap-3">
+                <h2 class="text-a2 font-medium uppercase">Connect</h2>
+                <ul class="flex flex-col gap-1.5">
+                    <li><NuxtLink to="" class="lowercase">Find us</NuxtLink></li>
+                    <li><NuxtLink to="" class="lowercase">Contact us</NuxtLink></li>
+                </ul>
+            </div>
+            <div class="flex flex-col gap-3">
+                <h2 class="text-a2 font-medium uppercase">Work with us</h2>
+                <ul class="flex flex-col gap-1.5">
+                    <li><NuxtLink to="" class="lowercase">Open positions</NuxtLink></li>
+                </ul>
+            </div>
+            <div class="flex flex-col gap-3">
+                <h2 class="text-a2 font-medium uppercase">Trade</h2>
+                <ul class="flex flex-col gap-1.5">
+                    <li><NuxtLink to="" class="lowercase">Make a request</NuxtLink></li>
+                </ul>
+            </div>
+            <div class="flex flex-col gap-3">
+                <h2 class="text-a2 font-medium uppercase">Info</h2>
+                <ul class="flex flex-col gap-1.5">
+                    <li><NuxtLink to="" class="lowercase">Shipping & Returns</NuxtLink></li>
+                    <li><NuxtLink to="" class="lowercase">Terms & Conditions</NuxtLink></li>
+                    <li><NuxtLink to="" class="lowercase">Privacy Policy</NuxtLink></li>
+                </ul>
+            </div>
+            <div class="flex flex-col gap-3">
+                <h2 class="text-a2 font-medium uppercase">Follow us</h2>
+                <ul class="flex gap-2 sm:justify-center">
+                    <li><a href="https://www.instagram.com/studionadadebs/" target="_blank">
+                        <img src="/icons/instagram.svg" alt="Instagram" />
+                    </a></li>
+                    <li><a href="https://www.facebook.com/studionadadebs" target="_blank">
+                        <img src="/icons/facebook.svg" alt="Facebook" />
+                    </a></li>
+                    <li><a href="https://www.linkedin.com/in/nadadebs/" target="_blank">
+                        <img src="/icons/linkedin.svg" alt="LinkedIn" />
+                    </a></li>
+                </ul>
             </div>
         </div>
     </footer>
 </template>
-
-<script setup>
-const props = defineProps({
-    contact: Object,
-    socialLinks: Object,
-    legalLinks: Array,
-    credits: Array,
-})
-</script>
