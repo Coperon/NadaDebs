@@ -1,124 +1,163 @@
 <template>
-    <header 
-        id="header" 
-        ref="header" 
-        class="fixed inset-0 h-screen z-10 flex flex-col transition-colors duration-300"
-        :class="menuState.isOpened ? 'pointer-events-auto bg-white' : 'pointer-events-none bg-sand'"
+    <header
+        class="fixed inset-0 h-screen z-10"
+        :class="menuState.isOpened ? 'pointer-events-auto' : 'pointer-events-none'"
     >
-        <div class="pointer-events-auto p-4 flex items-center justify-between shrink-0">
+        <div class="absolute z-10 inset-x-0 top-0 pointer-events-auto p-4 sm:p-6 lg:px-8 xl:px-12 flex md:flex-row-reverse items-center justify-between md:gap-12 shrink-0">
+            <div class="hidden md:flex flex-1 items-center justify-end gap-6">
+                <span class="lowercase text-a2 font-medium">Search</span>
+                <span class="lowercase text-a2 font-medium">Favorites (3)</span>
+                <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
+            </div>
+
             <NuxtLink to="/"><CommonHeaderBrandLogo /></NuxtLink>
 
-            <div class="flex items-center gap-2.5">
-                <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
-                <IconsDots class="w-2 h-auto" />
-                <button @click="toggleMenuState" class="lowercase text-a2 font-medium relative" aria-label="Toggle Menu">
-                    <span :class="menuState.isOpened ? 'opacity-0' : 'opacity-100'">Menu</span>
-                    <span class="absolute top-0 left-0" :class="menuState.isOpened ? 'opacity-100' : 'opacity-0'">Close</span>
-                </button>
+            <div class="flex-1 flex items-center justify-end md:justify-start md:gap-12">
+                <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative">
+                    <div class="md:hidden"><ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount /></div>
+                    <div class="hidden md:block text-a2 font-medium">{{ route.name }}</div>
+                    <IconsDots class="w-2 h-auto" />
+                    <button @click="toggleMenuState" class="lowercase text-a2 font-medium relative" aria-label="Toggle Menu">
+                        <span :class="menuState.isOpened ? 'opacity-0' : 'opacity-100'">Menu</span>
+                        <span class="absolute top-0 left-0" :class="menuState.isOpened ? 'opacity-100' : 'opacity-0'">Close</span>
+                    </button>
+                    <button @click="toggleMenuState" class="hidden md:flex absolute inset-0 cursor-pointer" aria-label="Toggle Menu"></button>
+                </div>
+
+                <!-- <div class="hidden xl:flex justify-center flex-grow">
+                    <ul v-if="route.name === 'studio'" class="flex gap-6">
+                        <li><NuxtLink to="" class="lowercase">Collaborations</NuxtLink></li>
+                        <li><NuxtLink to="" class="lowercase">Interiors</NuxtLink></li>
+                        <li><NuxtLink to="" class="lowercase">Bespoke</NuxtLink></li>
+                    </ul>
+                </div> -->
             </div>
         </div>
 
-        <div v-if="menuState.isOpened" class="flex-grow px-4 pb-6 flex flex-col gap-8 overflow-y-auto">
-            <div class="shrink-0 border-t border-b border-current py-1.5 flex items-center text-a2 font-medium lowercase">
-                <div class="flex-1 pr-2-5 py-1">Search</div>
-                <div class="flex-1 pl-2.5 py-1 border-l border-current">Favorites (3)</div>
+        <Transition name="fade">
+            <div v-if="menuState.isOpened" class="absolute inset-0">
+                <div class="absolute inset-0" @click="toggleMenuState"></div>
+                <div class="bg-white absolute inset-y-0 left-0 w-full max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
+                    <div class="px-4 sm:hidden">
+                        <div class="shrink-0 border-t border-b border-current py-1.5 flex items-center text-a2 font-medium lowercase">
+                            <div class="flex-1 pr-2-5 py-1">Search</div>
+                            <div class="flex-1 pl-2.5 py-1 border-l border-current">Favorites (3)</div>
+                        </div>
+                    </div>
+
+                    <nav class="flex-grow flex flex-col justify-between gap-12 p-4 sm:p-6 lg:p-8 xl:p-12 overflow-y-auto">
+                        <ul class="flex flex-col gap-2">
+                            <li>
+                                <button @click="isShopMenuOpen = !isShopMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
+                                    <span>Shop</span>
+                                    <div class="transition-transform object-center duration-300" :class="isShopMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                        </svg>
+                                    </div>
+                                </button>
+                                <Transition name="fade">
+                                    <div v-if="isShopMenuOpen" class="overflow-hidden max-h-48">
+                                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
+                                            <li><NuxtLink to="" class="lowercase">Objects</NuxtLink></li>
+                                            <li><NuxtLink to="" class="lowercase">Furniture</NuxtLink></li>
+                                            <li><NuxtLink to="" class="lowercase">Collections</NuxtLink></li>
+                                        </ul>
+                                    </div>
+                                </Transition>
+                            </li>
+                            <li>
+                                <button @click="isStudioMenuOpen = !isStudioMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
+                                    <span>Studio</span>
+                                    <div class="transition-transform object-center duration-300" :class="isStudioMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                        </svg>
+                                    </div>
+                                </button>
+                                <Transition name="fade">
+                                    <div v-if="isStudioMenuOpen" class="overflow-hidden max-h-48">
+                                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
+                                            <li><NuxtLink to="" class="lowercase">Collaborations</NuxtLink></li>
+                                            <li><NuxtLink to="" class="lowercase">Interiors</NuxtLink></li>
+                                            <li><NuxtLink to="" class="lowercase">Bespoke</NuxtLink></li>
+                                        </ul>
+                                    </div>
+                                </Transition>
+                            </li>
+                            <li>
+                                <button @click="isOurWorldMenuOpen = !isOurWorldMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
+                                    <span>Our World</span>
+                                    <div class="transition-transform object-center duration-300" :class="isOurWorldMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                        </svg>
+                                    </div>
+                                </button>
+                                <Transition name="fade">
+                                    <div v-if="isOurWorldMenuOpen" class="overflow-hidden max-h-48">
+                                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
+                                            <li><NuxtLink to="" class="lowercase">About Nada Debs</NuxtLink></li>
+                                            <li><NuxtLink to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
+                                        </ul>
+                                    </div>
+                                </Transition>
+                            </li>
+                        </ul>
+
+                        <ul class="flex flex-col gap-2">
+                            <li>
+                                <button @click="isNewsMenuOpen = !isNewsMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                                    <span>News</span>
+                                    <div class="transition-transform object-center duration-300" :class="isNewsMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                        <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                        </svg>
+                                    </div>
+                                </button>
+                                <Transition name="fade">
+                                    <div v-if="isNewsMenuOpen" class="overflow-hidden max-h-48">
+                                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
+                                            <li><NuxtLink to="" class="lowercase">Latest</NuxtLink></li>
+                                            <li><NuxtLink to="" class="lowercase">Press</NuxtLink></li>
+                                            <li><NuxtLink to="" class="lowercase">Awards</NuxtLink></li>
+                                        </ul>
+                                    </div>
+                                </Transition>
+                            </li>
+                            <li>
+                                <NuxtLink to="" class="text-a2 font-medium uppercase">Connect</NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink to="" class="text-a2 font-medium uppercase">Work with us</NuxtLink>
+                            </li>
+                            <li>
+                                <NuxtLink to="" class="text-a2 font-medium uppercase">Trade</NuxtLink>
+                            </li>
+                            <li>
+                                <button @click="isInfoMenuOpen = !isInfoMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                                    <span>Info</span>
+                                    <div class="transition-transform object-center duration-300" :class="isInfoMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                        <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                        </svg>
+                                    </div>
+                                </button>
+                                <Transition name="fade">
+                                    <div v-if="isInfoMenuOpen" class="overflow-hidden max-h-48">
+                                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
+                                            <li><NuxtLink to="" class="lowercase">Shipping & Returns</NuxtLink></li>
+                                            <li><NuxtLink to="" class="lowercase">Terms and Conditions</NuxtLink></li>
+                                            <li><NuxtLink to="" class="lowercase">Privacy Policy</NuxtLink></li>
+                                        </ul>
+                                    </div>
+                                </Transition>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
-
-            <nav class="flex-grow flex flex-col justify-between gap-12">
-                <ul class="flex flex-col gap-2">
-                    <li>
-                        <button @click="isShopMenuOpen = !isShopMenuOpen" class="text-a1-bold uppercase text-left">
-                            Shop
-                            <span class="transition-transform object-center duration-300 inline-block" :class="isShopMenuOpen ? 'rotate-45' : 'rotate-0'">+</span>
-                        </button>
-                        <ul v-if="isShopMenuOpen" class="pt-2.5 pb-4 flex flex-col gap-2.5">
-                            <li><NuxtLink to="" class="lowercase">Objects</NuxtLink></li>
-                            <li><NuxtLink to="" class="lowercase">Furniture</NuxtLink></li>
-                            <li><NuxtLink to="" class="lowercase">Collections</NuxtLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <button class="text-a1-bold uppercase text-left">
-                            Studio
-                            <span>+</span>
-                        </button>
-                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
-                            <li><NuxtLink to="" class="lowercase">Collaborations</NuxtLink></li>
-                            <li><NuxtLink to="" class="lowercase">Interiors</NuxtLink></li>
-                            <li><NuxtLink to="" class="lowercase">Bespoke</NuxtLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <button class="text-a1-bold uppercase text-left">
-                            Our World
-                            <span>+</span>
-                        </button>
-                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
-                            <li><NuxtLink to="" class="lowercase">About Nada Debs</NuxtLink></li>
-                            <li><NuxtLink to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <ul class="flex flex-col gap-2">
-                    <li>
-                        <button class="text-a2 font-medium uppercase">
-                            News
-                            <span>+</span>
-                        </button>
-                    </li>
-                    <li>
-                        <button class="text-a2 font-medium uppercase">
-                            Connect
-                        </button>
-                    </li>
-                    <li>
-                        <button class="text-a2 font-medium uppercase">
-                            Work with us
-                        </button>
-                    </li>
-                    <li>
-                        <button class="text-a2 font-medium uppercase">
-                            Trade
-                        </button>
-                    </li>
-                    <li>
-                        <button class="text-a2 font-medium uppercase">
-                            Info
-                            <span>+</span>
-                        </button>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-
-
-
-        <!-- <nav
-            id="main-nav"
-            class="flex justify-between sticky top-0 left-0 w-full p-2 border-b leading-none"
-        >
-            <NuxtLink
-                to="/"
-                class="flex transition-colors"
-                active-class="text-blue"
-            >
-               <CommonHeaderBrandLogo />
-            </NuxtLink>
-            <div
-                class="ml-auto flex items-center gap-x-2 h-[2em]"
-                v-if="navItems && navItems?.length > 0"
-            >
-                <CommonHeaderPrimaryNav
-                    :menuIsOpened="menuState.isOpened"
-                    :items="navItems"
-                />
-                <button @click="toggleMenuState" class="h-[1em] md:hidden" aria-label="Toggle nav menu">
-                    <IconsBurger :menuIsOpened="menuState.isOpened" />
-                </button>
-            </div>
-            <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
-        </nav> -->
+        </Transition>
     </header>
 </template>
 
@@ -127,7 +166,12 @@ import { useCartStore } from '@/stores/cart'
 
 const menuState = useMenuStore()
 const cartStore = useCartStore()
+const route = useRoute()
 const isShopMenuOpen = ref(false)
+const isStudioMenuOpen = ref(false)
+const isOurWorldMenuOpen = ref(false)
+const isNewsMenuOpen = ref(false)
+const isInfoMenuOpen = ref(false)
 
 const toggleMenuState = () => {
     menuState.isOpened = !menuState.isOpened
@@ -140,20 +184,17 @@ const toggleCartDrawer = () => {
 const cartItemCount = computed(() => {
     return cartStore.cart?.lineItems?.reduce((total, item) => total + item.quantity, 0) || 0
 })
-
-const header = ref(null)
-
-onBeforeMount(() => {
-    // add matchmedia to open or close menu both on load or on change
-    const mq = window.matchMedia('(min-width: 768px)')
-    menuState.isOpened = mq.matches
-
-    mq.addEventListener('change', e => {
-        if (e.matches) {
-            menuState.isOpened = true
-        } else {
-            menuState.isOpened = false
-        }
-    })
-})
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    max-height: 0;
+}
+</style>
