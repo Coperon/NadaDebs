@@ -1,6 +1,9 @@
 <template>
     <Html class="text-base">
-        <Body class="antialiased font-default bg-sand text-black text-p1 font-light">
+        <Body 
+            class="antialiased font-default bg-sand text-p1 font-light"
+            :class="route.name === 'studio' ? 'text-light-gray' : 'text-black'"
+        >
             <NuxtLoadingIndicator
                 :throttle="200"
                 :height="3"

@@ -13,7 +13,7 @@
         </main>
 
         <!-- Footer -->
-        <CommonFooter />
+        <CommonFooter v-if="route.name !== 'studio'" />
 
         <!-- Shop Cart Drawer -->
         <!-- <ShopCartDrawer :cart="cartStore.cart" :isOpen="cartStore.isCartOpen" @close="cartStore.setCartOpen(false)" /> -->
@@ -32,6 +32,7 @@
 <script setup>
 import { useCartStore } from '@/stores/cart'
 
+const route = useRoute()
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
 </script>

@@ -23,6 +23,13 @@ export const structure = (S, context) =>
         S.document().schemaType('homepage').documentId('homepage'),
       ),
       S.divider(),
+      S.listItem().title('Studio').id('studio').child(
+        S.document().schemaType('studio').documentId('studio'),
+      ),
+      S.listItem().title('Collaborations').id('collaborations').child(
+        S.document().schemaType('collaborations').documentId('collaborations'),
+      ),
+      S.divider(),
       S.listItem()
         .title('About')
         .id('about')

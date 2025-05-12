@@ -6,14 +6,14 @@
         <div class="absolute z-10 inset-x-0 top-0 pointer-events-auto p-4 sm:p-6 lg:px-8 xl:px-12 flex md:flex-row-reverse items-center justify-between md:gap-12 shrink-0">
             <div class="hidden md:flex flex-1 items-center justify-end gap-6">
                 <span class="lowercase text-a2 font-medium">Search</span>
-                <span class="lowercase text-a2 font-medium">Favorites (3)</span>
+                <span class="lowercase text-a2 font-medium">Favorites (0)</span>
                 <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
             </div>
 
             <NuxtLink to="/"><CommonHeaderBrandLogo /></NuxtLink>
 
             <div class="flex-1 flex items-center justify-end md:justify-start md:gap-12">
-                <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative">
+                <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative" :class="{ 'text-black': menuState.isOpened }">
                     <div class="md:hidden"><ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount /></div>
                     <div class="hidden md:block text-a2 font-medium">{{ route.name }}</div>
                     <IconsDots class="w-2 h-auto" />
@@ -35,13 +35,13 @@
         </div>
 
         <Transition name="fade">
-            <div v-if="menuState.isOpened" class="absolute inset-0">
+            <div v-if="menuState.isOpened" class="absolute inset-0 text-black">
                 <div class="absolute inset-0" @click="toggleMenuState"></div>
                 <div class="bg-white absolute inset-y-0 left-0 w-full max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
                     <div class="px-4 sm:hidden">
                         <div class="shrink-0 border-t border-b border-current py-1.5 flex items-center text-a2 font-medium lowercase">
                             <div class="flex-1 pr-2-5 py-1">Search</div>
-                            <div class="flex-1 pl-2.5 py-1 border-l border-current">Favorites (3)</div>
+                            <div class="flex-1 pl-2.5 py-1 border-l border-current">Favorites (0)</div>
                         </div>
                     </div>
 
