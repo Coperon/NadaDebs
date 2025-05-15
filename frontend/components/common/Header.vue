@@ -10,10 +10,10 @@
                 <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
             </div>
 
-            <NuxtLink to="/"><CommonHeaderBrandLogo /></NuxtLink>
+            <NuxtLink to="/" :class="{ 'text-black lg:text-inherit': menuState.isOpened }"><CommonHeaderBrandLogo /></NuxtLink>
 
             <div class="flex-1 flex items-center justify-end md:justify-start md:gap-12">
-                <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative" :class="{ 'text-black': menuState.isOpened }">
+                <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative" :class="{ 'text-black sm:text-inherit md:text-black': menuState.isOpened }">
                     <div class="md:hidden"><ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount /></div>
                     <div class="hidden md:block text-a2 font-medium">{{ route.name }}</div>
                     <IconsDots class="w-2 h-auto" />
