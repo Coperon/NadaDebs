@@ -7,7 +7,7 @@
         <!-- Main content -->
         <main
             id="main-content"
-            class="relative flex flex-1 flex-col h-full max-w-full p-2"
+            class="relative flex flex-1 flex-col h-full max-w-full"
         >
             <slot />
         </main>

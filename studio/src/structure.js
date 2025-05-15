@@ -1,7 +1,7 @@
 import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 
 // icons: https://react-icons.github.io/react-icons/search/
-import {GoHome} from 'react-icons/go'
+import { HiOutlineHome } from "react-icons/hi2";
 import {RxAvatar} from 'react-icons/rx'
 import {IoDocumentsOutline} from 'react-icons/io5'
 import {TagsIcon} from '@sanity/icons'
@@ -10,25 +10,28 @@ import {GrNavigate} from 'react-icons/gr'
 import {CiGrid42} from 'react-icons/ci'
 import {BsMailbox} from 'react-icons/bs'
 import { FaShopify } from "react-icons/fa";
+import { HiOutlineFolder } from "react-icons/hi2";
+import { HiOutlineDocument } from "react-icons/hi2";
 
 export const structure = (S, context) =>
   S.list()
     .title('Content')
     .items([
       S.divider(),
-      S.listItem().title('Homepage').id('homepage').icon(GoHome).child(
+      S.listItem().title('Homepage').id('homepage').icon(HiOutlineHome).child(
         // Instead of rendering a list of documents, we render a single
         // document, specifying the `documentId` manually to ensure
         // that we're editing the single instance of the document
         S.document().schemaType('homepage').documentId('homepage'),
       ),
       S.divider(),
-      S.listItem().title('Studio').id('studio').child(
+      S.listItem().title('Studio').id('studio').icon(HiOutlineDocument).child(
         S.document().schemaType('studio').documentId('studio'),
       ),
-      S.listItem().title('Collaborations').id('collaborations').child(
+      S.listItem().title('Collaborations - Index').id('collaborations').icon(HiOutlineDocument).child(
         S.document().schemaType('collaborations').documentId('collaborations'),
       ),
+      S.listItem().title(`Collaborations - All`).icon(HiOutlineFolder).child(S.documentTypeList('collaboration')),
       S.divider(),
       S.listItem()
         .title('About')

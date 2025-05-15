@@ -35,5 +35,14 @@ export default {
             hidden: true,
             validation: (Rule) => Rule.required(),
         },
+        {
+            name: 'description',
+            title: 'Description',
+            type: 'text',
+            group: 'page',
+            validation: (Rule) => Rule.required(),
+        },
+        
     ],
 }
+

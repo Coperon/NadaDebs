@@ -3,7 +3,10 @@
         class="fixed inset-0 h-screen z-10"
         :class="menuState.isOpened ? 'pointer-events-auto' : 'pointer-events-none'"
     >
-        <div class="absolute z-10 inset-x-0 top-0 pointer-events-auto p-4 sm:p-6 lg:px-8 xl:px-12 flex md:flex-row-reverse items-center justify-between md:gap-12 shrink-0">
+        <div 
+            class="absolute z-10 inset-x-0 top-0 pointer-events-auto p-4 sm:p-6 lg:px-8 xl:px-12 flex md:flex-row-reverse items-center justify-between md:gap-12 shrink-0 transition-colors duration-300"
+            :class="route.name === 'studio' ? 'bg-transparent' : 'bg-sand'"
+        >
             <div class="hidden md:flex flex-1 items-center justify-end gap-6">
                 <span class="lowercase text-a2 font-medium">Search</span>
                 <span class="lowercase text-a2 font-medium">Favorites (0)</span>
@@ -15,7 +18,7 @@
             <div class="flex-1 flex items-center justify-end md:justify-start md:gap-12">
                 <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative" :class="{ 'text-black sm:text-inherit md:text-black': menuState.isOpened }">
                     <div class="md:hidden"><ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount /></div>
-                    <div class="hidden md:block text-a2 font-medium">{{ route.name }}</div>
+                    <div class="hidden md:block text-a2 font-medium">{{ parentRouteSlug }}</div>
                     <IconsDots class="w-2 h-auto" />
                     <button @click="toggleMenuState" class="lowercase text-a2 font-medium relative" aria-label="Toggle Menu">
                         <span :class="menuState.isOpened ? 'opacity-0' : 'opacity-100'">Menu</span>
@@ -209,6 +212,13 @@ import { useCartStore } from '@/stores/cart'
 const menuState = useMenuStore()
 const cartStore = useCartStore()
 const route = useRoute()
+
+const parentRouteSlug = computed(() => {
+    // Split the path and get the first non-empty segment
+    const segments = route.path.split('/').filter(Boolean)
+    return segments[0] || ''
+})
+
 const isShopMenuOpen = ref(false)
 const isStudioMenuOpen = ref(false)
 const isOurWorldMenuOpen = ref(false)

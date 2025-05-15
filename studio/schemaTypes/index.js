@@ -4,6 +4,7 @@ import about from './singleton/about'
 import homepage from './singleton/homePage'
 import studio from './singleton/studio'
 import collaborations from './singleton/collaborations'
+import collaboration from './collaboration'
 import contact from './singleton/contact'
 import page from './page'
 import siteConfig from './siteConfig'
@@ -41,6 +42,7 @@ export const schemaTypes = [
   homepage,
   studio,
   collaborations,
+  collaboration,
   contact,
   page,
   category,
