@@ -54,9 +54,9 @@
         </nav>
 
         <!-- Desktop -->
-        <nav id="desktop-menu" class="hidden lg:block fixed inset-x-20 xl:inset-x-32 top-1/2 -translate-y-1/2">
+        <nav id="desktop-menu" class="hidden lg:block fixed inset-x-0 top-1/2 -translate-y-1/2">
             <ul class="flex items-center">
-                <li class="flex-1 flex justify-start">
+                <li class="flex-1 flex justify-center">
                     <div @mouseenter="toggleMenu('shop'); isBgWhite = true; hoveredMenu = 'shop'" @mouseleave="toggleMenu('ourWorld'); isBgWhite = false; hoveredMenu = null" class="relative">
                         <NuxtLink to="" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'shop' }">Shop</NuxtLink>
                         <Transition name="fade">
@@ -79,7 +79,7 @@
                         </Transition>
                     </div>
                 </li>
-                <li class="flex-1 flex justify-end">
+                <li class="flex-1 flex justify-center">
                     <div @mouseenter="toggleMenu('studio'); isBgWhite = true; hoveredMenu = 'studio'" @mouseleave="toggleMenu('ourWorld'); isBgWhite = false; hoveredMenu = null" class="relative">
                         <NuxtLink to="/studio" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'studio' }">Studio</NuxtLink>
                         <Transition name="fade">
