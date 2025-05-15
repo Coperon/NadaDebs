@@ -34,173 +34,172 @@
             </div>
         </div>
 
-        <Transition name="fade">
-            <div v-if="menuState.isOpened" class="absolute inset-0 text-black">
-                <div class="absolute inset-0" @click="toggleMenuState"></div>
-                <div class="bg-white absolute inset-y-0 left-0 w-full max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
-                    <div class="px-4 sm:hidden">
-                        <div class="shrink-0 border-t border-b border-current py-1.5 flex items-center text-a2 font-medium lowercase">
-                            <div class="flex-1 pr-2-5 py-1">Search</div>
-                            <div class="flex-1 pl-2.5 py-1 border-l border-current">Favorites (0)</div>
-                        </div>
+        
+        <div class="absolute inset-0 text-black transition-opacity duration-300" :class="{ 'opacity-0 pointer-events-none': !menuState.isOpened }">
+            <div class="absolute inset-0" @click="toggleMenuState"></div>
+            <div class="bg-white absolute inset-y-0 left-0 w-full max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
+                <div class="px-4 sm:hidden">
+                    <div class="shrink-0 border-t border-b border-current py-1.5 flex items-center text-a2 font-medium lowercase">
+                        <div class="flex-1 pr-2-5 py-1">Search</div>
+                        <div class="flex-1 pl-2.5 py-1 border-l border-current">Favorites (0)</div>
                     </div>
-
-                    <nav class="flex-grow flex flex-col justify-between gap-12 px-4 py-8 sm:px-6 lg:px-8 lg:py-12 xl:px-12 xl:py-16 overflow-y-auto">
-                        <ul class="flex flex-col gap-2">
-                            <li>
-                                <button @click="isShopMenuOpen = !isShopMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
-                                    <span>Shop</span>
-                                    <div class="transition-transform object-center duration-300" :class="isShopMenuOpen ? 'rotate-45' : 'rotate-0'">
-                                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
-                                        </svg>
-                                    </div>
-                                </button>
-                                <Transition name="fade">
-                                    <div v-if="isShopMenuOpen" class="overflow-hidden max-h-48">
-                                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
-                                            <li><NuxtLink to="" class="lowercase">Objects</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Furniture</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Collections</NuxtLink></li>
-                                        </ul>
-                                    </div>
-                                </Transition>
-                            </li>
-                            <li>
-                                <button @click="isStudioMenuOpen = !isStudioMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
-                                    <span>Studio</span>
-                                    <div class="transition-transform object-center duration-300" :class="isStudioMenuOpen ? 'rotate-45' : 'rotate-0'">
-                                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
-                                        </svg>
-                                    </div>
-                                </button>
-                                <Transition name="fade">
-                                    <div v-if="isStudioMenuOpen" class="overflow-hidden max-h-48">
-                                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
-                                            <li><NuxtLink to="" class="lowercase">Collaborations</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Interiors</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Bespoke</NuxtLink></li>
-                                        </ul>
-                                    </div>
-                                </Transition>
-                            </li>
-                            <li>
-                                <button @click="isOurWorldMenuOpen = !isOurWorldMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
-                                    <span>Our World</span>
-                                    <div class="transition-transform object-center duration-300" :class="isOurWorldMenuOpen ? 'rotate-45' : 'rotate-0'">
-                                        <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
-                                        </svg>
-                                    </div>
-                                </button>
-                                <Transition name="fade">
-                                    <div v-if="isOurWorldMenuOpen" class="overflow-hidden max-h-48">
-                                        <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
-                                            <li><NuxtLink to="" class="lowercase">About Nada Debs</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
-                                        </ul>
-                                    </div>
-                                </Transition>
-                            </li>
-                        </ul>
-
-                        <ul class="flex flex-col gap-2">
-                            <li>
-                                <button @click="isNewsMenuOpen = !isNewsMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
-                                    <span>News</span>
-                                    <div class="transition-transform object-center duration-300" :class="isNewsMenuOpen ? 'rotate-45' : 'rotate-0'">
-                                        <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
-                                        </svg>
-                                    </div>
-                                </button>
-                                <Transition name="fade">
-                                    <div v-if="isNewsMenuOpen" class="overflow-hidden max-h-48">
-                                        <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                            <li><NuxtLink to="" class="lowercase">Latest</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Press</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Awards</NuxtLink></li>
-                                        </ul>
-                                    </div>
-                                </Transition>
-                            </li>
-                            <li>
-                                <button @click="isConnectMenuOpen = !isConnectMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
-                                    <span>Connect</span>
-                                    <div class="transition-transform object-center duration-300" :class="isConnectMenuOpen ? 'rotate-45' : 'rotate-0'">
-                                        <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
-                                        </svg>
-                                    </div>
-                                </button>
-                                <Transition name="fade">
-                                    <div v-if="isConnectMenuOpen" class="overflow-hidden max-h-48">
-                                        <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                            <li><NuxtLink to="" class="lowercase">Find us</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Contact us</NuxtLink></li>
-                                        </ul>
-                                    </div>
-                                </Transition>
-                            </li>
-                            <li>
-                                <button @click="isTradeMenuOpen = !isTradeMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
-                                    <span>Trade</span>
-                                    <div class="transition-transform object-center duration-300" :class="isTradeMenuOpen ? 'rotate-45' : 'rotate-0'">
-                                        <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
-                                        </svg>
-                                    </div>
-                                </button>
-                                <Transition name="fade">
-                                    <div v-if="isTradeMenuOpen" class="overflow-hidden max-h-48">
-                                        <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                            <li><NuxtLink to="" class="lowercase">Make a request</NuxtLink></li>
-                                        </ul>
-                                    </div>
-                                </Transition>
-                            </li>
-                            <li>
-                                <button @click="isWorkWithUsMenuOpen = !isWorkWithUsMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
-                                    <span>Work with us</span>
-                                    <div class="transition-transform object-center duration-300" :class="isWorkWithUsMenuOpen ? 'rotate-45' : 'rotate-0'">
-                                        <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
-                                        </svg>
-                                    </div>
-                                </button>
-                                <Transition name="fade">
-                                    <div v-if="isWorkWithUsMenuOpen" class="overflow-hidden max-h-48">
-                                        <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                            <li><NuxtLink to="" class="lowercase">Open positions</NuxtLink></li>
-                                        </ul>
-                                    </div>
-                                </Transition>
-                            </li>
-                            <li>
-                                <button @click="isInfoMenuOpen = !isInfoMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
-                                    <span>Info</span>
-                                    <div class="transition-transform object-center duration-300" :class="isInfoMenuOpen ? 'rotate-45' : 'rotate-0'">
-                                        <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                                            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
-                                        </svg>
-                                    </div>
-                                </button>
-                                <Transition name="fade">
-                                    <div v-if="isInfoMenuOpen" class="overflow-hidden max-h-48">
-                                        <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                            <li><NuxtLink to="" class="lowercase">Shipping & Returns</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Terms & Conditions</NuxtLink></li>
-                                            <li><NuxtLink to="" class="lowercase">Privacy Policy</NuxtLink></li>
-                                        </ul>
-                                    </div>
-                                </Transition>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
+
+                <nav class="flex-grow flex flex-col justify-between gap-12 px-4 py-8 sm:px-6 lg:px-8 lg:py-12 xl:px-12 xl:py-16 overflow-y-auto">
+                    <ul class="flex flex-col gap-2">
+                        <li>
+                            <button @click="isShopMenuOpen = !isShopMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
+                                <span>Shop</span>
+                                <div class="transition-transform object-center duration-300" :class="isShopMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <Transition name="fade">
+                                <div v-if="isShopMenuOpen" class="overflow-hidden max-h-48">
+                                    <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
+                                        <li><NuxtLink to="" class="lowercase">Objects</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Furniture</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Collections</NuxtLink></li>
+                                    </ul>
+                                </div>
+                            </Transition>
+                        </li>
+                        <li>
+                            <button @click="isStudioMenuOpen = !isStudioMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
+                                <span>Studio</span>
+                                <div class="transition-transform object-center duration-300" :class="isStudioMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <Transition name="fade">
+                                <div v-if="isStudioMenuOpen" class="overflow-hidden max-h-48">
+                                    <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
+                                        <li><NuxtLink to="" class="lowercase">Collaborations</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Interiors</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Bespoke</NuxtLink></li>
+                                    </ul>
+                                </div>
+                            </Transition>
+                        </li>
+                        <li>
+                            <button @click="isOurWorldMenuOpen = !isOurWorldMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
+                                <span>Our World</span>
+                                <div class="transition-transform object-center duration-300" :class="isOurWorldMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <Transition name="fade">
+                                <div v-if="isOurWorldMenuOpen" class="overflow-hidden max-h-48">
+                                    <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
+                                        <li><NuxtLink to="" class="lowercase">About Nada Debs</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
+                                    </ul>
+                                </div>
+                            </Transition>
+                        </li>
+                    </ul>
+
+                    <ul class="flex flex-col gap-2">
+                        <li>
+                            <button @click="isNewsMenuOpen = !isNewsMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                                <span>News</span>
+                                <div class="transition-transform object-center duration-300" :class="isNewsMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                    <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <Transition name="fade">
+                                <div v-if="isNewsMenuOpen" class="overflow-hidden max-h-48">
+                                    <ul class="pt-3 pb-4 flex flex-col gap-1.5">
+                                        <li><NuxtLink to="" class="lowercase">Latest</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Press</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Awards</NuxtLink></li>
+                                    </ul>
+                                </div>
+                            </Transition>
+                        </li>
+                        <li>
+                            <button @click="isConnectMenuOpen = !isConnectMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                                <span>Connect</span>
+                                <div class="transition-transform object-center duration-300" :class="isConnectMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                    <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <Transition name="fade">
+                                <div v-if="isConnectMenuOpen" class="overflow-hidden max-h-48">
+                                    <ul class="pt-3 pb-4 flex flex-col gap-1.5">
+                                        <li><NuxtLink to="" class="lowercase">Find us</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Contact us</NuxtLink></li>
+                                    </ul>
+                                </div>
+                            </Transition>
+                        </li>
+                        <li>
+                            <button @click="isTradeMenuOpen = !isTradeMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                                <span>Trade</span>
+                                <div class="transition-transform object-center duration-300" :class="isTradeMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                    <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <Transition name="fade">
+                                <div v-if="isTradeMenuOpen" class="overflow-hidden max-h-48">
+                                    <ul class="pt-3 pb-4 flex flex-col gap-1.5">
+                                        <li><NuxtLink to="" class="lowercase">Make a request</NuxtLink></li>
+                                    </ul>
+                                </div>
+                            </Transition>
+                        </li>
+                        <li>
+                            <button @click="isWorkWithUsMenuOpen = !isWorkWithUsMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                                <span>Work with us</span>
+                                <div class="transition-transform object-center duration-300" :class="isWorkWithUsMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                    <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <Transition name="fade">
+                                <div v-if="isWorkWithUsMenuOpen" class="overflow-hidden max-h-48">
+                                    <ul class="pt-3 pb-4 flex flex-col gap-1.5">
+                                        <li><NuxtLink to="" class="lowercase">Open positions</NuxtLink></li>
+                                    </ul>
+                                </div>
+                            </Transition>
+                        </li>
+                        <li>
+                            <button @click="isInfoMenuOpen = !isInfoMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                                <span>Info</span>
+                                <div class="transition-transform object-center duration-300" :class="isInfoMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                    <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <Transition name="fade">
+                                <div v-if="isInfoMenuOpen" class="overflow-hidden max-h-48">
+                                    <ul class="pt-3 pb-4 flex flex-col gap-1.5">
+                                        <li><NuxtLink to="" class="lowercase">Shipping & Returns</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Terms & Conditions</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Privacy Policy</NuxtLink></li>
+                                    </ul>
+                                </div>
+                            </Transition>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-        </Transition>
+        </div>
     </header>
 </template>
 
