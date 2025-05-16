@@ -28,10 +28,29 @@ export const structure = (S, context) =>
       S.listItem().title('Studio').id('studio').icon(HiOutlineDocument).child(
         S.document().schemaType('studio').documentId('studio'),
       ),
-      S.listItem().title('Collaborations - Index').id('collaborations').icon(HiOutlineDocument).child(
-        S.document().schemaType('collaborations').documentId('collaborations'),
-      ),
-      S.listItem().title(`Collaborations - All`).icon(HiOutlineFolder).child(S.documentTypeList('collaboration')),
+      S.listItem()
+        .title('Collaborations')
+        .icon(HiOutlineFolder)
+        .child(
+          S.list()
+            .title('Collaborations')
+            .items([
+              S.listItem()
+                .title('Index Page')
+                .id('collaborationsIndex')
+                .icon(HiOutlineDocument)
+                .child(S.document().schemaType('collaborations').documentId('collaborations')),
+              S.listItem()
+                .title('Collaborations')
+                .id('collaborations')
+                .icon(HiOutlineFolder)
+                .child(S.documentTypeList('collaboration')),
+            ])
+        ),
+      // S.listItem().title('Collaborations - Index').id('collaborations').icon(HiOutlineDocument).child(
+      //   S.document().schemaType('collaborations').documentId('collaborations'),
+      // ),
+      // S.listItem().title(`Collaborations - All`).icon(HiOutlineFolder).child(S.documentTypeList('collaboration')),
       S.divider(),
       S.listItem()
         .title('About')

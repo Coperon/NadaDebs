@@ -47,12 +47,6 @@ export default {
             group: 'content',
         },
         {
-            name: 'location',
-            title: 'Location',
-            type: 'string',
-            group: 'content',
-        },
-        {
             name: 'year',
             title: 'Year',
             type: 'number',
@@ -75,6 +69,19 @@ export default {
             type: 'image',
             validation: (Rule) => Rule.required(),
             group: 'content'
+        },
+        {
+            name: 'relatedCollaborations',
+            title: 'Related Collaborations',
+            type: 'array',
+            of: [{ 
+                type: 'reference', 
+                to: [{ type: 'collaboration' }],
+                options: {
+                    disableNew: true,
+                }
+            }],
+            group: 'content',
         },
         {
             name: 'isFeatured',
