@@ -7,11 +7,11 @@
                     <span>{{ collaborationData?.title }}</span>
                 </h1>
 
-                <div v-if="collaborationData?.description" class="max-w-[62ch]">
+                <div v-if="collaborationData?.description" class="max-w-[62ch] text-balance">
                     {{ collaborationData?.description }}
                 </div>
 
-                <div v-if="collaborationData?.year" class="text-h2 flex flex-col gap-1.5 xl:mt-auto">
+                <div v-if="collaborationData?.year" class="text-a2-bold xl:text-h2 flex flex-col gap-1.5 xl:mt-auto">
                     <span class="uppercase">Year</span>
                     <span class="font-light">{{ collaborationData?.year }}</span>
                 </div>
@@ -64,50 +64,68 @@ const collaborationData = await getCollaborationBySlug(route.params.id)
 const scrollContainer = ref(null)
 const imagesContainer = ref(null)
 let tl = null
+let mm = null
 
-onMounted(() => {
-    if (process.client) {
-        const mm = gsap.matchMedia()
-
-        mm.add("(min-width: 1280px)", () => {
-            if (scrollContainer.value && imagesContainer.value) {
-                tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: scrollContainer.value,
-                        start: 'top top',
-                        end: () => `+=${imagesContainer.value.scrollWidth - window.innerWidth * 0.6}`,
-                        scrub: 1,
-                        pin: true,
-                        anticipatePin: 1,
-                        invalidateOnRefresh: true,
-                    }
-                })
-
-                tl.to(imagesContainer.value, {
-                    x: () => -(imagesContainer.value.scrollWidth - window.innerWidth * 0.6),
-                    ease: 'none'
-                })
-
-                window.addEventListener('resize', () => {
-                    if (tl?.scrollTrigger) {
-                        tl.scrollTrigger.refresh()
-                    }
-                })
-            }
-
-            return () => {
-                if (tl?.scrollTrigger) {
-                    tl.scrollTrigger.kill()
-                }
-                tl = null
-                window.removeEventListener('resize', () => {
-                    if (tl?.scrollTrigger) {
-                        tl.scrollTrigger.refresh()
-                    }
-                })
+const initGSAP = () => {
+    if (scrollContainer.value && imagesContainer.value) {
+        tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: scrollContainer.value,
+                start: 'top top',
+                end: () => `+=${imagesContainer.value.scrollWidth - window.innerWidth * 0.6}`,
+                scrub: 1,
+                pin: true,
+                anticipatePin: 1,
+                invalidateOnRefresh: true,
             }
         })
+
+        tl.to(imagesContainer.value, {
+            x: () => -(imagesContainer.value.scrollWidth - window.innerWidth * 0.6),
+            ease: 'none'
+        })
     }
+}
+
+const cleanupGSAP = () => {
+    if (tl?.scrollTrigger) {
+        tl.scrollTrigger.kill()
+    }
+    tl = null
+    if (mm) {
+        mm.kill()
+    }
+    mm = null
+}
+
+const handleResize = () => {
+    if (window.innerWidth >= 1280) {
+        if (!tl) {
+            initGSAP()
+        } else if (tl?.scrollTrigger) {
+            tl.scrollTrigger.refresh()
+        }
+    } else {
+        cleanupGSAP()
+    }
+}
+
+onMounted(() => {
+    mm = gsap.matchMedia()
+
+    mm.add("(min-width: 1280px)", () => {
+        initGSAP()
+        return () => {
+            cleanupGSAP()
+        }
+    })
+
+    window.addEventListener('resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+    cleanupGSAP()
+    window.removeEventListener('resize', handleResize)
 })
 
 definePageMeta({
