@@ -1,6 +1,6 @@
 <template>
-    <div class="pt-[3.25rem] sm:pt-[4.25rem]">
-        <article class="pb-12 xl:pb-0 xl:h-[calc(100vh-4.25rem)] xl:flex xl:overflow-auto">
+    <div class="pt-[3.25rem] sm:pt-[4.25rem] xl:pt-0">
+        <article ref="scrollContainer" class="pb-12 xl:pb-0 xl:h-screen xl:pt-[4.25rem] xl:overflow-hidden xl:flex">
             <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pt-16 xl:py-8 flex flex-col gap-6 xl:w-[40vw] xl:shrink-0 xl:sticky xl:left-0">
                 <h1 class="text-h2 uppercase flex flex-col gap-1.5">
                     <span class="font-light">Nada Debs x</span>
@@ -17,7 +17,11 @@
                 </div>
             </div>
 
-            <div v-if="collaborationData?.images && collaborationData?.images?.length > 0" class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-2.5 xl:shrink-0 xl:relative xl:bg-sand">
+            <div 
+                ref="imagesContainer"
+                v-if="collaborationData?.images && collaborationData?.images?.length > 0" 
+                class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-2.5 xl:shrink-0 xl:relative xl:bg-sand"
+            >
                 <div v-for="image in collaborationData?.images" :key="image._key">
                     <CommonMediaImage
                         :image="image"
@@ -50,8 +54,61 @@
 <script setup>
 import { useSeoObject } from '@/composables/seo'
 import { getCollaborationBySlug } from '@/data/collaboration'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
 const route = useRoute()
 const collaborationData = await getCollaborationBySlug(route.params.id)
+const scrollContainer = ref(null)
+const imagesContainer = ref(null)
+let tl = null
+
+onMounted(() => {
+    if (process.client) {
+        const mm = gsap.matchMedia()
+
+        mm.add("(min-width: 1280px)", () => {
+            if (scrollContainer.value && imagesContainer.value) {
+                tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: scrollContainer.value,
+                        start: 'top top',
+                        end: () => `+=${imagesContainer.value.scrollWidth - window.innerWidth * 0.6}`,
+                        scrub: 1,
+                        pin: true,
+                        anticipatePin: 1,
+                        invalidateOnRefresh: true,
+                    }
+                })
+
+                tl.to(imagesContainer.value, {
+                    x: () => -(imagesContainer.value.scrollWidth - window.innerWidth * 0.6),
+                    ease: 'none'
+                })
+
+                window.addEventListener('resize', () => {
+                    if (tl?.scrollTrigger) {
+                        tl.scrollTrigger.refresh()
+                    }
+                })
+            }
+
+            return () => {
+                if (tl?.scrollTrigger) {
+                    tl.scrollTrigger.kill()
+                }
+                tl = null
+                window.removeEventListener('resize', () => {
+                    if (tl?.scrollTrigger) {
+                        tl.scrollTrigger.refresh()
+                    }
+                })
+            }
+        })
+    }
+})
 
 definePageMeta({
     scrollToTop: true,
