@@ -35,7 +35,7 @@
         </article>
 
         <aside v-if="collaborationData?.relatedCollaborations && collaborationData?.relatedCollaborations?.length > 0" class="pb-12">
-            <div class="px-4 py-12">
+            <div class="px-4 py-12 xl:pt-24">
                 <h2 class="text-a2-bold uppercase text-center">Explore More</h2>
             </div>
 
