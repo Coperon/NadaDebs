@@ -11,6 +11,7 @@
                 :showFeatured="true"
                 :isCollaboration="false" 
                 :route="'/studio/interiors'"
+                :categories="categories"
             />
         </div>
     </div>
@@ -20,9 +21,11 @@
 import { useSeoObject } from '@/composables/seo'
 import { getInteriorsPage } from '@/data/interiorsPage'
 import { getInteriors } from '@/data/interiors'
+import { getInteriorCategories } from '@/data/interiorCategories'
 
 const interiorsPageData = await getInteriorsPage()
 const interiorsData = await getInteriors()
+const categories = await getInteriorCategories()
 
 useSeoObject(interiorsPageData?.seo, interiorsPageData?.title)
 </script>

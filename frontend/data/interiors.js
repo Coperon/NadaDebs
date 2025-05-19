@@ -6,7 +6,11 @@ export const getInteriors = async () => {
       _id,
       title,
       slug,
-      category,
+      category->{
+        _id,
+        title,
+        slug
+      },
       location,
       year,
       featuredImage {
