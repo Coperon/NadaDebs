@@ -27,6 +27,11 @@
                         <span v-if="isCollaboration" class="font-light">Nada Debs x</span>
                         <span>{{ item.title }}</span>
                     </h2>
+
+                    <div v-if="!isCollaboration && item?.year" class="text-p2 mt-1.5">
+                        <span v-if="item?.location">{{ item.location }}, </span>
+                        <span v-if="item?.year">{{ item.year }}</span>
+                    </div>
                 </div>
             </NuxtLink>
         </div>
