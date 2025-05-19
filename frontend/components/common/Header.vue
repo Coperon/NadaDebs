@@ -26,14 +26,31 @@
                     <button @click="toggleMenuState" class="hidden md:flex absolute inset-0 cursor-pointer" aria-label="Toggle Menu"></button>
                 </div>
 
-                <!-- <div class="hidden xl:flex justify-center flex-grow">
-                    {{ route }}
-                    <ul v-if="route.name === 'studio'" class="flex gap-6">
-                        <li><NuxtLink to="/studio/collaborations" class="lowercase">Collaborations</NuxtLink></li>
-                        <li><NuxtLink to="/studio/interiors" class="lowercase">Interiors</NuxtLink></li>
-                        <li><NuxtLink to="/studio/bespoke" class="lowercase">Bespoke</NuxtLink></li>
+                <div class="hidden xl:flex justify-center flex-grow">
+                    <ul v-if="route.path.startsWith('/studio/')" class="flex gap-6">
+                        <li>
+                            <NuxtLink 
+                                to="/studio/collaborations" 
+                                class="lowercase hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/studio/collaborations' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Collaborations</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink 
+                                to="/studio/interiors" 
+                                class="lowercase hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/studio/interiors' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Interiors</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink 
+                                to="/studio/bespoke" 
+                                class="lowercase hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/studio/bespoke' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Bespoke</NuxtLink>
+                        </li>
                     </ul>
-                </div> -->
+                </div>
             </div>
         </div>
 

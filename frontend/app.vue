@@ -1,8 +1,8 @@
 <template>
     <Html class="text-base">
         <Body 
-            class="antialiased font-default bg-sand text-p1 font-light"
-            :class="route.name === 'studio' ? 'text-light-gray' : 'text-black'"
+            class="antialiased font-default text-p1 font-light"
+            :class="bodyClasses"
         >
             <NuxtLoadingIndicator
                 :throttle="200"
@@ -30,6 +30,32 @@ const shouldIndexFollow = isProduction && siteUrlIsValid
 const nuxtApp = useNuxtApp()
 const route = useRoute()
 const previousRouteStore = usePreviousRouteStore()
+
+const bodyClasses = computed(() => {
+    // Default classes
+    const classes = {
+        'text-black': true,
+        'bg-sand': true
+    }
+
+    // Override text color for specific pages
+    if (['studio', 'our-world'].includes(route.name)) {
+        classes['text-black'] = false
+        classes['text-light-gray'] = true
+    }
+
+    // Override background for specific paths
+    if (route.path.startsWith('/studio/')) {
+        classes['bg-sand'] = false
+        classes['bg-beige'] = true
+    } else if (route.path.startsWith('/our-world/')) {
+        classes['bg-sand'] = false
+        classes['bg-white'] = true
+    }
+
+    return classes
+})
+
 nuxtApp.hook('page:start', () => {
     previousRouteStore.name = route?.name
 })
