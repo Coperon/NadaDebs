@@ -4,7 +4,10 @@ import about from './singleton/about'
 import homepage from './singleton/homePage'
 import studio from './singleton/studio'
 import collaborations from './singleton/collaborations'
+import interiors from './singleton/interiors'
 import collaboration from './collaboration'
+import interior from './interior'
+import interiorCategory from './interior/category'
 import contact from './singleton/contact'
 import page from './page'
 import siteConfig from './siteConfig'
@@ -42,7 +45,10 @@ export const schemaTypes = [
   homepage,
   studio,
   collaborations,
+  interiors,
   collaboration,
+  interior,
+  interiorCategory,
   contact,
   page,
   category,

@@ -1,7 +1,7 @@
 import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 
 // icons: https://react-icons.github.io/react-icons/search/
-import { HiOutlineHome } from "react-icons/hi2";
+import {HomeIcon} from '@sanity/icons'
 import {RxAvatar} from 'react-icons/rx'
 import {IoDocumentsOutline} from 'react-icons/io5'
 import {TagsIcon} from '@sanity/icons'
@@ -10,27 +10,27 @@ import {GrNavigate} from 'react-icons/gr'
 import {CiGrid42} from 'react-icons/ci'
 import {BsMailbox} from 'react-icons/bs'
 import { FaShopify } from "react-icons/fa";
-import { HiOutlineFolder } from "react-icons/hi2";
-import { HiOutlineDocument } from "react-icons/hi2";
+import {DocumentIcon} from '@sanity/icons'
+import {FolderIcon} from '@sanity/icons'
 
 export const structure = (S, context) =>
   S.list()
     .title('Content')
     .items([
       S.divider(),
-      S.listItem().title('Homepage').id('homepage').icon(HiOutlineHome).child(
+      S.listItem().title('Homepage').id('homepage').icon(HomeIcon).child(
         // Instead of rendering a list of documents, we render a single
         // document, specifying the `documentId` manually to ensure
         // that we're editing the single instance of the document
         S.document().schemaType('homepage').documentId('homepage'),
       ),
       S.divider(),
-      S.listItem().title('Studio').id('studio').icon(HiOutlineDocument).child(
+      S.listItem().title('Studio').id('studio').icon(DocumentIcon).child(
         S.document().schemaType('studio').documentId('studio'),
       ),
       S.listItem()
         .title('Collaborations')
-        .icon(HiOutlineFolder)
+        .icon(FolderIcon)
         .child(
           S.list()
             .title('Collaborations')
@@ -38,19 +38,38 @@ export const structure = (S, context) =>
               S.listItem()
                 .title('Index Page')
                 .id('collaborationsIndex')
-                .icon(HiOutlineDocument)
+                .icon(DocumentIcon)
                 .child(S.document().schemaType('collaborations').documentId('collaborations')),
               S.listItem()
                 .title('Collaborations')
                 .id('collaborations')
-                .icon(HiOutlineFolder)
+                .icon(FolderIcon)
                 .child(S.documentTypeList('collaboration')),
             ])
         ),
-      // S.listItem().title('Collaborations - Index').id('collaborations').icon(HiOutlineDocument).child(
+      S.listItem()
+        .title('Interiors')
+        .icon(FolderIcon)
+        .child(
+          S.list()
+            .title('Interiors')
+            .items([
+              S.listItem()
+                .title('Index Page')
+                .id('interiorsIndex')
+                .icon(DocumentIcon)
+                .child(S.document().schemaType('interiors').documentId('interiors')),
+              S.listItem()
+                .title('Interiors')
+                .id('interiors')
+                .icon(FolderIcon)
+                .child(S.documentTypeList('interior')),
+            ])
+        ),
+      // S.listItem().title('Collaborations - Index').id('collaborations').icon(DocumentIcon).child(
       //   S.document().schemaType('collaborations').documentId('collaborations'),
       // ),
-      // S.listItem().title(`Collaborations - All`).icon(HiOutlineFolder).child(S.documentTypeList('collaboration')),
+      // S.listItem().title(`Collaborations - All`).icon(FolderIcon).child(S.documentTypeList('collaboration')),
       S.divider(),
       S.listItem()
         .title('About')
