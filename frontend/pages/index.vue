@@ -70,7 +70,7 @@
                 </li>
                 <li class="flex-1 flex justify-center text-white">
                     <div @mouseenter="showOurWorldMenu = true; hoveredMenu = 'ourWorld'" @mouseleave="showOurWorldMenu = false; hoveredMenu = null" class="relative">
-                        <NuxtLink to="" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'ourWorld' }">Our World</NuxtLink>
+                        <NuxtLink to="/our-world/about-nada-debs" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'ourWorld' }">Our World</NuxtLink>
                         <Transition name="fade">
                             <ul v-if="showOurWorldMenu" class="absolute top-full left-1/2 -translate-x-1/2 pt-2 flex flex-col items-center text-center text-a2">
                                 <li><NuxtLink @mouseenter="hoveredSubmenu = 'about'" @mouseleave="hoveredSubmenu = null" to="/our-world/about-nada-debs" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'about' }">About Nada Debs</NuxtLink></li>

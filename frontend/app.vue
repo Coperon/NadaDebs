@@ -39,7 +39,7 @@ const bodyClasses = computed(() => {
     }
 
     // Override text color for specific pages
-    if (['studio', 'our-world'].includes(route.name)) {
+    if (['studio'].includes(route.name)) {
         classes['text-black'] = false
         classes['text-light-gray'] = true
     }
@@ -48,9 +48,6 @@ const bodyClasses = computed(() => {
     if (route.path.startsWith('/studio/')) {
         classes['bg-sand'] = false
         classes['bg-beige'] = true
-    } else if (route.path.startsWith('/our-world/')) {
-        classes['bg-sand'] = false
-        classes['bg-white'] = true
     }
 
     return classes

@@ -11,7 +11,7 @@ import {CiGrid42} from 'react-icons/ci'
 import {BsMailbox} from 'react-icons/bs'
 import { FaShopify } from "react-icons/fa";
 import {DocumentIcon} from '@sanity/icons'
-import {FolderIcon} from '@sanity/icons'
+import {DocumentsIcon} from '@sanity/icons'
 
 export const structure = (S, context) =>
   S.list()
@@ -25,12 +25,16 @@ export const structure = (S, context) =>
         S.document().schemaType('homepage').documentId('homepage'),
       ),
       S.divider(),
+      S.listItem().title('About Nada Debs').id('about').icon(DocumentIcon).child(
+        S.document().schemaType('about').documentId('about'),
+      ),
+      S.divider(),
       S.listItem().title('Studio').id('studio').icon(DocumentIcon).child(
         S.document().schemaType('studio').documentId('studio'),
       ),
       S.listItem()
         .title('Collaborations')
-        .icon(FolderIcon)
+        .icon(DocumentsIcon)
         .child(
           S.list()
             .title('Collaborations')
@@ -43,13 +47,13 @@ export const structure = (S, context) =>
               S.listItem()
                 .title('Collaborations')
                 .id('collaborations')
-                .icon(FolderIcon)
+                .icon(DocumentsIcon)
                 .child(S.documentTypeList('collaboration')),
             ])
         ),
       S.listItem()
         .title('Interiors')
-        .icon(FolderIcon)
+        .icon(DocumentsIcon)
         .child(
           S.list()
             .title('Interiors')
@@ -62,7 +66,7 @@ export const structure = (S, context) =>
               S.listItem()
                 .title('Interiors')
                 .id('interiors')
-                .icon(FolderIcon)
+                .icon(DocumentsIcon)
                 .child(S.documentTypeList('interior')),
             ])
         ),
@@ -70,58 +74,61 @@ export const structure = (S, context) =>
         S.document().schemaType('bespoke').documentId('bespoke'),
       ),
       S.divider(),
-      S.listItem()
-        .title('About')
-        .id('about')
-        .icon(RxAvatar)
-        .child(S.document().schemaType('about').documentId('about')),
-      S.listItem()
-        .title('Contact')
-        .id('contact')
-        .icon(BsMailbox)
-        .child(S.document().schemaType('contact').documentId('contact')),
-      S.divider(),
-      S.listItem().title(`Other Pages`).child(S.documentTypeList('page')).icon(IoDocumentsOutline),
-      S.divider(),
-      S.listItem()
-        .title('Work Page')
-        .id('projectsArchive')
-        .icon(CiGrid42)
-        .child(S.document().schemaType('projectsArchive').documentId('projectsArchive')),
-      S.listItem().title(`Projects`).child(S.documentTypeList('project')),
-      /* TODO: default order should be first? */
-      // allow custom reordering tab for projects
-      orderableDocumentListDeskItem({
-        type: 'project',
-        title: 'Reorder',
-        createIntent: false,
-        S,
-        context,
-      }),
-      S.listItem().title('Categories').child(S.documentTypeList('category')).icon(TagsIcon),
-      S.divider(),
-      S.listItem()
-      .title('Shop Page')
-      .id('shopArchive')
-      .icon(FaShopify)
-      .child(S.document().schemaType('shopArchive').documentId('shopArchive')),
-      S.listItem().title(`Products`).child(S.documentTypeList('product')),
-      /* TODO: default order should be first? */
-      // allow custom reordering tab for projects
-      orderableDocumentListDeskItem({
-        type: 'product',
-        title: 'Reorder',
-        createIntent: false,
-        S,
-        context,
-      }),
-      S.divider(),
-      S.listItem().title('Nav menus').child(S.documentTypeList('navigation')).icon(GrNavigate),
-      S.divider(),
-      S.listItem()
-        .title('Site Global Settings')
-        .id('siteConfig')
-        .icon(IoSettingsOutline)
-        .child(S.document().schemaType('siteConfig').documentId('siteConfig')),
-        S.divider(),
+
+
+      
+      // S.listItem()
+      //   .title('About')
+      //   .id('about')
+      //   .icon(RxAvatar)
+      //   .child(S.document().schemaType('about').documentId('about')),
+      // S.listItem()
+      //   .title('Contact')
+      //   .id('contact')
+      //   .icon(BsMailbox)
+      //   .child(S.document().schemaType('contact').documentId('contact')),
+      // S.divider(),
+      // S.listItem().title(`Other Pages`).child(S.documentTypeList('page')).icon(IoDocumentsOutline),
+      // S.divider(),
+      // S.listItem()
+      //   .title('Work Page')
+      //   .id('projectsArchive')
+      //   .icon(CiGrid42)
+      //   .child(S.document().schemaType('projectsArchive').documentId('projectsArchive')),
+      // S.listItem().title(`Projects`).child(S.documentTypeList('project')),
+      // /* TODO: default order should be first? */
+      // // allow custom reordering tab for projects
+      // orderableDocumentListDeskItem({
+      //   type: 'project',
+      //   title: 'Reorder',
+      //   createIntent: false,
+      //   S,
+      //   context,
+      // }),
+      // S.listItem().title('Categories').child(S.documentTypeList('category')).icon(TagsIcon),
+      // S.divider(),
+      // S.listItem()
+      // .title('Shop Page')
+      // .id('shopArchive')
+      // .icon(FaShopify)
+      // .child(S.document().schemaType('shopArchive').documentId('shopArchive')),
+      // S.listItem().title(`Products`).child(S.documentTypeList('product')),
+      // /* TODO: default order should be first? */
+      // // allow custom reordering tab for projects
+      // orderableDocumentListDeskItem({
+      //   type: 'product',
+      //   title: 'Reorder',
+      //   createIntent: false,
+      //   S,
+      //   context,
+      // }),
+      // S.divider(),
+      // S.listItem().title('Nav menus').child(S.documentTypeList('navigation')).icon(GrNavigate),
+      // S.divider(),
+      // S.listItem()
+      //   .title('Site Global Settings')
+      //   .id('siteConfig')
+      //   .icon(IoSettingsOutline)
+      //   .child(S.document().schemaType('siteConfig').documentId('siteConfig')),
+      //   S.divider(),
     ])
