@@ -66,10 +66,9 @@ export const structure = (S, context) =>
                 .child(S.documentTypeList('interior')),
             ])
         ),
-      // S.listItem().title('Collaborations - Index').id('collaborations').icon(DocumentIcon).child(
-      //   S.document().schemaType('collaborations').documentId('collaborations'),
-      // ),
-      // S.listItem().title(`Collaborations - All`).icon(FolderIcon).child(S.documentTypeList('collaboration')),
+      S.listItem().title('Bespoke').id('bespoke').icon(DocumentIcon).child(
+        S.document().schemaType('bespoke').documentId('bespoke'),
+      ),
       S.divider(),
       S.listItem()
         .title('About')
