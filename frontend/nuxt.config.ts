@@ -89,6 +89,7 @@ export default defineNuxtConfig({
         // to add custom fonts to the app from Google Fonts
         // you need to npm i @nuxtjs/google-fonts   
         // '@nuxtjs/google-fonts',
+        '@nuxtjs/sanity',
     ],
     runtimeConfig: {
         public: {
