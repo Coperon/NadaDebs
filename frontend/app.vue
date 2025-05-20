@@ -30,6 +30,7 @@ const shouldIndexFollow = isProduction && siteUrlIsValid
 const nuxtApp = useNuxtApp()
 const route = useRoute()
 const previousRouteStore = usePreviousRouteStore()
+const menuState = useMenuStore()
 
 const bodyClasses = computed(() => {
     // Default classes
@@ -48,6 +49,10 @@ const bodyClasses = computed(() => {
     if (route.path.startsWith('/studio/')) {
         classes['bg-sand'] = false
         classes['bg-beige'] = true
+    }
+
+    if (menuState.isOpened) {
+        classes['overflow-hidden'] = true
     }
 
     return classes

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="quote text-h3-upper-light uppercase max-w-[48ch] text-balance mx-auto">
+        <div class="quote text-h3-upper-mobile sm:text-h3-upper uppercase max-w-[48ch] text-balance mx-auto">
             <SanityContent :blocks="text" />
         </div>
 

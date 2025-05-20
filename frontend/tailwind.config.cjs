@@ -33,30 +33,31 @@ module.exports = {
                     letterSpacing: '0.05em',
                     fontWeight: '700',
                 }],
+                'h1-mobile': ['1.125rem', {
+                    lineHeight: '1',
+                    letterSpacing: '0.05em',
+                    fontWeight: '700',
+                }],
                 'h2': ['0.875rem', {
                     lineHeight: '1',
                     letterSpacing: '0.02em',
                     fontWeight: '700',
                 }],
-                'h3-upper-bold': ['1.375rem', {
+                'h3-upper': ['1.375rem', {
                     lineHeight: '1.09090909',
                     letterSpacing: '0.04em',
-                    fontWeight: '700',
                 }],
-                'h3-upper-light': ['1.375rem', {
+                'h3-upper-mobile': ['1.125rem', {
                     lineHeight: '1.09090909',
                     letterSpacing: '0.04em',
-                    fontWeight: '300',
                 }],
-                'h3-lower-bold': ['1.375rem', {
+                'h3-lower': ['1.375rem', {
                     lineHeight: '1.09090909',
                     letterSpacing: '0.01em',
-                    fontWeight: '700',
                 }],
-                'h3-lower-light': ['1.375rem', {
+                'h3-lower-mobile': ['1.125rem', {
                     lineHeight: '1.09090909',
                     letterSpacing: '0.01em',
-                    fontWeight: '300',
                 }],
                 'a1-bold': ['1rem', {
                     lineHeight: '1.375',

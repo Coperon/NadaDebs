@@ -57,7 +57,7 @@
         
         <div class="absolute inset-0 text-black transition-opacity duration-300" :class="{ 'opacity-0 pointer-events-none': !menuState.isOpened }">
             <div class="absolute inset-0" @click="toggleMenuState"></div>
-            <div class="bg-white absolute inset-y-0 left-0 w-full max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
+            <div class="bg-white absolute inset-y-0 left-0 w-full sm:max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
                 <div class="px-4 sm:hidden">
                     <div class="shrink-0 border-t border-b border-current py-1.5 flex items-center text-a2 font-medium lowercase">
                         <div class="flex-1 pr-2-5 py-1">Search</div>
@@ -79,9 +79,9 @@
                             <Transition name="fade">
                                 <div v-if="isShopMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
-                                        <li><NuxtLink to="" class="lowercase">Objects</NuxtLink></li>
-                                        <li><NuxtLink to="" class="lowercase">Furniture</NuxtLink></li>
-                                        <li><NuxtLink to="" class="lowercase">Collections</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Objects</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Furniture</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Collections</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -98,9 +98,9 @@
                             <Transition name="fade">
                                 <div v-if="isStudioMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
-                                        <li><NuxtLink to="/studio/collaborations" class="lowercase">Collaborations</NuxtLink></li>
-                                        <li><NuxtLink to="/studio/interiors" class="lowercase">Interiors</NuxtLink></li>
-                                        <li><NuxtLink to="/studio/bespoke" class="lowercase">Bespoke</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/studio/collaborations" class="lowercase">Collaborations</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/studio/interiors" class="lowercase">Interiors</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/studio/bespoke" class="lowercase">Bespoke</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -117,8 +117,8 @@
                             <Transition name="fade">
                                 <div v-if="isOurWorldMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
-                                        <li><NuxtLink to="/our-world/about-nada-debs" class="lowercase">About Nada Debs</NuxtLink></li>
-                                        <li><NuxtLink to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/our-world/about-nada-debs" class="lowercase">About Nada Debs</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -138,9 +138,9 @@
                             <Transition name="fade">
                                 <div v-if="isNewsMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="" class="lowercase">Latest</NuxtLink></li>
-                                        <li><NuxtLink to="" class="lowercase">Press</NuxtLink></li>
-                                        <li><NuxtLink to="" class="lowercase">Awards</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Latest</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Press</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Awards</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -157,8 +157,8 @@
                             <Transition name="fade">
                                 <div v-if="isConnectMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="" class="lowercase">Find us</NuxtLink></li>
-                                        <li><NuxtLink to="" class="lowercase">Contact us</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Find us</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Contact us</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -175,7 +175,7 @@
                             <Transition name="fade">
                                 <div v-if="isTradeMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="" class="lowercase">Make a request</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Make a request</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -192,7 +192,7 @@
                             <Transition name="fade">
                                 <div v-if="isWorkWithUsMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="" class="lowercase">Open positions</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Open positions</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -209,9 +209,9 @@
                             <Transition name="fade">
                                 <div v-if="isInfoMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="" class="lowercase">Shipping & Returns</NuxtLink></li>
-                                        <li><NuxtLink to="" class="lowercase">Terms & Conditions</NuxtLink></li>
-                                        <li><NuxtLink to="" class="lowercase">Privacy Policy</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Shipping & Returns</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Terms & Conditions</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Privacy Policy</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
