@@ -118,7 +118,7 @@
                                 <div v-if="isOurWorldMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
                                         <li><NuxtLink to="/our-world/about-nada-debs" class="lowercase">About Nada Debs</NuxtLink></li>
-                                        <li><NuxtLink to="/our-world/contemporary-crafts" class="lowercase">Contemporary Crafts</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -138,9 +138,9 @@
                             <Transition name="fade">
                                 <div v-if="isNewsMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="/news/latest" class="lowercase">Latest</NuxtLink></li>
-                                        <li><NuxtLink to="/news/press" class="lowercase">Press</NuxtLink></li>
-                                        <li><NuxtLink to="/news/awards" class="lowercase">Awards</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Latest</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Press</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Awards</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -157,8 +157,8 @@
                             <Transition name="fade">
                                 <div v-if="isConnectMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="/connect/find-us" class="lowercase">Find us</NuxtLink></li>
-                                        <li><NuxtLink to="/connect/contact-us" class="lowercase">Contact us</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Find us</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Contact us</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -175,7 +175,7 @@
                             <Transition name="fade">
                                 <div v-if="isTradeMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="/trade/make-a-request" class="lowercase">Make a request</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Make a request</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -192,7 +192,7 @@
                             <Transition name="fade">
                                 <div v-if="isWorkWithUsMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="/work-with-us/open-positions" class="lowercase">Open positions</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Open positions</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -209,9 +209,9 @@
                             <Transition name="fade">
                                 <div v-if="isInfoMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink to="/info/shipping-returns" class="lowercase">Shipping & Returns</NuxtLink></li>
-                                        <li><NuxtLink to="/info/terms-conditions" class="lowercase">Terms & Conditions</NuxtLink></li>
-                                        <li><NuxtLink to="/info/privacy-policy" class="lowercase">Privacy Policy</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Shipping & Returns</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Terms & Conditions</NuxtLink></li>
+                                        <li><NuxtLink to="" class="lowercase">Privacy Policy</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
