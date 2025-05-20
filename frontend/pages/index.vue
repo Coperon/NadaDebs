@@ -35,8 +35,8 @@
                     <button @click="toggleMenu('ourWorld')" class="text-a1-bold uppercase">Our World</button>
                     <div class="submenu overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'ourWorld' ? menuHeights.ourWorld + 'px' : '0px' }">
                         <ul class="pt-2 flex flex-col items-center gap-2">
-                            <li><NuxtLink to="" class="lowercase">About Nada Debs</NuxtLink></li>
-                            <li><NuxtLink to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
+                            <li><NuxtLink to="/our-world/about-nada-debs" class="lowercase">About Nada Debs</NuxtLink></li>
+                            <li><NuxtLink to="/our-world/contemporary-crafts" class="lowercase">Contemporary Crafts</NuxtLink></li>
                         </ul>
                     </div>
                 </li>
@@ -44,9 +44,9 @@
                     <button @click="toggleMenu('studio')" class="text-a1-bold uppercase">Studio</button>
                     <div class="submenu overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'studio' ? menuHeights.studio + 'px' : '0px' }">
                         <ul class="pt-2 flex flex-col items-center gap-2">
-                            <li><NuxtLink to="" class="lowercase">Collaborations</NuxtLink></li>
-                            <li><NuxtLink to="" class="lowercase">Interiors</NuxtLink></li>
-                            <li><NuxtLink to="" class="lowercase">Bespoke</NuxtLink></li>
+                            <li><NuxtLink to="/studio/collaborations" class="lowercase">Collaborations</NuxtLink></li>
+                            <li><NuxtLink to="/studio/interiors" class="lowercase">Interiors</NuxtLink></li>
+                            <li><NuxtLink to="/studio/bespoke" class="lowercase">Bespoke</NuxtLink></li>
                         </ul>
                     </div>
                 </li>
@@ -73,8 +73,8 @@
                         <NuxtLink to="" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'ourWorld' }">Our World</NuxtLink>
                         <Transition name="fade">
                             <ul v-if="showOurWorldMenu" class="absolute top-full left-1/2 -translate-x-1/2 pt-2 flex flex-col items-center text-center text-a2">
-                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'about'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'about' }">About Nada Debs</NuxtLink></li>
-                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'crafts'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'crafts' }">Contemporary Crafts</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'about'" @mouseleave="hoveredSubmenu = null" to="/our-world/about-nada-debs" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'about' }">About Nada Debs</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'crafts'" @mouseleave="hoveredSubmenu = null" to="/our-world/contemporary-crafts" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'crafts' }">Contemporary Crafts</NuxtLink></li>
                             </ul>
                         </Transition>
                     </div>
@@ -84,9 +84,9 @@
                         <NuxtLink to="/studio" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'studio' }">Studio</NuxtLink>
                         <Transition name="fade">
                             <ul v-if="activeMenu === 'studio'" class="absolute top-full right-0 pt-2 flex flex-col items-end text-right text-a2">
-                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'collaborations'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'collaborations' }">Collaborations</NuxtLink></li>
-                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'interiors'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'interiors' }">Interiors</NuxtLink></li>
-                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'bespoke'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'bespoke' }">Bespoke</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'collaborations'" @mouseleave="hoveredSubmenu = null" to="/studio/collaborations" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'collaborations' }">Collaborations</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'interiors'" @mouseleave="hoveredSubmenu = null" to="/studio/interiors" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'interiors' }">Interiors</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'bespoke'" @mouseleave="hoveredSubmenu = null" to="/studio/bespoke" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'bespoke' }">Bespoke</NuxtLink></li>
                             </ul>
                         </Transition>
                     </div>
