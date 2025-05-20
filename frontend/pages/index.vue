@@ -23,7 +23,7 @@
             <ul class="flex flex-col items-center text-center gap-2.5">
                 <li class="flex flex-col">
                     <button @click="toggleMenu('shop')" class="text-a1-bold uppercase">Shop</button>
-                    <div class="overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'shop' ? menuHeights.shop + 'px' : '0px' }">
+                    <div class="submenu overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'shop' ? menuHeights.shop + 'px' : '0px' }">
                         <ul class="pt-2 flex flex-col items-center gap-2">
                             <li><NuxtLink to="" class="lowercase">Objects</NuxtLink></li>
                             <li><NuxtLink to="" class="lowercase">Furniture</NuxtLink></li>
@@ -33,7 +33,7 @@
                 </li>
                 <li class="flex flex-col">
                     <button @click="toggleMenu('ourWorld')" class="text-a1-bold uppercase">Our World</button>
-                    <div class="overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'ourWorld' ? menuHeights.ourWorld + 'px' : '0px' }">
+                    <div class="submenu overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'ourWorld' ? menuHeights.ourWorld + 'px' : '0px' }">
                         <ul class="pt-2 flex flex-col items-center gap-2">
                             <li><NuxtLink to="" class="lowercase">About Nada Debs</NuxtLink></li>
                             <li><NuxtLink to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
@@ -42,7 +42,7 @@
                 </li>
                 <li class="flex flex-col">
                     <button @click="toggleMenu('studio')" class="text-a1-bold uppercase">Studio</button>
-                    <div class="overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'studio' ? menuHeights.studio + 'px' : '0px' }">
+                    <div class="submenu overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'studio' ? menuHeights.studio + 'px' : '0px' }">
                         <ul class="pt-2 flex flex-col items-center gap-2">
                             <li><NuxtLink to="" class="lowercase">Collaborations</NuxtLink></li>
                             <li><NuxtLink to="" class="lowercase">Interiors</NuxtLink></li>
@@ -116,7 +116,7 @@ const hoveredMenu = ref(null)
 const hoveredSubmenu = ref(null)
 
 const calculateMenuHeights = () => {
-    const menus = document.querySelectorAll('#mobile-menu ul li div')
+    const menus = document.querySelectorAll('.submenu')
     menuHeights.value = {
         shop: menus[0].scrollHeight,
         ourWorld: menus[1].scrollHeight,
