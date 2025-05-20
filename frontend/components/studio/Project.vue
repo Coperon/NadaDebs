@@ -37,6 +37,10 @@
                     class="w-full h-auto xl:w-auto xl:h-full xl:shrink-0"
                 />
             </div>
+
+            <div class="absolute -left-10 bottom-10 text-primary-button">
+                <IconsDots class="w-20 h-auto" />
+            </div>
         </div>
     </article>
 </template>
