@@ -1,7 +1,7 @@
 <template>
-    <section class="py-20 sm:py-24 lg:py-30">
+    <section>
         <AboutText :title="aboutNada?.title" :text="aboutNada?.text" />
-        <AboutHandmadeHeartmade :content="handmadeHeartmade" />
+        <AboutHandmadeHeartmade v-if="handmadeHeartmade" :content="handmadeHeartmade" />
     </section>
 </template>
 
@@ -9,7 +9,7 @@
 const props = defineProps({
     aboutNada: {
         type: Object,
-        required: false
+        required: true
     },
     handmadeHeartmade: {
         type: Object,

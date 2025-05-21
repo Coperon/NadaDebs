@@ -29,6 +29,17 @@ export const getAboutData = async () => {
             title,
             text
         },
+        services {
+            title,
+            text,
+            services[] {
+                title,
+                continuationText,
+                image {
+                    ${imageQuery}
+                }
+            }
+        },
         seo {
             ${seoQuery}
         },

@@ -157,6 +157,59 @@ export default {
             ]
         },
         {
+            name: 'services',
+            title: 'Studio Services',
+            type: 'object',
+            group: 'page',
+            fields: [
+                {
+                    title: 'Title',
+                    name: 'title',
+                    type: 'string',
+                },
+                {
+                    title: 'Text',
+                    name: 'text',
+                    type: 'array',
+                    of: [{ 
+                        type: 'block',
+                        lists: [],
+                        styles: [],
+                        marks: {
+                            decorators: [],
+                            annotations: [],
+                        }
+                    }],
+                    validation: (Rule) => Rule.required(),
+                },
+                {
+                    title: 'Services',
+                    name: 'services',
+                    type: 'array',
+                    of: [{ type: 'object', fields: [
+                        {
+                            title: 'Title',
+                            name: 'title',
+                            type: 'string',
+                            validation: (Rule) => Rule.required(),
+                        },
+                        {
+                            title: 'Continuation Text',
+                            name: 'continuationText',
+                            type: 'string'
+                        },
+                        {
+                            title: 'Image',
+                            name: 'image',
+                            type: 'image',
+                            validation: (Rule) => Rule.required(),
+                        },
+                    ] }],
+                    validation: (Rule) => Rule.required(),
+                }
+            ]
+        },
+        {
             name: 'seo',
             title: 'SEO',
             type: 'seo',

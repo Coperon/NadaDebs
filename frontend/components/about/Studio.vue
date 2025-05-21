@@ -1,5 +1,5 @@
 <template>
-    <section class="py-20 sm:py-24 lg:py-30">
+    <section>
         <AboutText :title="aboutStudio?.title" :text="aboutStudio?.text" />
     </section>
 </template>

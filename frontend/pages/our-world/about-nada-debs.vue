@@ -3,13 +3,19 @@
         <AboutHero 
             :hero="aboutData?.hero" 
         />
-        <AboutNada
-            :aboutNada="aboutData?.aboutNadaDebs"
-            :handmadeHeartmade="aboutData?.handmadeHeartmade"
-        />
-        <AboutStudio
-            :aboutStudio="aboutData?.aboutStudio"
-        />
+
+        <div class="py-20 sm:py-24 lg:py-30 flex flex-col gap-20 sm:gap-24 lg:gap-30">
+            <AboutNada
+                :aboutNada="aboutData?.aboutNadaDebs"
+                :handmadeHeartmade="aboutData?.handmadeHeartmade"
+            />
+            <AboutStudio
+                :aboutStudio="aboutData?.aboutStudio"
+            />
+            <AboutServices
+                :services="aboutData?.services"
+            />
+        </div>
     </div>
 </template>
 

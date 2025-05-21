@@ -18,14 +18,14 @@ export const structure = (S, context) =>
     .title('Content')
     .items([
       S.divider(),
-      S.listItem().title('Homepage').id('homepage').icon(HomeIcon).child(
+      S.listItem().title('Home').id('homepage').icon(HomeIcon).child(
         // Instead of rendering a list of documents, we render a single
         // document, specifying the `documentId` manually to ensure
         // that we're editing the single instance of the document
         S.document().schemaType('homepage').documentId('homepage'),
       ),
       S.divider(),
-      S.listItem().title('About Nada Debs').id('about').icon(DocumentIcon).child(
+      S.listItem().title('About').id('about').icon(DocumentIcon).child(
         S.document().schemaType('about').documentId('about'),
       ),
       S.divider(),
