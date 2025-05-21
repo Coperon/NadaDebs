@@ -1,5 +1,5 @@
 <template>
-    <div class="h-svh text-white">
+    <div class="h-svh text-white relative">
         <div class="absolute inset-0">
             <CommonMediaImage
                 :image="hero?.image"

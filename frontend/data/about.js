@@ -16,6 +16,15 @@ export const getAboutData = async () => {
             video,
             playButtonText
         },
+        aboutNadaDebs {
+            title,
+            text
+        },
+        handmadeHeartmade {
+            title,
+            handmade,
+            heartmade
+        },
         seo {
             ${seoQuery}
         },

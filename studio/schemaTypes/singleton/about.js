@@ -76,6 +76,59 @@ export default {
             ]
         },
         {
+            name: 'aboutNadaDebs',
+            title: 'About Nada Debs',
+            type: 'object',
+            group: 'page',
+            fields: [
+                {
+                    title: 'Title',
+                    name: 'title',
+                    type: 'string',
+                },
+                {
+                    title: 'Text',
+                    name: 'text',
+                    type: 'array',
+                    of: [{ 
+                        type: 'block',
+                        lists: [],
+                        styles: [],
+                        marks: {
+                            decorators: [],
+                            annotations: [],
+                        }
+                    }],
+                    validation: (Rule) => Rule.required(),
+                }
+            ]
+        },
+        {
+            name: 'handmadeHeartmade',
+            title: 'Handmade / Heartmade',
+            type: 'object',
+            group: 'page',
+            fields: [
+                {
+                    title: 'Title',
+                    name: 'title',
+                    type: 'string',
+                },
+                {
+                    title: 'Handmade',
+                    name: 'handmade',
+                    type: 'text',
+                    validation: (Rule) => Rule.required(),
+                },
+                {
+                    title: 'Heartmade',
+                    name: 'heartmade',
+                    type: 'text',
+                    validation: (Rule) => Rule.required(),
+                }
+            ]
+        },
+        {
             name: 'seo',
             title: 'SEO',
             type: 'seo',

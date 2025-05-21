@@ -1,5 +1,11 @@
 <template>
-    <AboutHero :hero="aboutData?.hero" />
+    <div>
+        <AboutHero :hero="aboutData?.hero" />
+        <AboutNada
+            :aboutNada="aboutData?.aboutNadaDebs"
+            :handmadeHeartmade="aboutData?.handmadeHeartmade"
+        />
+    </div>
 </template>
 
 <script setup>
