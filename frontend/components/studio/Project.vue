@@ -38,7 +38,7 @@
                 />
             </div>
 
-            <div class="absolute -left-10 bottom-10 text-primary-button">
+            <div class="hidden xl:block absolute -left-10 bottom-10 text-primary-button">
                 <IconsDots class="w-20 h-auto" />
             </div>
         </div>

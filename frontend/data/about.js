@@ -13,7 +13,8 @@ export const getAboutData = async () => {
             image {
                 ${imageQuery}
             },
-            video
+            video,
+            playButtonText
         },
         seo {
             ${seoQuery}

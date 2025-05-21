@@ -17,7 +17,7 @@
             <div class="flex-1 flex items-center justify-end md:justify-start md:gap-12">
                 <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative" :class="{ 'text-black sm:text-inherit md:text-black': menuState.isOpened }">
                     <div class="md:hidden"><ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount /></div>
-                    <div class="hidden md:block text-a2 font-medium">{{ parentRouteSlug }}</div>
+                    <div class="hidden md:block text-a2 font-medium lowercase">{{ parentRouteSlug }}</div>
                     <IconsDots class="w-2 h-auto" />
                     <button @click="toggleMenuState" class="lowercase text-a2 font-medium relative" aria-label="Toggle Menu">
                         <span :class="menuState.isOpened ? 'opacity-0' : 'opacity-100'">Menu</span>
@@ -231,9 +231,14 @@ const cartStore = useCartStore()
 const route = useRoute()
 
 const parentRouteSlug = computed(() => {
-    // Split the path and get the first non-empty segment
-    const segments = route.path.split('/').filter(Boolean)
-    return segments[0] || ''
+    if (route.path.startsWith('/studio/')) {
+        return 'Studio'
+    }
+    else if (route.path.startsWith('/our-world/')) {
+        return 'Our World'
+    }
+
+    return 'Nada Debs'
 })
 
 const isShopMenuOpen = ref(false)

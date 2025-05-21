@@ -1,5 +1,5 @@
 <template>
-    <div class="text-light-gray lg:text-black">
+    <div class="text-white lg:text-black">
         <header class="fixed inset-x-0 top-0 z-10 flex justify-center items-center py-5 lg:py-6">
             <h1><CommonHeaderBrandLogo /></h1>
         </header>

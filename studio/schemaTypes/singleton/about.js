@@ -67,6 +67,12 @@ export default {
                     type: 'url',
                     description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
                 },
+                {
+                    title: 'Play Button Text',
+                    name: 'playButtonText',
+                    type: 'string',
+                    validation: (Rule) => Rule.required(),
+                }
             ]
         },
         {

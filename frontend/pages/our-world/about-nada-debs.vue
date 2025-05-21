@@ -1,7 +1,5 @@
 <template>
-    <div>
-        {{ aboutData?.title }}
-    </div>
+    <AboutHero :hero="aboutData?.hero" />
 </template>
 
 <script setup>
