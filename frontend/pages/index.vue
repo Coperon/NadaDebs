@@ -117,10 +117,12 @@ const hoveredSubmenu = ref(null)
 
 const calculateMenuHeights = () => {
     const menus = document.querySelectorAll('.submenu')
+    if (menus.length === 0) return
+    
     menuHeights.value = {
-        shop: menus[0].scrollHeight,
-        ourWorld: menus[1].scrollHeight,
-        studio: menus[2].scrollHeight
+        shop: menus[0]?.scrollHeight || 0,
+        ourWorld: menus[1]?.scrollHeight || 0,
+        studio: menus[2]?.scrollHeight || 0
     }
 }
 
