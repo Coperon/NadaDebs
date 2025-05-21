@@ -25,6 +25,10 @@ export const getAboutData = async () => {
             handmade,
             heartmade
         },
+        aboutStudio {
+            title,
+            text
+        },
         seo {
             ${seoQuery}
         },

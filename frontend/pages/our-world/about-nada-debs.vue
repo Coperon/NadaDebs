@@ -1,9 +1,14 @@
 <template>
     <div>
-        <AboutHero :hero="aboutData?.hero" />
+        <AboutHero 
+            :hero="aboutData?.hero" 
+        />
         <AboutNada
             :aboutNada="aboutData?.aboutNadaDebs"
             :handmadeHeartmade="aboutData?.handmadeHeartmade"
+        />
+        <AboutStudio
+            :aboutStudio="aboutData?.aboutStudio"
         />
     </div>
 </template>

@@ -129,6 +129,34 @@ export default {
             ]
         },
         {
+            name: 'aboutStudio',
+            title: 'About Studio Nada Debs',
+            type: 'object',
+            group: 'page',
+            fields: [
+                {
+                    title: 'Title',
+                    name: 'title',
+                    type: 'string',
+                },
+                {
+                    title: 'Text',
+                    name: 'text',
+                    type: 'array',
+                    of: [{ 
+                        type: 'block',
+                        lists: [],
+                        styles: [],
+                        marks: {
+                            decorators: [],
+                            annotations: [],
+                        }
+                    }],
+                    validation: (Rule) => Rule.required(),
+                }
+            ]
+        },
+        {
             name: 'seo',
             title: 'SEO',
             type: 'seo',
