@@ -14,7 +14,7 @@
                 <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
             </div>
 
-            <NuxtLink to="/" :class="{ 'text-black lg:text-inherit': menuState.isOpened }"><CommonHeaderBrandLogo /></NuxtLink>
+            <NuxtLink @click="menuState.isOpened = false" to="/" :class="{ 'text-black lg:text-inherit': menuState.isOpened }"><CommonHeaderBrandLogo /></NuxtLink>
 
             <div class="flex-1 flex items-center justify-end md:justify-start md:gap-12">
                 <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative" :class="{ 'text-black sm:text-inherit md:text-black': menuState.isOpened }">
@@ -258,8 +258,9 @@ const isInfoMenuOpen = ref(false)
 const updateTopNavColor = () => {
     if (route.name === 'our-world-about-nada-debs') {
         const windowHeight = window.innerHeight
+        const topNavHeight = topNav.value.offsetHeight
         const scrollY = window.scrollY
-        isTopNavWhite.value = scrollY >= 0 && scrollY <= windowHeight
+        isTopNavWhite.value = scrollY >= 0 && scrollY <= windowHeight - (topNavHeight / 2)
     } else {
         isTopNavWhite.value = false
     }
