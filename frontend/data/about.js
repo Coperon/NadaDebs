@@ -27,7 +27,10 @@ export const getAboutData = async () => {
         },
         aboutStudio {
             title,
-            text
+            text,
+            images[] {
+                ${imageQuery}
+            }
         },
         services {
             title,

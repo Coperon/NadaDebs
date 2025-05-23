@@ -153,7 +153,17 @@ export default {
                         }
                     }],
                     validation: (Rule) => Rule.required(),
-                }
+                },
+                {
+                    name: 'images',
+                    title: 'Images',
+                    type: 'array',
+                    of: [{ type: 'image' }],
+                    options: {
+                        layout: 'grid',
+                    },
+                    validation: (Rule) => Rule.max(10),
+                },
             ]
         },
         {

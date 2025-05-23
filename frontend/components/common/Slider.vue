@@ -1,31 +1,26 @@
 <template>
     <div
         ref="swiperContainer"
-        class="swiper flex flex-col flex-1 relative w-full h-full"
+        class="swiper"
     >
         <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="image in images">
+            <div 
+                v-for="image in images"
+                class="swiper-slide aspect-square sm:aspect-[4/3] md:aspect-[3/2] xl:aspect-[2/1] cursor-pointer"
+            >
                 <CommonMediaImage
-                    class="w-full h-full block object-contain object-center"
+                    class="w-full h-full object-cover"
                     :image="image"
-                    width="1800"
-                    mobileWidth="800"
+                    width="1536"
+                    mobileWidth="768"
                 />
             </div>
         </div>
-        <div class="swiper-pagination absolute bottom-0 right-0 p-2"></div>
-        <div
-            class="swiper-button-prev swiper-prev absolute top-0 left-0 w-1/2 h-full z-10"
-        ></div>
-        <div
-            class="swiper-button-next swiper-next absolute top-0 right-0 w-1/2 h-full z-10"
-        ></div>
     </div>
 </template>
 
 <script setup>
 import Swiper from 'swiper'
-import { Navigation, Pagination } from 'swiper/modules'
 import 'swiper/css'
 
 const swiperContainer = ref(null)
@@ -34,9 +29,6 @@ const props = defineProps({
     images: {
         type: Array,
         required: true,
-    },
-    currentSlide: {
-        type: Number,
     },
 })
 let swiper = null
@@ -54,41 +46,27 @@ onBeforeUnmount(() => {
 
 const initSwiper = () => {
     swiper = new Swiper(swiperContainer.value, {
-        modules: [Navigation, Pagination],
-        slidesPerView: 1,
-        spaceBetween: 30,
+        slidesPerView: 1.1,
+        centeredSlides: false,
+        spaceBetween: 16,
         loop: false,
-        navigation: {
-            nextEl: '.swiper-next',
-            prevEl: '.swiper-prev',
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            type: 'fraction',
+        slideToClickedSlide: true,
+        breakpoints: {
+            640: {
+                centeredSlides: true,
+                slidesPerView: 1.2,
+            },
+            1280: {
+                centeredSlides: true,
+                slidesPerView: 1.3,
+            }
         },
     })
-    changeSlide(props.currentSlide, 0)
 }
-
-const changeSlide = (index, duration=600) => {
-    swiper.slideTo(index, duration)
-}
-
-// exposes methods to be used in parent component
-defineExpose({
-    changeSlide,
-})
 </script>
 
 <style scoped>
-.swiper-button {
-    @apply mix-blend-difference;
-}
-
-.swiper-next:not(.swiper-button-disabled) {
-    cursor: url('/icons/arrow-right.svg'), pointer;
-}
-.swiper-prev:not(.swiper-button-disabled) {
-    cursor: url('/icons/arrow-left.svg'), pointer;
+.swiper-slide-active {
+    cursor: default;
 }
 </style>
