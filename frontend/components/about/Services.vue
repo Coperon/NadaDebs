@@ -27,7 +27,7 @@
         <div 
             v-if="services?.services && services?.services?.length > 0" 
             ref="servicesContainer"
-            class="hidden sm:flex mt-12 h-svh isolate"
+            class="hidden sm:flex mt-20 sm:mt-24 lg:mt-30 h-svh isolate"
         >
             <div class="w-1/2 p-4 sm:p-6 lg:p-8 xl:p-12">
                 <ul class="flex flex-col items-center text-center justify-center gap-8 h-full">
