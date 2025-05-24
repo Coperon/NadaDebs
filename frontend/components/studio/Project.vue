@@ -26,7 +26,7 @@
         <div 
             ref="imagesContainer"
             v-if="images && images?.length > 0" 
-            class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-2.5 xl:shrink-0 xl:relative xl:bg-sand"
+            class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-2.5 xl:shrink-0 xl:relative xl:bg-beige"
         >
             <div v-for="image in images" :key="image._key">
                 <CommonMediaImage

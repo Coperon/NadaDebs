@@ -35,8 +35,8 @@
 
                     <div class="w-3/5">
                         <h2 class="text-h2">{{ craft.title }}</h2>
-                        <div v-if="craft.description" class="text-p2 mt-2 line-clamp-5">
-                            {{ craft.description }}
+                        <div v-if="craft.briefDescription" class="text-p2 mt-2 line-clamp-5">
+                            {{ craft.briefDescription }}
                         </div>
                     </div>
                 </NuxtLink>
