@@ -1,12 +1,10 @@
 import { RiProfileLine } from 'react-icons/ri'
 import { IoMdAnalytics } from 'react-icons/io'
-import { HiOutlineDocument } from "react-icons/hi2";
 
 export default {
     name: 'interior',
     title: 'Interior Project',
     type: 'document',
-    icon: HiOutlineDocument,
     groups: [
         {
             name: 'content',

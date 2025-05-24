@@ -9,6 +9,8 @@ import interior from './interior'
 import interiorCategory from './interior/category'
 import bespoke from './singleton/bespoke'
 import about from './singleton/about'
+import crafts from './singleton/crafts'
+import craft from './craft'
 import contact from './singleton/contact'
 import page from './page'
 import siteConfig from './siteConfig'
@@ -51,6 +53,8 @@ export const schemaTypes = [
   interiorCategory,
   bespoke,
   about,
+  crafts,
+  craft,
   contact,
   page,
   category,

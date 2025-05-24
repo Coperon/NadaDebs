@@ -2,8 +2,8 @@ import { RiProfileLine } from 'react-icons/ri'
 import { IoMdAnalytics } from 'react-icons/io'
 
 export default {
-    name: 'collaboration',
-    title: 'Collaboration',
+    name: 'craft',
+    title: 'Craft',
     type: 'document',
     groups: [
         {
@@ -21,7 +21,7 @@ export default {
     fields: [
         {
             name: 'title',
-            title: 'Collaborator',
+            title: 'Title',
             type: 'string',
             validation: (Rule) => Rule.required(),
             group: 'content',
@@ -45,48 +45,25 @@ export default {
             group: 'content',
         },
         {
-            name: 'year',
-            title: 'Year',
-            type: 'number',
+            name: 'thumbnail',
+            title: 'Thumbnail',
+            type: 'object',
+            group: 'content',
             validation: (Rule) => Rule.required(),
-            group: 'content',
-        },
-        {
-            name: 'images',
-            title: 'Images',
-            type: 'array',
-            of: [{ type: 'image' }],
-            options: {
-                layout: 'grid',
-            },
-            group: 'content',
-        },
-        {
-            name: 'featuredImage',
-            title: 'Featured Image',
-            type: 'image',
-            validation: (Rule) => Rule.required(),
-            group: 'content'
-        },
-        {
-            name: 'relatedCollaborations',
-            title: 'Related Collaborations',
-            type: 'array',
-            of: [{ 
-                type: 'reference', 
-                to: [{ type: 'collaboration' }],
-                options: {
-                    disableNew: true,
-                }
-            }],
-            group: 'content',
-        },
-        {
-            name: 'isFeatured',
-            title: 'Is Featured',
-            description: 'If true, the project will be displayed larger on the collaborations page',
-            type: 'boolean',
-            group: 'content',
+            fields: [
+                {
+                    title: 'Image',
+                    name: 'image',
+                    type: 'image',
+                    validation: (Rule) => Rule.required(),
+                },
+                {
+                    title: 'Video URL',
+                    name: 'video',
+                    type: 'url',
+                    description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
+                },
+            ]
         },
         {
             title: 'SEO',
@@ -95,4 +72,13 @@ export default {
             group: 'seo',
         },
     ],
+    preview: {
+        select: {
+            title: 'title',
+            media: 'thumbnail.image',
+        },
+        prepare({ title, media }) {
+            return { title, media }
+        }
+    }
 }

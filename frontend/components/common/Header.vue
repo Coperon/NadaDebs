@@ -28,28 +28,44 @@
                     <button @click="toggleMenuState" class="hidden md:flex absolute inset-0 cursor-pointer" aria-label="Toggle Menu"></button>
                 </div>
 
-                <div class="hidden xl:flex justify-center flex-grow">
+                <div class="hidden xl:flex justify-center flex-grow text-a2 lowercase">
                     <ul v-if="route.path.startsWith('/studio/')" class="flex gap-6">
                         <li>
                             <NuxtLink 
                                 to="/studio/collaborations" 
-                                class="lowercase hover:opacity-100 transition-opacity duration-300"
+                                class="hover:opacity-100 transition-opacity duration-300"
                                 :class="route.path === '/studio/collaborations' ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Collaborations</NuxtLink>
                         </li>
                         <li>
                             <NuxtLink 
                                 to="/studio/interiors" 
-                                class="lowercase hover:opacity-100 transition-opacity duration-300"
+                                class="hover:opacity-100 transition-opacity duration-300"
                                 :class="route.path === '/studio/interiors' ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Interiors</NuxtLink>
                         </li>
                         <li>
                             <NuxtLink 
                                 to="/studio/bespoke" 
-                                class="lowercase hover:opacity-100 transition-opacity duration-300"
+                                class="hover:opacity-100 transition-opacity duration-300"
                                 :class="route.path === '/studio/bespoke' ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Bespoke</NuxtLink>
+                        </li>
+                    </ul>
+                    <ul v-if="route.path.startsWith('/our-world/')" class="flex gap-6">
+                        <li>
+                            <NuxtLink 
+                                to="/our-world/about-nada-debs" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/our-world/about-nada-debs' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >About Nada Debs</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink 
+                                to="/our-world/crafts" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/our-world/crafts' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Contemporary Crafts</NuxtLink>
                         </li>
                     </ul>
                 </div>
@@ -120,7 +136,7 @@
                                 <div v-if="isOurWorldMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/our-world/about-nada-debs" class="lowercase">About Nada Debs</NuxtLink></li>
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Contemporary Crafts</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/our-world/crafts" class="lowercase">Contemporary Crafts</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>

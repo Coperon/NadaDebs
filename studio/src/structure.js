@@ -28,6 +28,25 @@ export const structure = (S, context) =>
       S.listItem().title('About').id('about').icon(DocumentIcon).child(
         S.document().schemaType('about').documentId('about'),
       ),
+      S.listItem()
+        .title('Crafts')
+        .icon(DocumentsIcon)
+        .child(
+          S.list()
+            .title('Crafts')
+            .items([
+              S.listItem()
+                .title('Index Page')
+                .id('craftsIndex')
+                .icon(DocumentIcon)
+                .child(S.document().schemaType('crafts').documentId('crafts')),
+              S.listItem()
+                .title('Crafts')
+                .id('crafts')
+                .icon(DocumentsIcon)
+                .child(S.documentTypeList('craft')),
+            ])
+        ),
       S.divider(),
       S.listItem().title('Studio').id('studio').icon(DocumentIcon).child(
         S.document().schemaType('studio').documentId('studio'),
