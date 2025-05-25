@@ -19,7 +19,7 @@ const props = defineProps({
     },
     uppercase: {
         type: Boolean,
-        required: true,
+        required: false,
         default: true
     }
 })

@@ -23,7 +23,7 @@ module.exports = {
                 black: '#151515',
                 sand: '#E0DCD6',
                 beige: '#F1EAE4',
-                'primary-button': '#F8EFD7'
+                'primary-button': '#F8EFD7',
             },
             // Typography styles
             fontSize: {

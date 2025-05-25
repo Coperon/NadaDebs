@@ -5,7 +5,7 @@
                 @click="selectedCategory = null"
                 :class="{ 'font-medium': selectedCategory === null }"
             >All</button>
-            <template v-for="(category, index) in categories" :key="category._id">
+            <template v-for="category in categories" :key="category._id">
                 <span>, </span>
                 <button 
                     @click="selectedCategory = category._id"
@@ -17,7 +17,7 @@
         <Transition name="fade" mode="out-in">
             <div 
                 :key="selectedCategory"
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-y-12 xl:gap-y-16 gap-x-2 pb-12"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-y-12 xl:gap-y-16 gap-x-2.5 pb-12"
             >
                 <div 
                     v-for="item in filteredItems" 

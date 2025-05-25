@@ -93,7 +93,25 @@ export const structure = (S, context) =>
         S.document().schemaType('bespoke').documentId('bespoke'),
       ),
       S.divider(),
-
+      S.listItem()
+        .title('News')
+        .icon(DocumentsIcon)
+        .child(
+          S.list()
+            .title('News')
+            .items([
+              S.listItem()
+                .title('Index Page')
+                .id('newsIndex')
+                .icon(DocumentIcon)
+                .child(S.document().schemaType('news').documentId('news')),
+              S.listItem()
+                .title('Posts')
+                .id('news')
+                .icon(DocumentsIcon)
+                .child(S.documentTypeList('post')),
+            ])
+        ),
 
       
       // S.listItem()

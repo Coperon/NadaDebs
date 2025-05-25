@@ -4,8 +4,8 @@ import {TextIcon} from '@sanity/icons'
 import {ImageIcon} from '@sanity/icons'
 
 export default {
-    name: 'craft',
-    title: 'Craft',
+    name: 'post',
+    title: 'Post',
     type: 'document',
     groups: [
         {
@@ -41,43 +41,32 @@ export default {
             group: 'content',
         },
         {
-            name: 'briefDescription',
-            title: 'Brief description (for thumbnail)',
-            type: 'string',
-            validation: (Rule) => Rule.required(),
-            group: 'content',
-        },
-        {
-            name: 'description',
-            title: 'Description',
-            type: 'text',
-            group: 'content',
-        },
-        {
             name: 'thumbnail',
             title: 'Thumbnail',
-            type: 'object',
+            type: 'image',
             group: 'content',
             validation: (Rule) => Rule.required(),
-            fields: [
-                {
-                    title: 'Image',
-                    name: 'image',
-                    type: 'image',
-                    validation: (Rule) => Rule.required(),
-                },
-                {
-                    title: 'Video URL',
-                    name: 'video',
-                    type: 'url',
-                    description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
-                },
-            ]
         },
         {
             name: 'cover',
             title: 'Cover',
             type: 'image',
+            group: 'content',
+        },
+        {
+            name: 'date',
+            title: 'Month & Year',
+            type: 'date',
+            group: 'content',
+            validation: (Rule) => Rule.required(),
+            options: {
+                dateFormat: 'MMM YYYY',
+            },
+        },
+        {
+            name: 'text',
+            title: 'Text',
+            type: 'text',
             group: 'content',
             validation: (Rule) => Rule.required(),
         },
@@ -206,13 +195,13 @@ export default {
             group: 'seo',
         },
     ],
-    preview: {
-        select: {
-            title: 'title',
-            media: 'thumbnail.image',
-        },
-        prepare({ title, media }) {
-            return { title, media }
-        }
-    }
+    // preview: {
+    //     select: {
+    //         title: 'title',
+    //         media: 'thumbnail.image',
+    //     },
+    //     prepare({ title, media }) {
+    //         return { title, media }
+    //     }
+    // }
 }

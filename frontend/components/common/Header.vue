@@ -68,6 +68,15 @@
                             >Contemporary Crafts</NuxtLink>
                         </li>
                     </ul>
+                    <ul v-if="route.path.startsWith('/news/')" class="flex gap-6">
+                        <li>
+                            <NuxtLink
+                                to="/news/latest"
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/news/latest' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Latest</NuxtLink>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -156,7 +165,7 @@
                             <Transition name="fade">
                                 <div v-if="isNewsMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Latest</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/news/latest" class="lowercase">Latest</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Press</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Awards</NuxtLink></li>
                                     </ul>
@@ -254,6 +263,9 @@ const parentRouteSlug = computed(() => {
     }
     else if (route.path.startsWith('/our-world/')) {
         return 'Our World'
+    }
+    else if (route.path.startsWith('/news/')) {
+        return 'News'
     }
 
     return 'Nada Debs'

@@ -11,6 +11,8 @@ import bespoke from './singleton/bespoke'
 import about from './singleton/about'
 import crafts from './singleton/crafts'
 import craft from './craft'
+import news from './singleton/news'
+import post from './post'
 import contact from './singleton/contact'
 import page from './page'
 import siteConfig from './siteConfig'
@@ -55,6 +57,8 @@ export const schemaTypes = [
   about,
   crafts,
   craft,
+  news,
+  post,
   contact,
   page,
   category,
