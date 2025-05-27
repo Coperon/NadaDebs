@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :class="{ 'pt-[3.25rem] sm:pt-[4.25rem]': !postData?.cover }">
         <div v-if="postData?.cover" class="h-svh relative overflow-hidden">
             <CommonMediaImage
                 :image="postData?.cover"
