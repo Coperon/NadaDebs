@@ -11,7 +11,7 @@ import {CiGrid42} from 'react-icons/ci'
 import {BsMailbox} from 'react-icons/bs'
 import { FaShopify } from "react-icons/fa";
 import {DocumentIcon} from '@sanity/icons'
-import {DocumentsIcon} from '@sanity/icons'
+import {FolderIcon} from '@sanity/icons'
 
 export const structure = (S, context) =>
   S.list()
@@ -25,91 +25,123 @@ export const structure = (S, context) =>
         S.document().schemaType('homepage').documentId('homepage'),
       ),
       S.divider(),
-      S.listItem().title('About').id('about').icon(DocumentIcon).child(
-        S.document().schemaType('about').documentId('about'),
-      ),
       S.listItem()
-        .title('Crafts')
-        .icon(DocumentsIcon)
+        .title('Our World')
+        .icon(FolderIcon)
         .child(
           S.list()
-            .title('Crafts')
+            .title('Our World')
             .items([
               S.listItem()
-                .title('Index Page')
-                .id('craftsIndex')
+                .title('About Nada Debs')
+                .id('about')
                 .icon(DocumentIcon)
-                .child(S.document().schemaType('crafts').documentId('crafts')),
+                .child(S.document().schemaType('about').documentId('about')),
               S.listItem()
-                .title('Crafts')
-                .id('crafts')
-                .icon(DocumentsIcon)
-                .child(S.documentTypeList('craft')),
+                .title('Contemporary Crafts')
+                .icon(FolderIcon)
+                .child(
+                  S.list()
+                    .title('Contemporary Crafts')
+                    .items([
+                      S.listItem()
+                        .title('Contemporary Crafts')
+                        .id('contemporaryCraftsIndex')
+                        .icon(DocumentIcon)
+                        .child(S.document().schemaType('crafts').documentId('crafts')),
+                      S.listItem()
+                        .title('Crafts')
+                        .id('crafts')
+                        .icon(FolderIcon)
+                        .child(S.documentTypeList('craft')),
+                    ]),
+                ),
             ])
-        ),
-      S.divider(),
-      S.listItem().title('Studio').id('studio').icon(DocumentIcon).child(
-        S.document().schemaType('studio').documentId('studio'),
       ),
       S.listItem()
-        .title('Collaborations')
-        .icon(DocumentsIcon)
+        .title('Studio')
+        .icon(FolderIcon)
         .child(
           S.list()
-            .title('Collaborations')
+            .title('Studio')
             .items([
               S.listItem()
-                .title('Index Page')
-                .id('collaborationsIndex')
+                .title('Studio')
+                .id('studioIndex')
                 .icon(DocumentIcon)
-                .child(S.document().schemaType('collaborations').documentId('collaborations')),
+                .child(S.document().schemaType('studio').documentId('studio')),
               S.listItem()
                 .title('Collaborations')
-                .id('collaborations')
-                .icon(DocumentsIcon)
-                .child(S.documentTypeList('collaboration')),
-            ])
-        ),
-      S.listItem()
-        .title('Interiors')
-        .icon(DocumentsIcon)
-        .child(
-          S.list()
-            .title('Interiors')
-            .items([
-              S.listItem()
-                .title('Index Page')
-                .id('interiorsIndex')
-                .icon(DocumentIcon)
-                .child(S.document().schemaType('interiors').documentId('interiors')),
+                .icon(FolderIcon)
+                .child(
+                  S.list()
+                    .title('Collaborations')
+                    .items([
+                      S.listItem()
+                        .title('Collaborations')
+                        .id('collaborationsIndex')
+                        .icon(DocumentIcon)
+                        .child(S.document().schemaType('collaborations').documentId('collaborations')),
+                      S.listItem()
+                        .title('Projects')
+                        .id('collaborations')
+                        .icon(FolderIcon)
+                        .child(S.documentTypeList('collaboration')),
+                    ]),
+                ),
               S.listItem()
                 .title('Interiors')
-                .id('interiors')
-                .icon(DocumentsIcon)
-                .child(S.documentTypeList('interior')),
-            ])
+                .icon(FolderIcon)
+                .child(
+                  S.list()
+                    .title('Interiors')
+                    .items([
+                      S.listItem()
+                        .title('Interiors')
+                        .id('interiorsIndex')
+                        .icon(DocumentIcon)
+                        .child(S.document().schemaType('interiors').documentId('interiors')),
+                      S.listItem()
+                        .title('Projects')
+                        .id('interiors')
+                        .icon(FolderIcon)
+                        .child(S.documentTypeList('interior')),
+                    ]),
+                ),
+              S.listItem()
+                .title('Bespoke')
+                .id('bespoke')
+                .icon(DocumentIcon)
+                .child(S.document().schemaType('bespoke').documentId('bespoke')),
+            ]),
         ),
-      S.listItem().title('Bespoke').id('bespoke').icon(DocumentIcon).child(
-        S.document().schemaType('bespoke').documentId('bespoke'),
-      ),
       S.divider(),
       S.listItem()
         .title('News')
-        .icon(DocumentsIcon)
+        .icon(FolderIcon)
         .child(
           S.list()
             .title('News')
             .items([
               S.listItem()
-                .title('Index Page')
-                .id('newsIndex')
-                .icon(DocumentIcon)
-                .child(S.document().schemaType('news').documentId('news')),
-              S.listItem()
-                .title('Posts')
-                .id('news')
-                .icon(DocumentsIcon)
-                .child(S.documentTypeList('post')),
+                .title('Latest')
+                .icon(FolderIcon)
+                .child(
+                  S.list()
+                    .title('Latest')
+                    .items([
+                      S.listItem()
+                        .title('Latest')
+                        .id('latestIndex')
+                        .icon(DocumentIcon)
+                        .child(S.document().schemaType('news').documentId('news')),
+                      S.listItem()
+                        .title('Posts')
+                        .id('news')
+                        .icon(FolderIcon)
+                        .child(S.documentTypeList('post')),
+                    ])
+                )
             ])
         ),
 
