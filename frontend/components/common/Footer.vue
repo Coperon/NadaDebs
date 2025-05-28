@@ -9,7 +9,7 @@
                 <h2 class="text-a2 font-medium uppercase">News</h2>
                 <ul class="flex flex-col gap-1.5">
                     <li><NuxtLink to="/news/latest" class="lowercase">Latest</NuxtLink></li>
-                    <li><NuxtLink to="" class="lowercase">Press</NuxtLink></li>
+                    <li><NuxtLink to="/news/press" class="lowercase">Press</NuxtLink></li>
                     <li><NuxtLink to="" class="lowercase">Awards</NuxtLink></li>
                 </ul>
             </div>
