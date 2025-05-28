@@ -141,7 +141,12 @@ export const structure = (S, context) =>
                         .icon(FolderIcon)
                         .child(S.documentTypeList('post')),
                     ])
-                )
+                ),
+              S.listItem()
+                .title('Press')
+                .id('press')
+                .icon(DocumentIcon)
+                .child(S.document().schemaType('press').documentId('press')),
             ])
         ),
 

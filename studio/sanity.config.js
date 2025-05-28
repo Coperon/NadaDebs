@@ -37,7 +37,7 @@ export default defineConfig({
   dataset: dataset,
   icon: BrandLogo,
   tools: [{
-    title: 'Preview site',
+    title: 'Preview',
     name: 'preview-link',
     component: PreviewLink,
   }],
@@ -90,7 +90,7 @@ export default defineConfig({
   plugins: [
     // structure tool controls the elements and order of the sidebar and the top bar of the studio UI
     structureTool({
-      title: 'Edit Content',
+      title: 'Content',
       structure,
     }),
     shopifyAssets({
@@ -105,7 +105,7 @@ export default defineConfig({
     inlineSvgInput(),
     // dashboard tool is a plugin that allows you to add a dashboard area for widgets to the top bar of studio
     dashboardTool({
-      title: 'Deploy site ',
+      title: 'Deploy',
       widgets: [
         // add the widget for cloudflare pages deploys in the dashboard
         // you must set SANITY_STUDIO_CLOUDFLARE_HOOK in the .env file to enable the deploy button
