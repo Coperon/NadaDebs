@@ -174,7 +174,7 @@
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/news/latest" class="lowercase">Latest</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="/news/press" class="lowercase">Press</NuxtLink></li>
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Awards</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/news/awards" class="lowercase">Awards</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>

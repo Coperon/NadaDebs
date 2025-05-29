@@ -10,7 +10,7 @@
                 <ul class="flex flex-col gap-1.5">
                     <li><NuxtLink to="/news/latest" class="lowercase">Latest</NuxtLink></li>
                     <li><NuxtLink to="/news/press" class="lowercase">Press</NuxtLink></li>
-                    <li><NuxtLink to="" class="lowercase">Awards</NuxtLink></li>
+                    <li><NuxtLink to="/news/awards" class="lowercase">Awards</NuxtLink></li>
                 </ul>
             </div>
             <div class="flex flex-col gap-3">
