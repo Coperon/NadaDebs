@@ -154,6 +154,20 @@ export const structure = (S, context) =>
                 .child(S.document().schemaType('awards').documentId('awards')),
             ])
         ),
+      S.listItem()
+        .title('Connect')
+        .icon(FolderIcon)
+        .child(
+          S.list()
+            .title('Connect')
+            .items([
+              S.listItem()
+                .title('Find us')
+                .id('findUs')
+                .icon(DocumentIcon)
+                .child(S.document().schemaType('findUs').documentId('findUs')),
+            ])
+        ),
 
       
       // S.listItem()

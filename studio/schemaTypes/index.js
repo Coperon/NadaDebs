@@ -15,6 +15,7 @@ import news from './singleton/news'
 import post from './post'
 import press from './singleton/press'
 import awards from './singleton/awards'
+import findUs from './singleton/findUs'
 import contact from './singleton/contact'
 import page from './page'
 import siteConfig from './siteConfig'
@@ -63,6 +64,7 @@ export const schemaTypes = [
   post,
   press,
   awards,
+  findUs,
   contact,
   page,
   category,

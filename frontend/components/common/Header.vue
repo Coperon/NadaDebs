@@ -83,6 +83,13 @@
                                 :class="route.path === '/news/press' ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Press</NuxtLink>
                         </li>
+                        <li>
+                            <NuxtLink
+                                to="/news/awards"
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/news/awards' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Awards</NuxtLink>
+                        </li>
                     </ul>
                 </div>
             </div>
