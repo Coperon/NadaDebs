@@ -27,7 +27,11 @@ export default defineNuxtConfig({
             ],
         },
     },
-
+    vite: {
+        build: {
+          minify: false
+        }
+    },
     postcss: {
         plugins: {
             tailwindcss: {},
