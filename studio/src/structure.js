@@ -147,6 +147,11 @@ export const structure = (S, context) =>
                 .id('press')
                 .icon(DocumentIcon)
                 .child(S.document().schemaType('press').documentId('press')),
+              S.listItem()
+                .title('Awards')
+                .id('awards')
+                .icon(DocumentIcon)
+                .child(S.document().schemaType('awards').documentId('awards')),
             ])
         ),
 
