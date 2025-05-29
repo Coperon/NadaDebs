@@ -16,7 +16,7 @@
             <div class="flex flex-col gap-3">
                 <h2 class="text-a2 font-medium uppercase">Connect</h2>
                 <ul class="flex flex-col gap-1.5">
-                    <li><NuxtLink to="" class="lowercase">Find us</NuxtLink></li>
+                    <li><NuxtLink to="/connect/find-us" class="lowercase">Find us</NuxtLink></li>
                     <li><NuxtLink to="" class="lowercase">Contact us</NuxtLink></li>
                 </ul>
             </div>

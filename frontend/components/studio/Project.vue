@@ -6,7 +6,7 @@
                 <span>{{ title }}</span>
             </h1>
 
-            <div v-if="description" class="max-w-[62ch] text-balance">
+            <div v-if="description" class="max-w-[62ch] text-balance whitespace-pre-line">
                 {{ description }}
             </div>
 

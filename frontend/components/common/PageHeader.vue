@@ -1,7 +1,7 @@
 <template>
     <header class="py-20 sm:py-25 lg:py-30 lg:min-h-[28.75rem] px-4 flex flex-col items-center justify-center text-center gap-6">
         <h1 class="text-h1-mobile sm:text-h1 uppercase">{{ title }}</h1>
-        <div class="max-w-[62ch] mx-auto">
+        <div class="max-w-[62ch] mx-auto whitespace-pre-line">
             {{ description }}
         </div>
     </header>

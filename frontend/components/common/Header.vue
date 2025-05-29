@@ -91,6 +91,14 @@
                             >Awards</NuxtLink>
                         </li>
                     </ul>
+                    <ul v-if="route.path.startsWith('/connect/')" class="flex gap-6">
+                        <li>
+                            <NuxtLink
+                                to="/connect/find-us"
+                                class="hover:opacity-100 transition-opacity duration-300"
+                            >Find us</NuxtLink>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -198,7 +206,7 @@
                             <Transition name="fade">
                                 <div v-if="isConnectMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Find us</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/connect/find-us" class="lowercase">Find us</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Contact us</NuxtLink></li>
                                     </ul>
                                 </div>
