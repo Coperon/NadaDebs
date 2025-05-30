@@ -1,6 +1,7 @@
 <template>
     <div>
         <textarea
+            :name="name"
             :placeholder="placeholder"
             :required="required"
             rows="12"
@@ -11,6 +12,10 @@
 
 <script setup>
 const props = defineProps({
+    name: {
+        type: String,
+        required: true,
+    },
     placeholder: {
         type: String,
         required: true,

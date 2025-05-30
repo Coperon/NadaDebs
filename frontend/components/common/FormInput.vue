@@ -2,6 +2,7 @@
     <div>
         <input 
             :type="type"
+            :name="name"
             :placeholder="placeholder"
             :required="required"
             class="w-full border border-black/20 text-a2-bold font-bold py-4 px-6 bg-transparent placeholder:text-a2 placeholder:font-light placeholder:text-current outline-none focus:outline-none focus:ring-0 focus:border-black"
@@ -12,6 +13,10 @@
 <script setup>
 const props = defineProps({
     type: {
+        type: String,
+        required: true,
+    },
+    name: {
         type: String,
         required: true,
     },
