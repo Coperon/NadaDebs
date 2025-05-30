@@ -166,6 +166,11 @@ export const structure = (S, context) =>
                 .id('findUs')
                 .icon(DocumentIcon)
                 .child(S.document().schemaType('findUs').documentId('findUs')),
+              S.listItem()
+                .title('Contact us')
+                .id('contact')
+                .icon(DocumentIcon)
+                .child(S.document().schemaType('contact').documentId('contact')),
             ])
         ),
 

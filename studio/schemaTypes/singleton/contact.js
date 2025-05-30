@@ -1,30 +1,59 @@
+import {RiProfileLine} from 'react-icons/ri'
+import {IoMdAnalytics} from 'react-icons/io'
+
 export default {
     name: 'contact',
-    title: 'Contact',
+    title: 'Contact us',
     type: 'document',
-    fields: [
-      {
-        name: 'title',
-        title: 'Title',
-        type: 'string',
-        validation: (Rule) => Rule.required(),
-      },
-      {
-        name: 'slug',
-        title: 'Slug',
-        type: 'slug',
-        description:
-          'The slug for the page, it must be unique. Click on "Generate" to create a slug automatically based on the title.',
-        validation: (Rule) => Rule.required(),
-        options: {
-          source: 'title',
+    groups: [
+        {
+            name: 'page',
+            title: 'Page',
+            options: {
+                collapsible: true,
+                collapsed: false,
+            },
+            default: true,
+            icon: RiProfileLine,
         },
-      },
-      {
-        name: 'content',
-        title: 'Main content',
-        type: 'blockContent',
-      },
+        {
+            name: 'seo',
+            title: 'SEO',
+            options: {
+                collapsible: true,
+                collapsed: false,
+            },
+            icon: IoMdAnalytics,
+        },
     ],
-  }
-  
+    fields: [
+        {
+            name: 'title',
+            title: 'Title',
+            type: 'string',
+            group: 'page',
+            hidden: false,
+            validation: (Rule) => Rule.required(),
+        },
+        {
+            name: 'description',
+            title: 'Description',
+            type: 'text',
+            group: 'page',
+            validation: (Rule) => Rule.required(),
+        },
+        {
+            name: 'image',
+            title: 'Image',
+            type: 'image',
+            group: 'page',
+            validation: (Rule) => Rule.required(),
+        },
+        {
+            name: 'seo',
+            title: 'SEO',
+            type: 'seo',
+            group: 'seo',
+        }
+    ],
+}

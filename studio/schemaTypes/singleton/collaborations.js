@@ -42,7 +42,12 @@ export default {
             group: 'page',
             validation: (Rule) => Rule.required(),
         },
-        
+        {
+            name: 'seo',
+            title: 'SEO',
+            type: 'seo',
+            group: 'seo',
+        }
     ],
 }
 

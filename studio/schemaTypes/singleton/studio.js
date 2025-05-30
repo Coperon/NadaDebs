@@ -119,5 +119,11 @@ export default {
                 },
             ]
         },
+        {
+            name: 'seo',
+            title: 'SEO',
+            type: 'seo',
+            group: 'seo',
+        }
     ],
 }
