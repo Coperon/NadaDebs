@@ -17,7 +17,7 @@
             </div>
 
             <div class="px-4 sm:px-6 lg:px-8 xl:px-12 max-w-screen-sm mx-auto md:w-1/2">
-                <form name="contact" netlify>
+                <form name="contact" method="POST" data-netlify="true">
                     <div class="grid grid-cols-1 gap-3">
                         <CommonFormInput type="text" name="first-name" placeholder="First Name *" required />
                         <CommonFormInput type="text" name="last-name" placeholder="Last Name *" required />
