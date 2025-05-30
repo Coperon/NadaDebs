@@ -2,7 +2,7 @@
     <div id="main-content-wrapper" class="flex flex-col min-h-svh">
 
         <!-- Header -->
-        <CommonHeader />
+        <CommonHeader :infoPages="infoPages" />
 
         <!-- Main content -->
         <main
@@ -13,7 +13,7 @@
         </main>
 
         <!-- Footer -->
-        <CommonFooter v-if="route.name !== 'studio'" />
+        <CommonFooter v-if="route.name !== 'studio'" :infoPages="infoPages" />
 
         <!-- Shop Cart Drawer -->
         <!-- <ShopCartDrawer :cart="cartStore.cart" :isOpen="cartStore.isCartOpen" @close="cartStore.setCartOpen(false)" /> -->
@@ -31,6 +31,9 @@
 
 <script setup>
 import { useCartStore } from '@/stores/cart'
+import { getInfoPages } from '@/data/infoPages'
+
+const infoPages = await getInfoPages()
 
 const route = useRoute()
 const siteSettingsData = inject('siteSettingsData')

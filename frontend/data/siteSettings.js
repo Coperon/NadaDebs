@@ -25,6 +25,16 @@ export const siteSettings = async () => {
                 ${imageQuery}
             }
         },
+        termsAndConditions -> {
+            _id,
+            title,
+            slug,
+        },
+        privacyPolicy -> {
+            _id,
+            title,
+            slug,
+        },
     }`
     const { data } = await useAsyncData('siteSettings', () =>
         $sanity.fetch(query),

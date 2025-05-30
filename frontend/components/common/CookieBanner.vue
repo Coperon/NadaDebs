@@ -142,7 +142,7 @@ function showCookieConsent() {
                                     : ''
                             }">Cookie Policy</a>` +
                             (props.enableConfigBanner
-                                ? ` or visit <a class="underline" type="button" data-cc="show-preferencesModal">Cookie Settings</a> to provide a controlled consent. `
+                                ? ` or visit <a class="underline underline-offset-2" type="button" data-cc="show-preferencesModal">Cookie Settings</a> to provide a controlled consent. `
                                 : `. `) +
                             `To accept all cookies click Accept All. To reject all click on Reject All.</div>`,
                         acceptAllBtn: 'Accept all',
@@ -279,7 +279,7 @@ body #cc-main {
 
 body #cc-main .cm a,
 body #cc-main .cm [data-cc='c-settings'] {
-    @apply underline inline;
+    @apply underline underline-offset-2 inline;
 }
 
 /* body #cm__desc {

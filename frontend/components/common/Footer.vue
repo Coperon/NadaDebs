@@ -32,12 +32,12 @@
                     <li><NuxtLink to="" class="lowercase">Make a request</NuxtLink></li>
                 </ul>
             </div>
-            <div class="flex flex-col gap-3">
+            <div v-if="infoPages?.length > 0" class="flex flex-col gap-3">
                 <h2 class="text-a2 font-medium uppercase">Info</h2>
                 <ul class="flex flex-col gap-1.5">
-                    <li><NuxtLink to="" class="lowercase">Shipping & Returns</NuxtLink></li>
-                    <li><NuxtLink to="" class="lowercase">Terms & Conditions</NuxtLink></li>
-                    <li><NuxtLink to="" class="lowercase">Privacy Policy</NuxtLink></li>
+                    <li v-for="infoPage in infoPages" :key="infoPage._id">
+                        <NuxtLink :to="`/info/${infoPage?.slug?.current}`" class="lowercase">{{ infoPage?.title }}</NuxtLink>
+                    </li>
                 </ul>
             </div>
             <div v-if="siteSettingsData?.socialLinks?.length > 0" class="flex flex-col gap-3">
@@ -56,4 +56,11 @@
 
 <script setup>
 const siteSettingsData = inject('siteSettingsData')
+
+const props = defineProps({
+    infoPages: {
+        type: Array,
+        required: false,
+    },
+})
 </script>

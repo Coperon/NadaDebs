@@ -254,7 +254,7 @@
                                 </div>
                             </Transition>
                         </li>
-                        <li>
+                        <li v-if="infoPages?.length > 0">
                             <button @click="isInfoMenuOpen = !isInfoMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
                                 <span>Info</span>
                                 <div class="transition-transform object-center duration-300" :class="isInfoMenuOpen ? 'rotate-45' : 'rotate-0'">
@@ -266,9 +266,9 @@
                             <Transition name="fade">
                                 <div v-if="isInfoMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Shipping & Returns</NuxtLink></li>
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Terms & Conditions</NuxtLink></li>
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Privacy Policy</NuxtLink></li>
+                                        <li v-for="infoPage in infoPages" :key="infoPage._id">
+                                            <NuxtLink @click="toggleMenuState" :to="`/info/${infoPage?.slug?.current}`" class="lowercase">{{ infoPage?.title }}</NuxtLink>
+                                        </li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -282,6 +282,13 @@
 
 <script setup>
 import { useCartStore } from '@/stores/cart'
+
+const props = defineProps({
+    infoPages: {
+        type: Array,
+        required: false,
+    },
+})
 
 const menuState = useMenuStore()
 const cartStore = useCartStore()

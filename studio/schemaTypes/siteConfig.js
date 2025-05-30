@@ -144,6 +144,7 @@ export default {
       type: 'reference',
       to: [{type: 'legal'}],
       group: 'legalLinks',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'privacyPolicy',
@@ -151,6 +152,7 @@ export default {
       type: 'reference',
       to: [{type: 'legal'}],
       group: 'legalLinks',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'seo',
