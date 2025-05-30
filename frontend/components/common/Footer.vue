@@ -40,20 +40,20 @@
                     <li><NuxtLink to="" class="lowercase">Privacy Policy</NuxtLink></li>
                 </ul>
             </div>
-            <div class="flex flex-col gap-3">
+            <div v-if="siteSettingsData?.socialLinks?.length > 0" class="flex flex-col gap-3">
                 <h2 class="text-a2 font-medium uppercase">Follow us</h2>
                 <ul class="flex gap-2 sm:justify-center">
-                    <li><a href="https://www.instagram.com/studionadadebs/" target="_blank">
-                        <img src="/icons/instagram.svg" alt="Instagram" />
-                    </a></li>
-                    <li><a href="https://www.facebook.com/studionadadebs" target="_blank">
-                        <img src="/icons/facebook.svg" alt="Facebook" />
-                    </a></li>
-                    <li><a href="https://www.linkedin.com/in/nadadebs/" target="_blank">
-                        <img src="/icons/linkedin.svg" alt="LinkedIn" />
-                    </a></li>
+                    <li v-for="socialLink in siteSettingsData?.socialLinks" :key="socialLink._key">
+                        <a :href="socialLink?.url" target="_blank">
+                            <img :src="socialLink?.icon?.asset?.url" :alt="socialLink?.title" class="w-6 h-6 object-contain" />
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </footer>
 </template>
+
+<script setup>
+const siteSettingsData = inject('siteSettingsData')
+</script>

@@ -24,19 +24,9 @@ export default {
       icon: CiShare2,
     },
     {
-      name: 'contact',
-      title: 'Contact',
-      icon: MdOutlineEmail,
-    },
-    {
       name: 'legalLinks',
       title: 'Legal Links',
       icon: MdOutlinePrivacyTip,
-    },
-    {
-      name: 'credits',
-      title: 'Credits',
-      icon: FaCreativeCommons,
     },
     {
       name: 'seo',
@@ -45,11 +35,6 @@ export default {
     },
   ],
   fieldsets: [
-    {
-      name: 'brand',
-      title: 'Branding',
-      options: {columns: 2},
-    },
     {
       name: 'cookieBanner',
       title: 'Cookie Banner',
@@ -70,6 +55,7 @@ export default {
       type: 'string',
       initialValue: 'en',
       group: 'site',
+      readOnly: true,
     },
     {
       name: 'currencyCode',
@@ -87,27 +73,10 @@ export default {
       group: 'site',
     },
     {
-      title: 'Site Logo',
-      name: 'siteLogo',
-      type: 'inlineSvg',
-      validation: (Rule) => Rule.required(),
-      group: 'site',
-      fieldset: 'brand',
-    },
-    {
-      title: 'Site Favicon',
+      title: 'Favicon',
       name: 'siteFavicon',
       type: 'image',
       validation: (Rule) => Rule.required(),
-      group: 'site',
-      fieldset: 'brand',
-    },
-    {
-      title: 'Main navigation',
-      name: 'mainNav',
-      description: 'Select menu for main navigation',
-      type: 'reference',
-      to: {type: 'navigation'},
       group: 'site',
     },
     {
@@ -156,53 +125,32 @@ export default {
               type: 'url',
               validation: (Rule) => Rule.required(),
             },
+            {
+              name: 'icon',
+              title: 'Icon',
+              type: 'image',
+              options: {
+                accept: 'image/svg+xml',
+              },
+              validation: (Rule) => Rule.required(),
+            }
           ],
         },
       ],
     },
-
     {
-      name: 'legalLinks',
-      title: 'Legal Pages',
-      type: 'array',
+      name: 'termsAndConditions',
+      title: 'Terms and Conditions',
+      type: 'reference',
+      to: [{type: 'legal'}],
       group: 'legalLinks',
-      of: [
-        {
-          type: 'reference',
-          to: [{type: 'page'}],
-        },
-      ],
     },
     {
-      name: 'contact',
-      title: 'Contact',
-      type: 'object',
-      group: 'contact',
-      fields: [
-        {
-          name: 'email',
-          title: 'EMAIL',
-          type: 'string',
-          validation: (Rule) => Rule.required(),
-        },
-        // {
-        //   name: 'phone',
-        //   title: 'PHONE',
-        //   type: 'phone',
-        // },
-        {
-          name: 'address',
-          title: 'ADDRESS',
-          type: 'text',
-          rows: 3,
-        },
-      ],
-    },
-    {
-      name: 'credits',
-      title: 'Credits',
-      type: 'textContent',
-      group: 'credits',
+      name: 'privacyPolicy',
+      title: 'Privacy Policy',
+      type: 'reference',
+      to: [{type: 'legal'}],
+      group: 'legalLinks',
     },
     {
       name: 'seo',
