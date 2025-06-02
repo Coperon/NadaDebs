@@ -16,7 +16,12 @@
         <CommonFooter v-if="route.name !== 'studio'" :infoPages="infoPages" />
 
         <!-- Shop Cart Drawer -->
-        <!-- <ShopCartDrawer :cart="cartStore.cart" :isOpen="cartStore.isCartOpen" @close="cartStore.setCartOpen(false)" /> -->
+        <ShopCartDrawer :cart="cartStore.cart" @close="cartStore.setCartOpen(false)" />
+
+        <!-- Country Selector -->
+        <!-- <ClientOnly>
+            <CountrySelector />
+        </ClientOnly> -->
         
         <!-- Cookie Banner -->
         <ClientOnly>
@@ -32,10 +37,12 @@
 <script setup>
 import { useCartStore } from '@/stores/cart'
 import { getInfoPages } from '@/data/infoPages'
-
+import CountrySelector from '@/components/shop/CountrySelector.vue'
+import { useCountryStore } from '@/stores/country'
 const infoPages = await getInfoPages()
 
 const route = useRoute()
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
+const countryStore = useCountryStore()
 </script>

@@ -176,6 +176,21 @@ export const structure = (S, context) =>
         ),
       S.divider(),
       S.listItem()
+        .title('Shop Page')
+        .id('shopArchive')
+        .icon(FaShopify)
+        .child(S.document().schemaType('shopArchive').documentId('shopArchive')),
+        S.listItem().title(`Products`).child(S.documentTypeList('product')),
+        // /* TODO: default order should be first? */
+        orderableDocumentListDeskItem({
+          type: 'product',
+          title: 'Reorder',
+          createIntent: false,
+          S,
+          context,
+        }),
+      S.divider(),
+      S.listItem()
         .title('Global')
         .id('siteConfig')
         .icon(CogIcon)

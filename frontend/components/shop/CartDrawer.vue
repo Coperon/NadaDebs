@@ -1,7 +1,7 @@
 <template>
   <div
     class="cart-drawer flex flex-col fixed top-0 right-0 h-full bg-white z-50 overflow-y-auto w-[340px] border text-black"
-    :class="{ 'translate-x-0': isOpen, 'translate-x-full pointer-events-none': !isOpen }">
+    :class="{ 'translate-x-0': cartStore.isCartOpen, 'translate-x-full pointer-events-none': !cartStore.isCartOpen }">
     <header class="sticky flex justify-between top-0 bg-white z-50 p-[20px]">
       <h4 class="uppercase">Cart</h4>
       <button class="uppercase" @click="$emit('close')">Close</button>
@@ -18,7 +18,7 @@
                 <p><span class="">{{ selectedOption?.name }}: </span>{{ selectedOption?.value }}</p>
               </template>
               <p>Quantity: {{ item?.quantity }}</p>
-              <p>Price: {{ formatPrice(item?.variant?.priceV2?.amount, item?.variant?.priceV2?.currencyCode) }}</p>
+              <p>Price: {{ formatPrice(item?.variant?.priceV2?.amount, item?.variant?.priceV2?.currencyCode, item?.variant?.priceV2?.symbol) }}</p>
               <button @click="removeFromCart(item?.id)"
                 class="remove-btn hover:text-[red] transition-colors mt-[10px]">Remove</button>
             </div>
@@ -27,7 +27,7 @@
         <footer class="sticky bottom-0 left-0 bg-white w-full mt-auto py-[20px]">
           <div class="cart-total mt-[10px] flex w-full justify-between">
             <small class="uppercase">Subtotal</small><span>{{ formatPrice(cart?.totalPriceV2?.amount,
-              cart?.totalPriceV2?.currencyCode) }}</span>
+              cart?.totalPriceV2?.currencyCode, cart?.totalPriceV2?.symbol) }}</span>
           </div>
           <small class="block mt-[10px] uppercase">Shipping and discount codes are added at checkout.</small>
 
@@ -48,7 +48,6 @@ import { removeFromCart as removeFromCartComposable } from '@/composables/shopif
 
 const props = defineProps({
   cart: Object,
-  isOpen: Boolean
 })
 
 const cartStore = useCartStore()
