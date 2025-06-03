@@ -4,114 +4,10 @@
         :class="menuState.isOpened ? 'pointer-events-auto' : 'pointer-events-none'"
     >
         <div 
-            ref="topNav"
-            class="absolute z-10 inset-x-0 top-0 pointer-events-auto p-4 sm:p-6 lg:px-8 xl:px-12 flex md:flex-row-reverse items-center justify-between md:gap-12 shrink-0 transition-colors duration-300"
-            :class="{ 'text-white': isTopNavWhite }"
-        >
-            <div class="hidden md:flex flex-1 items-center justify-end gap-6">
-                <span class="lowercase text-a2 font-medium">Search</span>
-                <span class="lowercase text-a2 font-medium">Favorites (0)</span>
-                <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
-            </div>
+            class="absolute inset-x-0 h-[3.25rem] sm:h-[4.25rem] transition-colors duration-300"
+            :class="headerBgClass"
+        ></div>
 
-            <NuxtLink @click="menuState.isOpened = false" to="/" :class="{ 'text-black lg:text-inherit': menuState.isOpened }"><CommonHeaderBrandLogo /></NuxtLink>
-
-            <div class="flex-1 flex items-center justify-end md:justify-start md:gap-12">
-                <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative" :class="{ 'text-black sm:text-inherit md:text-black': menuState.isOpened }">
-                    <div class="md:hidden"><ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount /></div>
-                    <div class="hidden md:block text-a2 font-medium lowercase">{{ parentRouteSlug }}</div>
-                    <IconsDots class="w-2 h-auto" />
-                    <button @click="toggleMenuState" class="lowercase text-a2 font-medium relative" aria-label="Toggle Menu">
-                        <span :class="menuState.isOpened ? 'opacity-0' : 'opacity-100'">Menu</span>
-                        <span class="absolute top-0 left-0" :class="menuState.isOpened ? 'opacity-100' : 'opacity-0'">Close</span>
-                    </button>
-                    <button @click="toggleMenuState" class="hidden md:flex absolute inset-0 cursor-pointer" aria-label="Toggle Menu"></button>
-                </div>
-
-                <div class="hidden xl:flex justify-center flex-grow text-a2 lowercase">
-                    <ul v-if="route.path.startsWith('/studio/')" class="flex gap-6">
-                        <li>
-                            <NuxtLink 
-                                to="/studio/collaborations" 
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/studio/collaborations' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >Collaborations</NuxtLink>
-                        </li>
-                        <li>
-                            <NuxtLink 
-                                to="/studio/interiors" 
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/studio/interiors' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >Interiors</NuxtLink>
-                        </li>
-                        <li>
-                            <NuxtLink 
-                                to="/studio/bespoke" 
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/studio/bespoke' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >Bespoke</NuxtLink>
-                        </li>
-                    </ul>
-                    <ul v-if="route.path.startsWith('/our-world/')" class="flex gap-6">
-                        <li>
-                            <NuxtLink 
-                                to="/our-world/about-nada-debs" 
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/our-world/about-nada-debs' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >About Nada Debs</NuxtLink>
-                        </li>
-                        <li>
-                            <NuxtLink 
-                                to="/our-world/crafts" 
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/our-world/crafts' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >Contemporary Crafts</NuxtLink>
-                        </li>
-                    </ul>
-                    <ul v-if="route.path.startsWith('/news/')" class="flex gap-6">
-                        <li>
-                            <NuxtLink
-                                to="/news/latest"
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/news/latest' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >Latest</NuxtLink>
-                        </li>
-                        <li>
-                            <NuxtLink
-                                to="/news/press"
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/news/press' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >Press</NuxtLink>
-                        </li>
-                        <li>
-                            <NuxtLink
-                                to="/news/awards"
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/news/awards' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >Awards</NuxtLink>
-                        </li>
-                    </ul>
-                    <ul v-if="route.path.startsWith('/connect/')" class="flex gap-6">
-                        <li>
-                            <NuxtLink
-                                to="/connect/find-us"
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/connect/find-us' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >Find us</NuxtLink>
-                        </li>
-                        <li>
-                            <NuxtLink
-                                to="/connect/contact-us"
-                                class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/connect/contact-us' ? 'font-medium opacity-100' : 'font-light opacity-30'"
-                            >Contact us</NuxtLink>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        
         <div class="absolute inset-0 text-black transition-opacity duration-300" :class="{ 'opacity-0 pointer-events-none': !menuState.isOpened }">
             <div class="absolute inset-0" @click="toggleMenuState"></div>
             <div class="bg-white absolute inset-y-0 left-0 w-full sm:max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
@@ -277,6 +173,114 @@
                 </nav>
             </div>
         </div>
+
+        <div 
+            ref="topNav"
+            class="absolute inset-x-0 top-0 pointer-events-auto p-4 sm:p-6 lg:px-8 xl:px-12 flex md:flex-row-reverse items-center justify-between md:gap-12 shrink-0 transition-colors duration-300"
+            :class="{ 'text-white': isTopNavTransparent && route.name === 'our-world-about-nada-debs' }"
+        >
+            <div class="hidden md:flex flex-1 items-center justify-end gap-6">
+                <span class="lowercase text-a2 font-medium">Search</span>
+                <span class="lowercase text-a2 font-medium">Favorites (0)</span>
+                <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
+            </div>
+
+            <NuxtLink @click="menuState.isOpened = false" to="/" :class="{ 'text-black lg:text-inherit': menuState.isOpened }"><CommonHeaderBrandLogo /></NuxtLink>
+
+            <div class="flex-1 flex items-center justify-end md:justify-start md:gap-12">
+                <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative" :class="{ 'text-black sm:text-inherit md:text-black': menuState.isOpened }">
+                    <div class="md:hidden"><ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount /></div>
+                    <div class="hidden md:block text-a2 font-medium lowercase">{{ parentRouteSlug }}</div>
+                    <IconsDots class="w-2 h-auto" />
+                    <button @click="toggleMenuState" class="lowercase text-a2 font-medium relative" aria-label="Toggle Menu">
+                        <span :class="menuState.isOpened ? 'opacity-0' : 'opacity-100'">Menu</span>
+                        <span class="absolute top-0 left-0" :class="menuState.isOpened ? 'opacity-100' : 'opacity-0'">Close</span>
+                    </button>
+                    <button @click="toggleMenuState" class="hidden md:flex absolute inset-0 cursor-pointer" aria-label="Toggle Menu"></button>
+                </div>
+
+                <div class="hidden xl:flex justify-center flex-grow text-a2 lowercase">
+                    <ul v-if="route.path.startsWith('/studio/')" class="flex gap-6">
+                        <li>
+                            <NuxtLink 
+                                to="/studio/collaborations" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/studio/collaborations' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Collaborations</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink 
+                                to="/studio/interiors" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/studio/interiors' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Interiors</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink 
+                                to="/studio/bespoke" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/studio/bespoke' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Bespoke</NuxtLink>
+                        </li>
+                    </ul>
+                    <ul v-if="route.path.startsWith('/our-world/')" class="flex gap-6">
+                        <li>
+                            <NuxtLink 
+                                to="/our-world/about-nada-debs" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/our-world/about-nada-debs' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >About Nada Debs</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink 
+                                to="/our-world/crafts" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/our-world/crafts' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Contemporary Crafts</NuxtLink>
+                        </li>
+                    </ul>
+                    <ul v-if="route.path.startsWith('/news/')" class="flex gap-6">
+                        <li>
+                            <NuxtLink
+                                to="/news/latest"
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/news/latest' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Latest</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
+                                to="/news/press"
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/news/press' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Press</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
+                                to="/news/awards"
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/news/awards' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Awards</NuxtLink>
+                        </li>
+                    </ul>
+                    <ul v-if="route.path.startsWith('/connect/')" class="flex gap-6">
+                        <li>
+                            <NuxtLink
+                                to="/connect/find-us"
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/connect/find-us' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Find us</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink
+                                to="/connect/contact-us"
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/connect/contact-us' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Contact us</NuxtLink>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </header>
 </template>
 
@@ -309,7 +313,7 @@ const parentRouteSlug = computed(() => {
 })
 
 const topNav = ref(null)
-const isTopNavWhite = ref(false)
+const isTopNavTransparent = ref(false)
 
 const isShopMenuOpen = ref(false)
 const isStudioMenuOpen = ref(false)
@@ -320,14 +324,32 @@ const isWorkWithUsMenuOpen = ref(false)
 const isTradeMenuOpen = ref(false)
 const isInfoMenuOpen = ref(false)
 
-const updateTopNavColor = () => {
-    if (route.name === 'our-world-about-nada-debs') {
+const headerBgClass = computed(() => {
+    if (
+        isTopNavTransparent.value 
+        || route.name === 'studio'
+    ) {
+        return 'bg-transparent'
+    }
+    if (route.path.startsWith('/studio/')) {
+        return 'bg-beige'
+    }
+
+    return 'bg-sand'
+})
+
+const updateTopNavBg = () => {
+    if (
+        route.name === 'our-world-about-nada-debs' 
+        || route.name === 'our-world-crafts-id' 
+        || route.name === 'news-latest-id'
+    ) {
         const windowHeight = window.innerHeight
         const topNavHeight = topNav.value.offsetHeight
         const scrollY = window.scrollY
-        isTopNavWhite.value = scrollY >= 0 && scrollY <= windowHeight - (topNavHeight / 2)
+        isTopNavTransparent.value = scrollY >= 0 && scrollY <= windowHeight - (topNavHeight / 2)
     } else {
-        isTopNavWhite.value = false
+        isTopNavTransparent.value = false
     }
 }
 
@@ -344,16 +366,20 @@ const cartItemCount = computed(() => {
 })
 
 watch(() => route.name, () => {
-    updateTopNavColor()
+    updateTopNavBg()
 })
 
 onMounted(() => {
-    window.addEventListener('scroll', updateTopNavColor)
-    isTopNavWhite.value = route.name === 'our-world-about-nada-debs' && window.scrollY === 0
+    window.addEventListener('scroll', updateTopNavBg)
+    isTopNavTransparent.value = (
+        route.name === 'our-world-about-nada-debs' 
+        || route.name === 'our-world-crafts-id' 
+        || route.name === 'news-latest-id'
+    ) && window.scrollY === 0
 })
 
 onUnmounted(() => {
-    window.removeEventListener('scroll', updateTopNavColor)
+    window.removeEventListener('scroll', updateTopNavBg)
 })
 </script>
 
