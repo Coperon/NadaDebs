@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-[3.25rem] sm:pt-[4.25rem]">
+    <div class="pt-[3.25rem] sm:pt-[4.25rem] pb-20 sm:pb-24 lg:pb-30">
         <CommonPageHeader 
             :title="newsPageData?.title" 
             :description="newsPageData?.description" 
@@ -45,10 +45,7 @@ import { getNews } from '@/data/news'
 const newsPageData = await getNewsPage()
 const newsData = await getNews()
 
-const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-}
+const { formatDate } = useDateFormat()
 
 useSeoObject(newsPageData?.seo, newsPageData?.title)
 </script>

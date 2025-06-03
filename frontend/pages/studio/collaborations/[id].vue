@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-[3.25rem] sm:pt-[4.25rem] xl:pt-0">
+    <div class="pt-[3.25rem] sm:pt-[4.25rem] xl:pt-0 pb-20 sm:pb-24 lg:pb-30">
         <StudioProject
             :title="collaborationData?.title"
             :description="collaborationData?.description"

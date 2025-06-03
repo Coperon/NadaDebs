@@ -145,7 +145,7 @@
                             <Transition name="fade">
                                 <div v-if="isWorkWithUsMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Open positions</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/work-with-us" class="lowercase">Open positions</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -299,14 +299,17 @@ const cartStore = useCartStore()
 const route = useRoute()
 
 const parentRouteSlug = computed(() => {
-    if (route.path.startsWith('/studio/')) {
+    if (route.path.startsWith('/studio')) {
         return 'Studio'
     }
-    else if (route.path.startsWith('/our-world/')) {
+    else if (route.path.startsWith('/our-world')) {
         return 'Our World'
     }
-    else if (route.path.startsWith('/news/')) {
+    else if (route.path.startsWith('/news')) {
         return 'News'
+    }
+    else if (route.path.startsWith('/work-with-us')) {
+        return 'Work with us'
     }
 
     return 'Nada Debs'

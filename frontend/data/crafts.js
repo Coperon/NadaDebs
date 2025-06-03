@@ -1,5 +1,5 @@
 import groq from 'groq'
-import { imageQuery, seoQuery } from "./fragments"
+import { imageQuery } from "./fragments"
 export const getCrafts = async () => {
     const { $sanity } = useNuxtApp()
     const query = groq`*[_type == "craft" && !(_id in path("drafts.**"))]|order(title asc){
@@ -12,9 +12,6 @@ export const getCrafts = async () => {
             ${imageQuery}
         },
         video,
-      },
-      seo {
-        ${seoQuery}
       },
     }`
 

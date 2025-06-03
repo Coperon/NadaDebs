@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-[3.25rem] sm:pt-[4.25rem]">
+    <div class="pt-[3.25rem] sm:pt-[4.25rem] pb-20 sm:pb-24 lg:pb-30">
         <CommonPageHeader 
             :title="collaborationsPageData?.title" 
             :description="collaborationsPageData?.description" 

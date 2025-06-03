@@ -22,7 +22,7 @@
                                         <a :href="office.map" target="_blank" class="flex items-center gap-1.5 group">
                                             <IconsPin class="w-3 h-3" />
                                             <span class="text-p2 font-medium">Get directions</span>
-                                            <IconsArrow class="h-2 w-auto opacity-30 group-hover:opacity-100 transition-opacity duration-300" />
+                                            <IconsArrow class="w-3 h-auto opacity-30 group-hover:opacity-100 transition-opacity duration-300" />
                                         </a>
                                     </div>
                                 </div>
@@ -45,7 +45,7 @@
                             <li v-for="store in list.stores" :key="store._key">
                                 <a :href="store.url" target="_blank" class="group">
                                     <span class="uppercase">{{ store.name }}</span>
-                                    <IconsArrow class="inline-block h-2 mb-0.5 ml-1.5 w-auto opacity-30 group-hover:opacity-100 transition-opacity duration-300" />
+                                    <IconsArrow class="inline-block w-3 h-auto mb-0.5 ml-1.5 opacity-30 group-hover:opacity-100 transition-opacity duration-300" />
                                 </a>
                             </li>
                         </ul>

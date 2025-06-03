@@ -1,5 +1,5 @@
 import groq from 'groq'
-import { imageQuery, seoQuery } from "./fragments"
+import { imageQuery } from "./fragments"
 export const getInteriors = async () => {
     const { $sanity } = useNuxtApp()
     const query = groq`*[_type == "interior" && !(_id in path("drafts.**"))]|order(year desc, _createdAt desc){
@@ -16,10 +16,7 @@ export const getInteriors = async () => {
       featuredImage {
         ${imageQuery}
       },
-      isFeatured,
-      seo {
-        ${seoQuery}
-      },
+      isFeatured
     }`
 
     const { data } = await useAsyncData('interiors', () => $sanity.fetch(query))

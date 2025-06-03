@@ -23,7 +23,7 @@
             <div class="flex flex-col gap-3">
                 <h2 class="text-a2 font-medium uppercase">Work with us</h2>
                 <ul class="flex flex-col gap-1.5">
-                    <li><NuxtLink to="" class="lowercase">Open positions</NuxtLink></li>
+                    <li><NuxtLink to="/work-with-us" class="lowercase">Open positions</NuxtLink></li>
                 </ul>
             </div>
             <div class="flex flex-col gap-3">

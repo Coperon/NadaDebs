@@ -34,7 +34,9 @@
                     </div>
 
                     <div class="mt-10 flex justify-center">
-                        <button type="submit" class="h-11 px-14 text-a2 font-medium uppercase bg-primary-button rounded-full hover:bg-white transition-colors duration-300">Send</button>
+                        <button type="submit" class="appearance-none">
+                            <CommonButton>Send</CommonButton>
+                        </button>
                     </div>
                 </form>
             </div>
