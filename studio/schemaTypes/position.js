@@ -20,8 +20,8 @@ export default {
     ],
     fields: [
         {
-            name: 'title',
-            title: 'Title',
+            name: 'position',
+            title: 'Position',
             type: 'string',
             validation: (Rule) => Rule.required(),
             group: 'content',
@@ -31,11 +31,32 @@ export default {
             title: 'Slug',
             type: 'slug',
             description:
-                'The slug for the page, it must be unique. Click on "Generate" to create a slug automatically based on the title.',
+                'The slug for the page, it must be unique. Click on "Generate" to create a slug automatically based on the position.',
             validation: (Rule) => Rule.required(),
             options: {
-                source: 'title',
+                source: 'position',
             },
+            group: 'content',
+        },
+        {
+            name: 'location',
+            title: 'Location',
+            type: 'string',
+            group: 'content',
+            validation: (Rule) => Rule.required(),
+        },
+        {
+            name: 'experience',
+            title: 'Experience',
+            type: 'string',
+            description: 'Junior, Mid, Senior...',
+            group: 'content',
+        },
+        {
+            name: 'type',
+            title: 'Type',
+            type: 'string',
+            description: 'Full-time, Part-time, Internship...',
             group: 'content',
         },
         {
@@ -43,10 +64,42 @@ export default {
             title: 'Open Until (Month & Year)',
             type: 'date',
             group: 'content',
-            validation: (Rule) => Rule.required(),
             options: {
                 dateFormat: 'MMM YYYY',
             },
+        },
+        {
+            name: 'applyLink',
+            title: 'Apply Link',
+            type: 'url',
+            group: 'content',
+            validation: (Rule) => Rule.required(),
+        },
+        {
+            name: 'aboutThePosition',
+            title: 'About the Position',
+            type: 'array',
+            of: [{ 
+                type: 'block',
+                styles: [
+                    { title: 'Heading', value: 'h2' },
+                ],
+                marks: {
+                    decorators: [
+                        { title: 'Strong', value: 'strong' },
+                        { title: 'Emphasis', value: 'em' },
+                    ],
+                },
+            }],
+            group: 'content',
+            validation: (Rule) => Rule.required(),
+        },
+        {
+            name: 'image',
+            title: 'Image',
+            type: 'image',
+            group: 'content',
+            validation: (Rule) => Rule.required(),
         },
         {
             title: 'SEO',

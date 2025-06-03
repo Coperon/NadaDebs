@@ -168,25 +168,25 @@ export const structure = (S, context) =>
                 .child(S.document().schemaType('contact').documentId('contact')),
             ])
         ),
-      // S.listItem()
-      //   .title('Work with us')
-      //   .icon(FolderIcon)
-      //   .child(
-      //     S.list()
-      //       .title('Work with us')
-      //       .items([
-      //         S.listItem()
-      //           .title('Work with us')
-      //           .id('workWithUs')
-      //           .icon(DocumentIcon)
-      //           .child(S.document().schemaType('workWithUs').documentId('workWithUs')),
-      //         S.listItem()
-      //           .title('Open Positions')
-      //           .id('positions')
-      //           .icon(FolderIcon)
-      //           .child(S.documentTypeList('position')),
-      //       ])
-      //   ),
+      S.listItem()
+        .title('Work with us')
+        .icon(FolderIcon)
+        .child(
+          S.list()
+            .title('Work with us')
+            .items([
+              S.listItem()
+                .title('Work with us')
+                .id('workWithUs')
+                .icon(DocumentIcon)
+                .child(S.document().schemaType('workWithUs').documentId('workWithUs')),
+              S.listItem()
+                .title('Open Positions')
+                .id('positions')
+                .icon(FolderIcon)
+                .child(S.documentTypeList('position')),
+            ])
+        ),
       S.listItem()
         .title('Info')
         .icon(FolderIcon)
