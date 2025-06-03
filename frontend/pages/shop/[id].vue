@@ -19,11 +19,19 @@
                         :variants="productData.store.variants" 
                         :selectedVariant="selectedVariant"
                         :productGid="productData?.store?.gid"
+                        :variantAvailability="variantAvailability"
+                        :variantAvailabilityLoading="variantAvailabilityLoading"
                         @update:selectedVariant="selectedVariant = $event" 
                     />
                 </div>
 
-                <ShopAddToCart :product="productData" :selectedVariant="selectedVariant" />
+                <ShopAddToCart 
+                  :product="productData" 
+                  :selectedVariant="selectedVariant" 
+                  :variantAvailability="variantAvailability" 
+                  :allVariantsUnavailable="allVariantsUnavailable"
+                  :variantAvailabilityLoading="variantAvailabilityLoading"
+                />
             </div>
         </div>
     </div>
@@ -34,6 +42,8 @@ import { buildBodyClass } from '@/utils'
 import { useSeoObject } from '@/composables/seo'
 import { getProductBySlug } from '@/data/shop'
 import { useCartStore } from '@/stores/cart'
+import { fetchVariantAvailability } from '@/composables/shopify'
+import { useCountryStore } from '@/stores/country'
 
 const route = useRoute()
 const routeName = route.name
@@ -45,6 +55,9 @@ const selectedVariant = ref(null)
 
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
+const countryStore = useCountryStore()
+const variantAvailability = ref({})
+const variantAvailabilityLoading = ref(false)
 
 definePageMeta({
     layout: 'default',
@@ -63,4 +76,46 @@ useSeoObject(
     productData?.value?.title || productData?.value?.store?.title,
     productData?.value?.featuredImage,
 )
+
+async function updateAllVariantAvailability() {
+  if (!productData.value?.store?.variants) return
+  variantAvailabilityLoading.value = true
+  const availability = {}
+  for (const variant of productData.value.store.variants) {
+    if (variant?.store?.gid && productData.value?.store?.gid && countryStore.country) {
+      try {
+        const available = await fetchVariantAvailability(
+          variant.store.gid,
+          productData.value.store.gid,
+          countryStore.country
+        )
+        availability[variant.store.gid] = available === true
+      } catch (e) {
+        availability[variant.store.gid] =
+          variant.store?.inventory ? variant.store.inventory.isAvailable !== false : false
+      }
+    } else {
+      availability[variant.store.gid] =
+        variant.store?.inventory ? variant.store.inventory.isAvailable !== false : false
+    }
+  }
+  variantAvailability.value = availability
+  variantAvailabilityLoading.value = false
+}
+
+// Compute if all variants are unavailable for initial AddToCart state
+const allVariantsUnavailable = computed(() => {
+  if (variantAvailabilityLoading.value) return false // Don't show sold out while loading
+  if (!productData.value?.store?.variants) return true
+  return productData.value.store.variants.every(v => {
+    if (v?.store?.gid && variantAvailability.value[v.store.gid] !== undefined) {
+      return !variantAvailability.value[v.store.gid]
+    }
+    // fallback to static inventory if needed
+    if (v.store?.inventory && v.store.inventory.management !== 'NOT_MANAGED' && v.store.inventory.isAvailable === false) return true
+    return false
+  })
+})
+
+watch(() => countryStore.country, updateAllVariantAvailability, { immediate: true })
 </script>

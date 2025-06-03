@@ -19,6 +19,9 @@
                 :index="index"
                 :selectedVariant="selectedVariant"
                 :productGid="productGid"
+                :isAvailable="variantAvailability[variant?.store?.gid] !== undefined
+                  ? variantAvailability[variant?.store?.gid]
+                  : (variant.store?.inventory ? variant.store.inventory.isAvailable !== false : true)"
             />
         </template>
     </div>
@@ -28,6 +31,8 @@
 const props = defineProps({
     variants: Array,
     selectedVariant: Object,
-    productGid: String
+    productGid: String,
+    variantAvailability: Object,
+    variantAvailabilityLoading: Boolean
 })
 </script>

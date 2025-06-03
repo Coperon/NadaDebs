@@ -5,8 +5,8 @@
         :class="{
             'bg-black text-white': selectedVariant && selectedVariant?.store?.gid === variant?.store?.gid,
             'bg-white hover:text-blue-700':
-                selectedVariant?.store?.gid !== variant?.store?.gid && !isOutOfStock,
-            'cursor-not-allowed line-through opacity-50 pointer-events-none': isOutOfStock
+                selectedVariant?.store?.gid !== variant?.store?.gid && isAvailable,
+            'cursor-not-allowed line-through opacity-50 pointer-events-none': !isAvailable
         }"
     >
         {{ variant.store.title }}

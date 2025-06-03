@@ -4,16 +4,15 @@
 </template>
 
 <script setup>
-import { fetchVariantAvailability } from '@/composables/shopify'
-
 const props = defineProps({
     product: Object,
-    selectedVariant: Object
+    selectedVariant: Object,
+    variantAvailability: Object,
+    allVariantsUnavailable: Boolean, // <-- new prop
+    variantAvailabilityLoading: Boolean // <-- add this line
 })
 
-const countryStore = useCountryStore()
 const showOptionsWarning = ref(false)
-const marketAvailable = ref(null)
 
 // Centralized function to get the variant to check (single or selected)
 const getActiveVariant = computed(() => {
@@ -26,24 +25,6 @@ const getActiveVariant = computed(() => {
     return null
 })
 
-// Centralized market-aware availability check
-async function checkMarketAvailability() {
-    const variant = getActiveVariant.value
-    if (variant && variant.store?.gid && props.product?.store?.gid && countryStore.country) {
-        try {
-            const available = await fetchVariantAvailability(variant.store.gid, props.product.store.gid, countryStore.country)
-            marketAvailable.value = available
-        } catch (e) {
-            marketAvailable.value = null
-        }
-    } else {
-        marketAvailable.value = null
-    }
-}
-
-watch(() => [countryStore.country, getActiveVariant.value?.store?.gid], checkMarketAvailability, { immediate: true })
-onMounted(checkMarketAvailability)
-
 const noVariantSelected = computed(() => {
     return (
         props?.product?.store?.variants?.length > 1 &&
@@ -51,20 +32,21 @@ const noVariantSelected = computed(() => {
 })
 
 const isOutOfStock = computed(() => {
-    // No variants at all
-    if (!props.product?.store?.variants || props.product.store.variants.length === 0) return true;
-
-    // If no variant selected and multiple variants, do NOT show Sold out (let user select)
-    if (props.product.store.variants.length > 1 && !props.selectedVariant) return false;
-
-    // Use marketAvailable if set (true/false)
-    if (marketAvailable.value === false || marketAvailable.value === undefined) return true;
-    if (marketAvailable.value === true) return false;
-
-    // Fallback to static inventory if marketAvailable is null
     const variant = getActiveVariant.value
-    if (variant && variant.store?.inventory && variant.store.inventory.management !== 'NOT_MANAGED' && variant.store.inventory.isAvailable === false) return true;
-    return false;
+    if (!variant) {
+        // If no variant selected and multiple variants, only show Sold out if all variants are unavailable
+        if (props.product?.store?.variants?.length > 1) {
+            return props.allVariantsUnavailable
+        }
+        return true
+    }
+    // Use centralized availability
+    if (props.variantAvailability && variant.store?.gid in props.variantAvailability) {
+        return !props.variantAvailability[variant.store.gid]
+    }
+    // Fallback to static inventory if needed
+    if (variant.store?.inventory && variant.store.inventory.management !== 'NOT_MANAGED' && variant.store.inventory.isAvailable === false) return true
+    return false
 })
 
 const handleClick = (event) => {
