@@ -6,13 +6,19 @@
                     :image="productData?.featuredImage" :alt="productData?.store?.title" width="700" height="700"
                     mobileWidth="400" mobileHeight="400" />
             </div>
-            <div class="flex flex-col gap-y-4 p-2 h-full col-span-12 lg:col-span-6">
+            <div class="flex flex-col gap-y-4 p-2 h-full col-span-12 lg:col-span-6 mt-32">
                 <h1 class="uppercase">{{ productData?.store?.title }}</h1>
-                <ShopProductPrice :price="productData?.store?.priceRange" />
+                <ShopProductPrice
+                  :price="selectedVariant
+                    ? { minVariantPrice: selectedVariant.store.price, maxVariantPrice: selectedVariant.store.price }
+                    : {}"
+                  :productGid="productData?.store?.gid"
+                />
                 <div class="w-fit" v-if="productData.store.variants && productData.store.variants.length > 1">
                     <ShopProductVariants 
                         :variants="productData.store.variants" 
                         :selectedVariant="selectedVariant"
+                        :productGid="productData?.store?.gid"
                         @update:selectedVariant="selectedVariant = $event" 
                     />
                 </div>
@@ -34,7 +40,9 @@ const routeName = route.name
 const productData = await getProductBySlug(route.params.id)
 const bodyClass = buildBodyClass(routeName)
 
-const selectedVariant = ref('')
+// Start with no variant selected, so price range is shown initially
+const selectedVariant = ref(null)
+
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
 

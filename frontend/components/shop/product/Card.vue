@@ -7,7 +7,7 @@
         <div class="p-2 flex flex-col flex-1 justify-between gap-2">
             <div class="flex justify-between gap-2">
                 <h2 class="uppercase">{{ product?.store?.title}}</h2>
-                <ShopProductPrice :productGid="product?.store?.gid" :fallbackPrice="product?.store?.priceRange" />
+                <ShopProductPrice :productGid="product?.store?.gid" :price="product?.store?.priceRange" />
             </div>
             <div class="flex justify-between gap-2" v-if="allowAddToCart && product?.store?.variants && product?.store?.variants?.length > 1">
                 <ShopProductVariants 

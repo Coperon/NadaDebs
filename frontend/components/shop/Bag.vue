@@ -1,8 +1,8 @@
 <template>
     <ClientOnly>
         <button @click="emit('toggleCartDrawer')" class="drawer-toggle lowercase text-a2 font-medium">
-            Cart ({{ cartItemCount }})
-        </button>
+        Cart ({{ cartItemCount }})
+    </button>
     </ClientOnly>
 </template>
 

@@ -286,3 +286,49 @@ export const fetchShopifyProductPrice = async (productGid, country) => {
   const data = await makeGraphQLRequest(query, { id: productGid, country })
   return data?.product?.priceRange
 }
+
+export const fetchVariantAvailability = async (variantGid, productGid, country) => {
+    console.log('Fetching variant availability for:', variantGid, productGid, 'in country:', country);
+  const query = `
+    query getVariant($productId: ID!, $country: CountryCode) @inContext(country: $country) {
+      product(id: $productId) {
+        variants(first: 100) {
+          edges {
+            node {
+              id
+              availableForSale
+            }
+          }
+        }
+      }
+    }
+  `
+  const data = await makeGraphQLRequest(query, { productId: productGid, country })
+  const variants = data?.product?.variants?.edges || []
+  console.log('Variants:', variants) // Log the fetched variants for debugging
+  const variant = variants.find(v => v.node.id === variantGid)
+  return variant?.node?.availableForSale
+}
+
+export const updateCartBuyerIdentity = async (cartId, countryCode) => {
+  const mutation = `
+    mutation cartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentityInput!) {
+      cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyerIdentity) {
+        cart {
+          ...CartFragment
+        }
+        userErrors {
+          message
+          code
+          field
+        }
+      }
+    }
+    ${cartFragment}
+  `;
+  const data = await makeGraphQLRequest(mutation, {
+    cartId,
+    buyerIdentity: { countryCode }
+  });
+  return data?.cartBuyerIdentityUpdate?.cart;
+};

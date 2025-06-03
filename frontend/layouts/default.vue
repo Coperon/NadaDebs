@@ -7,7 +7,10 @@
         <!-- Main content -->
         <main
             id="main-content"
-            class="relative flex flex-1 flex-col h-full max-w-full"
+            class="relative flex flex-1 flex-col h-full max-w-full transition-opacity duration-300 ease-in-out"
+            :class="{
+                'opacity-0': !loaded
+            }"
         >
             <slot />
         </main>
@@ -19,9 +22,9 @@
         <ShopCartDrawer :cart="cartStore.cart" @close="cartStore.setCartOpen(false)" />
 
         <!-- Country Selector -->
-        <!-- <ClientOnly>
+        <ClientOnly>
             <CountrySelector />
-        </ClientOnly> -->
+        </ClientOnly>
         
         <!-- Cookie Banner -->
         <ClientOnly>
@@ -39,10 +42,15 @@ import { useCartStore } from '@/stores/cart'
 import { getInfoPages } from '@/data/infoPages'
 import CountrySelector from '@/components/shop/CountrySelector.vue'
 import { useCountryStore } from '@/stores/country'
-const infoPages = await getInfoPages()
 
+const infoPages = await getInfoPages()
+const loaded = ref(false)
 const route = useRoute()
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
 const countryStore = useCountryStore()
+
+onMounted(() => {
+    loaded.value = true
+})
 </script>

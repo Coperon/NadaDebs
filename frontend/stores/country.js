@@ -1,14 +1,17 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { getCountryCookie, setCountryCookie } from '@/composables/countryCookie'
 
 export const useCountryStore = defineStore('country', () => {
-  const country = ref('US')
-  const currencySymbol = ref('$')
-  const currencyCode = ref('USD')
+  const { country, currencySymbol, currencyCode } = getCountryCookie()
+
+  const countryRef = ref(country)
+  const currencySymbolRef = ref(currencySymbol)
+  const currencyCodeRef = ref(currencyCode)
+
   function setCountry(newCountry, symbol = '$', code = 'USD') {
-    country.value = newCountry
-    currencySymbol.value = symbol
-    currencyCode.value = code
+    countryRef.value = newCountry
+    currencySymbolRef.value = symbol
+    currencyCodeRef.value = code
+    setCountryCookie(newCountry, symbol, code)
   }
-  return { country, setCountry, currencySymbol, currencyCode }
+  return { country: countryRef, setCountry, currencySymbol: currencySymbolRef, currencyCode: currencyCodeRef }
 })

@@ -78,7 +78,10 @@ export default defineNuxtConfig({
             },
         },
     },
-    plugins: ['~/plugins/sanity'],
+    plugins: [
+        '~/plugins/initCountry.client.js',
+        '~/plugins/sanity'
+    ],
     modules: [
         // to allow stores (persistent states) to be used in the app
         '@pinia/nuxt',
