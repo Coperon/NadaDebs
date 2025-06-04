@@ -70,6 +70,49 @@
                 </div>
             </div>
         </div>
+
+        <section>
+            <CommonPageHeader
+                title="About the Company"
+                :description="workWithUsData?.aboutTheCompany?.description"
+            />
+
+            <div v-if="workWithUsData?.aboutTheCompany?.images && workWithUsData?.aboutTheCompany?.images.length > 0">
+                <CommonSlider :images="workWithUsData?.aboutTheCompany?.images" />
+            </div>
+
+            <div v-if="workWithUsData?.team && workWithUsData?.team.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
+                <div class="px-4 sm:px-6 lg:px-8 xl:px-12">
+                    <h2 class="text-h2 uppercase text-center">Our Team</h2>
+                </div>
+
+                <div class="mt-10 grid grid-cols-12 gap-x-2.5 gap-y-8 xl:gap-y-12">
+                    <div 
+                        v-for="(person, index) in workWithUsData?.team" 
+                        :key="person._key" 
+                        :class="getPersonClass(index)"
+                    >
+                        <div 
+                            class="relative overflow-hidden" 
+                            :class="getPersonImageClass(index)"
+                        >
+                            <CommonMediaImage
+                                :image="person?.image"
+                                :alt="person?.name"
+                                :width="index < 2 ? '768' : '384'"
+                                :mobileWidth="index === 0 ? '768' : '384'"
+                                class="absolute inset-0 w-full h-full object-cover"
+                            />
+                        </div>
+
+                        <div class="px-4 mt-2.5 lg:mt-5">
+                            <h3 class="text-h2 uppercase">{{ person?.name }}</h3>
+                            <p class="text-p2 mt-1.5">{{ person?.role }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </template>
 
@@ -82,6 +125,20 @@ const workWithUsData = await getWorkWithUs()
 const positionsData = await getPositions()
 
 const { formatDate } = useDateFormat()
+
+const getPersonClass = (index) => {
+    if (index === 0) return 'col-span-12 sm:col-span-6'
+    if (index === 1) return 'col-span-6'
+    if (index > 1 && index < 6) return 'col-span-6 sm:col-span-4 lg:col-span-3'
+    return 'col-span-6 sm:col-span-4 lg:col-span-3 xl:col-span-2'
+}
+
+const getPersonImageClass = (index) => {
+    if (index === 0) return 'aspect-[3/2] xl:aspect-video'
+    if (index === 1) return 'aspect-[3/4] sm:aspect-[3/2] xl:aspect-video'
+    if (index > 1 && index < 6) return 'aspect-[3/4] sm:aspect-square'
+    return 'aspect-[3/4] sm:aspect-square xl:aspect-[3/4]'
+}
 
 useSeoObject(workWithUsData?.seo, workWithUsData?.title)
 </script>
