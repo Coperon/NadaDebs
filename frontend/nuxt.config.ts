@@ -11,10 +11,6 @@ export default defineNuxtConfig({
     css: ['@/assets/styles/global.css'],
     /* TODO: Refactor to use the new preview mode for Nuxt 3 to improve consistency (so we can have server rendering for both previews and production) */
     ssr: !isPreview, // Use client rendering for preview mode to avoid caching issues
-    // use experimental sharedPrerenderData to improve prerender performance and reduce build time. When using useAsyncData you should use a key that uniquely identifies the data fetched. */
-    experimental: {
-        sharedPrerenderData: isProduction,
-    },
     app: {
         pageTransition: {
             name: 'page',
@@ -31,12 +27,10 @@ export default defineNuxtConfig({
             ],
         },
     },
-
-    nitro: {
-        routeRules: {
-            // prerender all pages, full static
-            '/**/**': { prerender: true },
-        },
+    vite: {
+        build: {
+          minify: false
+        }
     },
     postcss: {
         plugins: {
@@ -105,5 +99,5 @@ export default defineNuxtConfig({
             }
         },
     },
-    compatibilityDate: '2024-11-07'
+    compatibilityDate: '2025-01-01',
 })
