@@ -64,29 +64,20 @@ export function formatDate(dateStr) {
 
 
 export const currencyCodeToSymbol = (currencyCode) => {
-    switch (currencyCode) {
-        case 'USD':
-            return '$'
-        case 'EUR':
-            return '€'
-        case 'GBP':
-            return '£'
-        default:
-            return '€'
-    }
+    // Deprecated: always use the symbol from the Shopify API if available
+    return currencyCode || ''
 }
 
-export const formatPrice = (price, currencyCode) => {
-    // check if currency symbol should be placed before or after the price
-    // make sure price is in the correct format. E.g. 10.00
-    let numberPrice = parseFloat(price) 
+export const formatPrice = (price, currencyCode='USD', symbol='$') => {
+    if (price && typeof price === 'object' && 'amount' in price) {
+        price = price.amount
+    }
+    let numberPrice = parseFloat(price)
+    if (isNaN(numberPrice)) return ''
     let priceToPrint = numberPrice.toFixed(2)
-    
-    if (!currencyCode) {
-        return priceToPrint
-    }
+    // Prefer API symbol if provided
     if (currencyCode === 'USD' || currencyCode === 'GBP') {
-        return `${currencyCodeToSymbol(currencyCode)}${priceToPrint}`
+        return `${symbol}${priceToPrint}`
     }
-    return `${priceToPrint}${currencyCodeToSymbol(currencyCode)}`
+   return `${priceToPrint}${symbol}`
 }

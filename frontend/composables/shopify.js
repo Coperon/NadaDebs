@@ -1,5 +1,6 @@
 import { createStorefrontApiClient } from '@shopify/storefront-api-client';
 import { useCartStore } from '@/stores/cart';
+import { useCountryStore } from '@/stores/country'
 
 let shopiClient;
 
@@ -15,12 +16,12 @@ const makeGraphQLRequest = async (query, variables) => {
 
 const transformCartData = (cartData) => {
     return {
-        id: cartData.id,
-        checkoutUrl: cartData.checkoutUrl,
-        lineItems: cartData.lines.edges.map(edge => {
+        id: cartData?.id,
+        checkoutUrl: cartData?.checkoutUrl,
+        lineItems: cartData?.lines.edges.map(edge => {
             const variant = edge.node.merchandise;
             if (!variant.product) {
-                console.warn('Missing product for variant:', variant.id); // Log missing product
+                console.warn('Missing product for variant:', variant?.id); // Log missing product
             }
             const options = variant.selectedOptions.reduce((acc, option) => {
                 acc[option.name.toLowerCase()] = option.value;
@@ -45,7 +46,7 @@ const transformCartData = (cartData) => {
                 }
             };
         }),
-        totalPriceV2: cartData.estimatedCost.totalAmount
+        totalPriceV2: cartData?.estimatedCost.totalAmount
     };
 };
 
@@ -116,8 +117,7 @@ const cartLinesAddMutation = `
 `;
 
 const cartCreateMutation = `
-    mutation ($input: CartInput!, $country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
+    mutation ($input: CartInput!) {
         cartCreate(input: $input) {
             userErrors {
                 message
@@ -148,6 +148,40 @@ const cartLinesRemoveMutation = `
     ${cartFragment}
 `;
 
+// 1. Query available countries and currencies
+export const getAvailableCountries = async (country = 'US') => {
+    const query = `
+      query getAvailableCountries($country: CountryCode) @inContext(country: $country) {
+        localization {
+          availableCountries {
+            currency {
+              isoCode
+              name
+              symbol
+            }
+            isoCode
+            name
+            unitSystem
+          }
+          country {
+            currency {
+              isoCode
+              name
+              symbol
+            }
+            isoCode
+            name
+            unitSystem
+          }
+        }
+      }
+    `;
+    const data = await makeGraphQLRequest(query, { country });
+    return data?.localization;
+};
+
+// 2. Store and use selected country in all queries/mutations
+// Example composable for country selection
 export const initShopify = async () => {
     const runtimeConfig = useRuntimeConfig();
     const storeDomain = runtimeConfig?.public?.shopifyStoreDomain;
@@ -198,10 +232,14 @@ export const addToCart = async (product, variantId) => {
         cartStore.setCartOpen(true); // Open the cart drawer
         return updatedCart; // Return the updated cart state
     } else {
+        // Use buyerIdentity for market context
+        const { useCountryStore } = await import('@/stores/country')
+        const countryStore = useCountryStore()
         const data = await makeGraphQLRequest(cartCreateMutation, {
-            input: { lines: lineItems },
-            country: 'ES',
-            language: 'EN'
+            input: {
+                lines: lineItems,
+                buyerIdentity: { countryCode: countryStore.country }
+            }
         });
         if (!data) return;
 
@@ -232,4 +270,65 @@ export const removeFromCart = async (lineItemId) => {
     const updatedCart = transformCartData(data.cartLinesRemove.cart);
     cartStore.setCart(updatedCart);
     return updatedCart; // Return the updated cart state
+};
+
+export const fetchShopifyProductPrice = async (productGid, country) => {
+  const query = `
+    query getProduct($id: ID!, $country: CountryCode) @inContext(country: $country) {
+      product(id: $id) {
+        priceRange {
+          minVariantPrice { amount currencyCode }
+          maxVariantPrice { amount currencyCode }
+        }
+      }
+    }
+  `
+  const data = await makeGraphQLRequest(query, { id: productGid, country })
+  return data?.product?.priceRange
+}
+
+export const fetchVariantAvailability = async (variantGid, productGid, country) => {
+    console.log('Fetching variant availability for:', variantGid, productGid, 'in country:', country);
+  const query = `
+    query getVariant($productId: ID!, $country: CountryCode) @inContext(country: $country) {
+      product(id: $productId) {
+        variants(first: 100) {
+          edges {
+            node {
+              id
+              availableForSale
+            }
+          }
+        }
+      }
+    }
+  `
+  const data = await makeGraphQLRequest(query, { productId: productGid, country })
+  const variants = data?.product?.variants?.edges || []
+  console.log('Variants:', variants) // Log the fetched variants for debugging
+  const variant = variants.find(v => v.node.id === variantGid)
+  return variant?.node?.availableForSale
+}
+
+export const updateCartBuyerIdentity = async (cartId, countryCode) => {
+  const mutation = `
+    mutation cartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentityInput!) {
+      cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyerIdentity) {
+        cart {
+          ...CartFragment
+        }
+        userErrors {
+          message
+          code
+          field
+        }
+      }
+    }
+    ${cartFragment}
+  `;
+  const data = await makeGraphQLRequest(mutation, {
+    cartId,
+    buyerIdentity: { countryCode }
+  });
+  return data?.cartBuyerIdentityUpdate?.cart;
 };
