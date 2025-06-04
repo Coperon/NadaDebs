@@ -29,7 +29,7 @@
             <div class="flex flex-col gap-3">
                 <h2 class="text-a2 font-medium uppercase">Trade</h2>
                 <ul class="flex flex-col gap-1.5">
-                    <li><NuxtLink to="" class="lowercase">Make a request</NuxtLink></li>
+                    <li><NuxtLink to="/trade" class="lowercase">Make a request</NuxtLink></li>
                 </ul>
             </div>
             <div v-if="infoPages?.length > 0" class="flex flex-col gap-3">

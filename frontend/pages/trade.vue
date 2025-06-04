@@ -1,12 +1,14 @@
 <template>
-    <CommonContactLayout :data="contactData">
-        <CommonForm formName="contact">
+    <CommonContactLayout :data="tradeData">
+        <CommonForm formName="trade">
+            <CommonFormInput type="text" name="company-name" placeholder="Company Name *" required />
+            <CommonFormInput type="url" name="company-website" placeholder="Company Website *" required />
+            <CommonFormInput type="text" name="type-of-business" placeholder="Type of Business *" required />
             <CommonFormInput type="text" name="first-name" placeholder="First Name *" required />
             <CommonFormInput type="text" name="last-name" placeholder="Last Name *" required />
             <CommonFormInput type="tel" name="mobile-number" placeholder="Mobile Number *" required />
             <CommonFormInput type="email" name="email-address" placeholder="Email Address *" required />
             <CommonFormInput type="text" name="country" placeholder="Country *" required />
-            <CommonFormInput type="text" name="profession" placeholder="Profession *" required />
             <CommonFormTextarea name="message" placeholder="Message *" required />
         </CommonForm>
     </CommonContactLayout>
@@ -14,9 +16,9 @@
 
 <script setup>
 import { useSeoObject } from '@/composables/seo'
-import { getContact } from '@/data/contact'
+import { getTrade } from '@/data/trade'
 
-const contactData = await getContact()
+const tradeData = await getTrade()
 
-useSeoObject(contactData?.seo, contactData?.title)
+useSeoObject(tradeData?.seo, tradeData?.title)
 </script>

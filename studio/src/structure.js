@@ -193,6 +193,9 @@ export const structure = (S, context) =>
         .child(
           S.documentTypeList('legal')
         ),
+      S.listItem().title('Trade').id('trade').icon(DocumentIcon).child(
+        S.document().schemaType('trade').documentId('trade'),
+      ),
       S.divider(),
       S.listItem()
         .title('Global')

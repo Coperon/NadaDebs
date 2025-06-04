@@ -32,7 +32,7 @@ export default {
             title: 'Title',
             type: 'string',
             group: 'page',
-            hidden: false,
+            hidden: true,
             validation: (Rule) => Rule.required(),
         },
         {

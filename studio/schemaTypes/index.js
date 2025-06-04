@@ -19,6 +19,7 @@ import findUs from './singleton/findUs'
 import contact from './singleton/contact'
 import workWithUs from './singleton/workWithUs'
 import position from './position'
+import trade from './singleton/trade'
 import legal from './legal'
 import page from './page'
 import siteConfig from './siteConfig'
@@ -71,6 +72,7 @@ export const schemaTypes = [
   contact,
   workWithUs,
   position,
+  trade,
   legal,
   page,
   category,

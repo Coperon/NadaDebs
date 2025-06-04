@@ -128,7 +128,7 @@
                             <Transition name="fade">
                                 <div v-if="isTradeMenuOpen" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Make a request</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/trade" class="lowercase">Make a request</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>
@@ -307,6 +307,12 @@ const parentRouteSlug = computed(() => {
     }
     else if (route.path.startsWith('/news')) {
         return 'News'
+    }
+    else if (route.path.startsWith('/connect')) {
+        return 'Connect'
+    }
+    else if (route.path.startsWith('/trade')) {
+        return 'Trade'
     }
     else if (route.path.startsWith('/work-with-us')) {
         return 'Work with us'

@@ -2,8 +2,8 @@ import {RiProfileLine} from 'react-icons/ri'
 import {IoMdAnalytics} from 'react-icons/io'
 
 export default {
-    name: 'contact',
-    title: 'Contact us',
+    name: 'trade',
+    title: 'Trade',
     type: 'document',
     groups: [
         {
