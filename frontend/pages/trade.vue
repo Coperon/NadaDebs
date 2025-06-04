@@ -11,6 +11,19 @@
             <CommonFormInput type="text" name="country" placeholder="Country *" required />
             <CommonFormTextarea name="message" placeholder="Message *" required />
         </CommonForm>
+
+        <form name="trade" data-netlify="true" hidden>
+            <input type="text" name="company-name" />
+            <input type="url" name="company-website" />
+            <input type="text" name="type-of-business" />
+            <input type="text" name="first-name" />
+            <input type="text" name="last-name" />
+            <input type="tel" name="mobile-number" />
+            <input type="email" name="email-address" />
+            <input type="text" name="country" />
+            <textarea name="message"></textarea>
+            <input type="checkbox" name="terms" />
+        </form>
     </CommonContactLayout>
 </template>
 
