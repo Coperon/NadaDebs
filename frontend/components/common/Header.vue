@@ -337,6 +337,7 @@ const headerBgClass = computed(() => {
     if (
         isTopNavTransparent.value 
         || route.name === 'studio'
+        || route.name === 'shop'
     ) {
         return 'bg-transparent'
     }

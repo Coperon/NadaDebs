@@ -1,6 +1,7 @@
 import project from './project'
 import product from './product'
 import homepage from './singleton/homePage'
+import shop from './singleton/shop'
 import studio from './singleton/studio'
 import collaborations from './singleton/collaborations'
 import collaboration from './collaboration'
@@ -54,6 +55,7 @@ export const schemaTypes = [
   product,
   projectsArchive,
   homepage,
+  shop,
   studio,
   collaborations,
   collaboration,

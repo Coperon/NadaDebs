@@ -16,15 +16,15 @@
         </main>
 
         <!-- Footer -->
-        <CommonFooter v-if="route.name !== 'studio'" :infoPages="infoPages" />
+        <CommonFooter v-if="route.name !== 'studio' && route.name !== 'shop'" :infoPages="infoPages" />
 
         <!-- Shop Cart Drawer -->
         <ShopCartDrawer :cart="cartStore.cart" @close="cartStore.setCartOpen(false)" />
 
         <!-- Country Selector -->
-        <ClientOnly>
+        <!-- <ClientOnly>
             <CountrySelector />
-        </ClientOnly>
+        </ClientOnly> -->
         
         <!-- Cookie Banner -->
         <ClientOnly>
