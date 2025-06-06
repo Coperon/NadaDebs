@@ -1,8 +1,8 @@
 import {TagIcon} from '@sanity/icons'
 
 export default {
-  name: 'interiorCategory',
-  title: 'Interior Category',
+  name: 'objectsCategory',
+  title: 'Objects Category',
   type: 'document',
   icon: TagIcon,
   fields: [

@@ -4,6 +4,8 @@ const formatNumber = (val) => {
   return new Intl.NumberFormat('en', {
     currency: DEFAULT_CURRENCY_CODE,
     style: 'currency',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(val)
 }
 

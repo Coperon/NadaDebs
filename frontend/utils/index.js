@@ -74,7 +74,7 @@ export const formatPrice = (price, currencyCode='USD', symbol='$') => {
     }
     let numberPrice = parseFloat(price)
     if (isNaN(numberPrice)) return ''
-    let priceToPrint = numberPrice.toFixed(2)
+    let priceToPrint = numberPrice.toString()
     // Prefer API symbol if provided
     if (currencyCode === 'USD' || currencyCode === 'GBP') {
         return `${symbol}${priceToPrint}`

@@ -6,7 +6,7 @@ import pluralize from 'pluralize-esm'
 import ProductHiddenInput from '../src/components/inputs/ProductHidden'
 import ShopifyDocumentStatus from '../src/components/media/ShopifyDocumentStatus'
 import { getPriceRange } from '../src/utils/getPriceRange'
-import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
+// import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 
 const GROUPS = [
     {
@@ -17,7 +17,7 @@ const GROUPS = [
     },
     {
         name: 'shopifySync',
-        title: 'Shopify sync',
+        title: 'Shopify Sync',
         icon: FaShopify,
     },
     {
@@ -34,7 +34,7 @@ export default {
     icon: TagIcon,
     groups: GROUPS,
     fields: [
-        orderRankField({ type: 'product', newItemPosition: 'before', hidden: true }),
+        // orderRankField({ type: 'product', newItemPosition: 'before', hidden: true }),
         {
             name: 'hidden',
             type: 'string',
@@ -86,20 +86,42 @@ export default {
         // },
         {
             name: 'featuredImage',
-            title: 'FeaturedImage',
+            title: 'Featured Image',
             type: 'image',
             validation: (Rule) => Rule.required(),
             options: {
                 hotspot: true,
             },
             group: 'editorial',
-            description: 'If filled, it will override the featured image from Shopify',
         },
         {
-            name: 'body',
-            title: 'Body',
-            type: 'textContent',
+            name: 'category',
+            title: 'Category',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Objects', value: 'objects' },
+                    { title: 'Furniture', value: 'furniture' },
+                ],
+            },
             group: 'editorial',
+            validation: (Rule) => Rule.required(),
+        },
+        {
+            name: 'objectsCategory',
+            title: 'Type',
+            type: 'reference',
+            to: [{ type: 'objectsCategory' }],
+            group: 'editorial',
+            hidden: ({ parent }) => parent?.category !== 'objects',
+        },
+        {
+            name: 'furnitureCategory',
+            title: 'Type',
+            type: 'reference',
+            to: [{ type: 'furnitureCategory' }],
+            group: 'editorial',
+            hidden: ({ parent }) => parent?.category !== 'furniture',
         },
         {
             title: 'SEO',
@@ -109,7 +131,7 @@ export default {
         },
     ],
     orderings: [
-        orderRankOrdering,
+        // orderRankOrdering,
         {
             name: 'titleAsc',
             title: 'Title (A-Z)',

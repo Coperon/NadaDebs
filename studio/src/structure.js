@@ -1,7 +1,7 @@
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list'
 
 // icons: https://react-icons.github.io/react-icons/search/
-import { HomeIcon } from '@sanity/icons'
+import { HomeIcon, TagIcon } from '@sanity/icons'
 import { DocumentIcon } from '@sanity/icons'
 import { FolderIcon } from '@sanity/icons'
 import { CogIcon } from '@sanity/icons'
@@ -20,8 +20,32 @@ export const structure = (S, context) =>
             S.divider(),
             S.listItem().title('Shop').icon(BasketIcon).child(
                 S.list().title('Shop').items([
+                    S.listItem().title('Products').id('products').icon(FolderIcon).child(
+                        S.documentTypeList('product')
+                    ),
+                    S.divider(),
                     S.listItem().title('Shop').id('shopIndex').icon(DocumentIcon).child(
                         S.document().schemaType('shop').documentId('shop')
+                    ),
+                    S.listItem().title('Objects').icon(FolderIcon).child(
+                        S.list().title('Objects').items([
+                            S.listItem().title('Objects').id('objectsIndex').icon(DocumentIcon).child(
+                                S.document().schemaType('objects').documentId('objects')
+                            ),
+                            S.listItem().title('Categories').id('objectsCategory').icon(TagIcon).child(
+                                S.documentTypeList('objectsCategory')
+                            ),
+                        ]),
+                    ),
+                    S.listItem().title('Furniture').icon(FolderIcon).child(
+                        S.list().title('Furniture').items([
+                            S.listItem().title('Furniture').id('furnitureIndex').icon(DocumentIcon).child(
+                                S.document().schemaType('furniture').documentId('furniture')
+                            ),
+                            S.listItem().title('Categories').id('furnitureCategory').icon(TagIcon).child(
+                                S.documentTypeList('furnitureCategory')
+                            ),
+                        ]),
                     ),
                 ]),
             ),
@@ -31,14 +55,14 @@ export const structure = (S, context) =>
                         S.document().schemaType('about').documentId('about')
                     ),
                     S.listItem().title('Contemporary Crafts').icon(FolderIcon).child(
-                            S.list().title('Contemporary Crafts').items([
-                                S.listItem().title('Contemporary Crafts').id('contemporaryCraftsIndex').icon(DocumentIcon).child(
-                                    S.document().schemaType('crafts').documentId('crafts')
-                                ),
-                                S.listItem().title('Crafts').id('crafts').icon(FolderIcon).child(
-                                    S.documentTypeList('craft')
-                                ),
-                            ]),
+                        S.list().title('Contemporary Crafts').items([
+                            S.listItem().title('Contemporary Crafts').id('contemporaryCraftsIndex').icon(DocumentIcon).child(
+                                S.document().schemaType('crafts').documentId('crafts')
+                            ),
+                            S.listItem().title('Crafts').id('crafts').icon(FolderIcon).child(
+                                S.documentTypeList('craft')
+                            ),
+                        ]),
                     ),
                 ])
             ),

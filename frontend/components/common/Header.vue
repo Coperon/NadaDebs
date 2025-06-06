@@ -299,7 +299,10 @@ const cartStore = useCartStore()
 const route = useRoute()
 
 const parentRouteSlug = computed(() => {
-    if (route.path.startsWith('/studio')) {
+    if (route.path.startsWith('/shop')) {
+        return 'Shop'
+    }
+    else if (route.path.startsWith('/studio')) {
         return 'Studio'
     }
     else if (route.path.startsWith('/our-world')) {
@@ -343,6 +346,9 @@ const headerBgClass = computed(() => {
     }
     if (route.path.startsWith('/studio/')) {
         return 'bg-beige'
+    }
+    if (route.path.startsWith('/shop/')) {
+        return 'bg-white'
     }
 
     return 'bg-sand'

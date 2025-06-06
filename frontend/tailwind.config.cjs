@@ -38,7 +38,7 @@ module.exports = {
                     fontWeight: '700',
                 }],
                 'h2': ['0.875rem', {
-                    lineHeight: '1',
+                    lineHeight: '1.35714286',
                     letterSpacing: '0.02em',
                     fontWeight: '700',
                 }],
