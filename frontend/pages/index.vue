@@ -25,7 +25,7 @@
                     <button @click="toggleMenu('shop')" class="text-a1-bold uppercase">Shop</button>
                     <div class="submenu overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'shop' ? menuHeights.shop + 'px' : '0px' }">
                         <ul class="pt-2 flex flex-col items-center gap-2">
-                            <li><NuxtLink to="" class="lowercase">Objects</NuxtLink></li>
+                            <li><NuxtLink to="/shop/objects" class="lowercase">Objects</NuxtLink></li>
                             <li><NuxtLink to="" class="lowercase">Furniture</NuxtLink></li>
                             <li><NuxtLink to="" class="lowercase">Collections</NuxtLink></li>
                         </ul>
@@ -58,10 +58,10 @@
             <ul class="flex items-center">
                 <li class="flex-1 flex justify-center">
                     <div @mouseenter="toggleMenu('shop'); isBgWhite = true; hoveredMenu = 'shop'" @mouseleave="toggleMenu('ourWorld'); isBgWhite = false; hoveredMenu = null" class="relative">
-                        <NuxtLink to="" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'shop' }">Shop</NuxtLink>
+                        <NuxtLink to="/shop" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'shop' }">Shop</NuxtLink>
                         <Transition name="fade">
                             <ul v-if="activeMenu === 'shop'" class="absolute top-full left-0 pt-2 flex flex-col items-start text-a2">
-                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'objects'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'objects' }">Objects</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'objects'" @mouseleave="hoveredSubmenu = null" to="/shop/objects" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'objects' }">Objects</NuxtLink></li>
                                 <li><NuxtLink @mouseenter="hoveredSubmenu = 'furniture'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'furniture' }">Furniture</NuxtLink></li>
                                 <li><NuxtLink @mouseenter="hoveredSubmenu = 'collections'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'collections' }">Collections</NuxtLink></li>
                             </ul>

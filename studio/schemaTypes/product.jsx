@@ -89,9 +89,12 @@ export default {
             title: 'Featured Image',
             type: 'image',
             validation: (Rule) => Rule.required(),
-            options: {
-                hotspot: true,
-            },
+            group: 'editorial',
+        },
+        {
+            name: 'secondaryImage',
+            title: 'Secondary Image',
+            type: 'image',
             group: 'editorial',
         },
         {
@@ -122,6 +125,13 @@ export default {
             to: [{ type: 'furnitureCategory' }],
             group: 'editorial',
             hidden: ({ parent }) => parent?.category !== 'furniture',
+        },
+        {
+            name: 'isFeatured',
+            title: 'Is Featured',
+            description: 'If true, the product will be displayed larger on the index page',
+            type: 'boolean',
+            group: 'editorial',
         },
         {
             title: 'SEO',

@@ -6,16 +6,29 @@
         />
 
         <div v-if="objectsData && objectsData.length > 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2.5 gap-y-8 md:gap-y-12 xl:gap-y-16">
-            <div v-for="object in objectsData" :key="object._id">
-                <NuxtLink :to="`/shop/${object.store.slug.current}`">
-                    <div v-if="object?.featuredImage" class="aspect-[4/5] relative overflow-hidden bg-beige/30">
+            <div v-for="object in objectsData" :key="object._id" :class="object.isFeatured ? 'col-span-2' : ''">
+                <NuxtLink :to="`/shop/${object.store.slug.current}`" class="group">
+                    <div v-if="object?.featuredImage" class="relative overflow-hidden bg-beige/30" :class="object.isFeatured ? 'aspect-auto' : 'aspect-[4/5]'">
                         <CommonMediaImage
                             :image="object.featuredImage"
                             :alt="object.store.title"
-                            width="384"
-                            mobileWidth="384"
-                            class="absolute inset-0 w-full h-full object-contain"
+                            :width="object.isFeatured ? '768' : '384'"
+                            :mobileWidth="object.isFeatured ? '768' : '384'"
+                            class="w-full h-full object-contain"
+                            :class="object.isFeatured ? 'absolute inset-0' : ''"
                         />
+                        <CommonMediaImage
+                            v-if="object?.secondaryImage"
+                            :image="object.secondaryImage"
+                            :alt="object.store.title"
+                            :width="object.isFeatured ? '768' : '384'"
+                            :mobileWidth="object.isFeatured ? '768' : '384'"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        />
+                        <div v-if="object.isFeatured" class="flex gap-x-2.5 w-full pointer-events-none">
+                            <div class="aspect-[4/5] flex-1"></div>
+                            <div class="aspect-[4/5] flex-1"></div>
+                        </div>
                     </div>
 
                     <div class="px-4 mt-2.5 lg:mt-5">

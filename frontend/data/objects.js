@@ -3,17 +3,21 @@ import { imageQuery } from "./fragments"
 
 export const getObjects = async () => {
     const { $sanity } = useNuxtApp()
-    const query = groq` *[_type == "product" && category == "objects" && !(_id in path("drafts.**"))]|order(createdAt desc) {
+    const query = groq` *[_type == "product" && category == "objects" && !(_id in path("drafts.**"))]|order(store.createdAt desc) {
         _id,
         title,
         hidden,
         featuredImage {
             ${imageQuery}
         },
+        secondaryImage {
+            ${imageQuery}
+        },
         objectsCategory->{
             title,
             slug,
         },
+        isFeatured,
         store {
             createdAt,
             priceRange,
