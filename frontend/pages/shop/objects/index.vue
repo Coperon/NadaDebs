@@ -5,8 +5,8 @@
             :description="objectsPageData?.description" 
         />
 
-        <div v-if="objectsData && objectsData.length > 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2.5 gap-y-8 md:gap-y-12 xl:gap-y-16">
-            <div v-for="object in objectsData" :key="object._id" :class="object.isFeatured ? 'col-span-2' : ''">
+        <div v-if="displayedItems.length > 0" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2.5 gap-y-8 md:gap-y-12 xl:gap-y-16">
+            <div v-for="object in displayedItems" :key="object._id" :class="object.isFeatured ? 'col-span-2' : ''">
                 <NuxtLink :to="`/shop/${object.store.slug.current}`" class="group">
                     <div v-if="object?.featuredImage" class="relative overflow-hidden bg-beige/30" :class="object.isFeatured ? 'aspect-auto' : 'aspect-[4/5]'">
                         <CommonMediaImage
@@ -33,12 +33,21 @@
 
                     <div class="px-4 mt-2.5 lg:mt-5">
                         <h2 class="text-h2">{{ object.store.title }}</h2>
-                        <div class="mt-1.5 opacity-50">
+                        <div class="mt-1.5 text-grey group-hover:text-black transition-colors">
                             <ShopProductPrice :productGid="object?.store?.gid" :price="object?.store?.priceRange" />
                         </div>
                     </div>
                 </NuxtLink>
             </div>
+        </div>
+
+        <div v-if="hasMoreItems" class="mt-12 flex justify-center">
+            <button 
+                @click="loadMore"
+                class="text-a2 text-grey lowercase hover:text-black transition-colors"
+            >
+                Load More +
+            </button>
         </div>
     </div>
 </template>
@@ -50,8 +59,26 @@ import { getObjects } from '@/data/objects'
 import { getObjectsCategories } from '@/data/objectsCategories'
 
 const objectsPageData = await getObjectsPage()
-const objectsData = await getObjects()
 const categories = await getObjectsCategories()
+
+const allProducts = await getObjects()
+
+const itemsPerPage = 24
+const currentPage = ref(1)
+
+const displayedItems = computed(() => {
+    const end = currentPage.value * itemsPerPage
+    return allProducts.value?.items?.slice(0, end) || []
+})
+
+const hasMoreItems = computed(() => {
+    if (!allProducts.value?.items) return false
+    return displayedItems.value.length < allProducts.value.items.length
+})
+
+const loadMore = () => {
+    currentPage.value++
+}
 
 useSeoObject(objectsPageData?.seo, objectsPageData?.title)
 </script>
