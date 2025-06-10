@@ -9,7 +9,11 @@
         ></div>
 
         <div class="absolute inset-0 text-black transition-opacity duration-300" :class="{ 'opacity-0 pointer-events-none': !menuState.isOpened }">
-            <div class="absolute inset-0" @click="toggleMenuState"></div>
+            <div 
+                class="absolute inset-0" 
+                :class="route.path.startsWith('/shop/') ? 'bg-beige/20' : 'bg-transparent'"
+                @click="toggleMenuState"
+            ></div>
             <div class="bg-white absolute inset-y-0 left-0 w-full sm:max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
                 <div class="px-4 sm:hidden">
                     <div class="shrink-0 border-t border-b border-current py-1.5 flex items-center text-a2 font-medium lowercase">
