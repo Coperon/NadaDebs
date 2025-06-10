@@ -25,7 +25,14 @@ export const getObjects = async () => {
                 priceRange,
                 slug,
                 title,
-                gid
+                gid,
+                variants[]->{
+                    store {
+                        inventory {
+                            isAvailable
+                        }
+                    }
+                }
             }
         }
     }`
