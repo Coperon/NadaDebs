@@ -45,30 +45,30 @@ export default defineConfig({
     // prev is the result from previous plugins and thus can be composed
     productionUrl: async (prev, context) => {
       // context includes the client and other details
-      if (context?.document?._id === 'homepage' || context?.document?._id === 'drafts.homepage') {
-        return `${previewUrl}`
-      }
+      // if (context?.document?._id === 'homepage' || context?.document?._id === 'drafts.homepage') {
+      //   return `${previewUrl}`
+      // }
 
-      if (context?.document?._id === 'about' || context?.document?._id === 'drafts.about') {
-        return `${previewUrl}/about/`
-      }
+      // if (context?.document?._id === 'about' || context?.document?._id === 'drafts.about') {
+      //   return `${previewUrl}/about/`
+      // }
 
-      if (
-        context?.document?._id === 'projectsArchive' ||
-        context?.document?._id === 'drafts.projectsArchive'
-      ) {
-        return `${previewUrl}/work/`
-      }
+      // if (
+      //   context?.document?._id === 'projectsArchive' ||
+      //   context?.document?._id === 'drafts.projectsArchive'
+      // ) {
+      //   return `${previewUrl}/work/`
+      // }
 
-      if (context?.document?._type === 'project') {
-        return `${previewUrl}/work/${context?.document?.slug?.current}/`
-      }
+      // if (context?.document?._type === 'project') {
+      //   return `${previewUrl}/work/${context?.document?.slug?.current}/`
+      // }
 
-      if (context?.document?._type === 'page') {
-        return `${previewUrl}/${context?.document?.slug?.current}/`
-      }
+      // if (context?.document?._type === 'page') {
+      //   return `${previewUrl}/${context?.document?.slug?.current}/`
+      // }
 
-      return prev
+      // return prev
     },
   },
   // remove the tab for all filelds when using tabs to organize fields
