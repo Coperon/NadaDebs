@@ -36,11 +36,11 @@ export default defineConfig({
   projectId: projectId,
   dataset: dataset,
   icon: BrandLogo,
-  // tools: [{
-  //   title: 'Preview',
-  //   name: 'preview-link',
-  //   component: PreviewLink,
-  // }],
+  tools: [{
+    title: 'Preview',
+    name: 'preview-link',
+    component: PreviewLink,
+  }],
   document: {
     // prev is the result from previous plugins and thus can be composed
     productionUrl: async (prev, context) => {
