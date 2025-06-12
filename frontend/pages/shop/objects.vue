@@ -158,14 +158,17 @@ const objectsPageData = await getObjectsPage()
 const categories = await getObjectsCategories()
 const allProducts = await getObjects()
 
-const selectedCategory = ref(null)
-const selectedSort = ref('recent')
+const route = useRoute()
+const router = useRouter()
+
+const selectedCategory = ref(route.query.type || null)
+const selectedSort = ref(route.query.sort || 'recent')
+const showInStockOnly = ref(route.query.stock === 'true')
 const itemsPerPage = 24
 const currentPage = ref(1)
 const isFilterOpen = ref(false)
 const isTypeListOpen = ref(true)
 const isSortingOpen = ref(true)
-const showInStockOnly = ref(false)
 
 const filterText = computed(() => {
     const filters = []
@@ -250,6 +253,17 @@ const loadMore = () => {
 watch(selectedCategory, () => {
     currentPage.value = 1
 })
+
+// Watch for filter changes and update URL
+watch([selectedCategory, selectedSort, showInStockOnly], ([newCategory, newSort, newInStock]) => {
+    const query = {}
+    
+    if (newCategory) query.type = newCategory
+    if (newSort !== 'recent') query.sort = newSort
+    if (newInStock) query.stock = 'true'
+    
+    router.replace({ query })
+}, { deep: true })
 
 useSeoObject(objectsPageData?.seo, objectsPageData?.title)
 </script>
