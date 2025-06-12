@@ -31,7 +31,8 @@
                             <ShopProductVariants 
                                 :variants="productData?.store?.variants"           
                                 :selectedVariant="selectedVariant"
-                                :productGid="productData?.store?.gid" :variantAvailability="variantAvailability"
+                                :productGid="productData?.store?.gid" 
+                                :variantAvailability="variantAvailability"
                                 :variantAvailabilityLoading="variantAvailabilityLoading"
                                 @update:selectedVariant="selectedVariant = $event"
                             />
