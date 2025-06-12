@@ -41,7 +41,7 @@
 
 <script setup>
 import Swiper from 'swiper'
-import { Pagination } from 'swiper/modules'
+import { Pagination, Mousewheel, FreeMode } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
@@ -77,22 +77,32 @@ onBeforeUnmount(() => {
 
 const initSwiper = () => {
     swiper = new Swiper(swiperContainer.value, {
-        modules: [Pagination],
-        slidesPerView: 1,
+        modules: [Pagination, Mousewheel, FreeMode],
         pagination: {
             el: '.swiper-pagination',
         },
+        mousewheel: {
+            enabled: true,
+            forceToAxis: true,
+            releaseOnEdges: true,
+        },
+        freeMode: true,
+        breakpoints: {
+            640: {
+                direction: 'vertical',
+            }
+        }
     })
 }
 </script>
 
 <style>
 #product-gallery .swiper-pagination {
-    @apply absolute bottom-4 inset-x-0 px-4 flex justify-center gap-1;
+    @apply bottom-4 h-1 flex justify-center gap-2 sm:bottom-auto sm:h-full sm:w-1 sm:left-4 lg:left-6 xl:left-8 sm:flex-col;
 }
 
 #product-gallery .swiper-pagination-bullet {
-    @apply w-1 h-1 rounded-full bg-black opacity-30;
+    @apply w-1 h-1 m-0 rounded-full bg-black opacity-30;
 }
 
 #product-gallery .swiper-pagination-bullet-active {
