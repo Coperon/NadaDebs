@@ -125,7 +125,11 @@
                         <div class="px-4 mt-2.5 lg:mt-5">
                             <h2 class="text-h2">{{ object.store.title }}</h2>
                             <div class="mt-1.5 text-grey group-hover:text-black transition-colors">
-                                <ShopProductPrice :productGid="object?.store?.gid" :price="object?.store?.priceRange" />
+                                <ShopProductPrice 
+                                    :productGid="object?.store?.gid" 
+                                    :price="object?.store?.priceRange" 
+                                    :isHidden="object?.buyOptions?.onlyInquire && object?.buyOptions?.hidePrice" 
+                                />
                             </div>
                         </div>
                     </NuxtLink>

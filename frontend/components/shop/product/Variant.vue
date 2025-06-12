@@ -1,15 +1,24 @@
 <template>
     <label
         :for="`radio-${index}-${variant._id}`"
-        class="tab transition-colors flex justify-center p-2 min-w-[40px] border border-black rounded-full cursor-pointer"
-        :class="{
-            'bg-black text-white': selectedVariant && selectedVariant?.store?.gid === variant?.store?.gid,
-            'bg-white hover:text-blue-700':
-                selectedVariant?.store?.gid !== variant?.store?.gid && isAvailable,
-            'cursor-not-allowed line-through opacity-50 pointer-events-none': !isAvailable
-        }"
+        class="cursor-pointer text-p2 lowercase flex items-center gap-2"
+        :class="
+            selectedVariant && selectedVariant?.store?.gid === variant?.store?.gid ? 'font-medium' : 'font-light'
+            // 'font-medium': selectedVariant && selectedVariant?.store?.gid === variant?.store?.gid,
+            // 'font-light': selectedVariant?.store?.gid !== variant?.store?.gid && !isAvailable
+            // 'cursor-not-allowed opacity-30 pointer-events-none': !isAvailable
+        "
     >
-        {{ variant.store.title }}
+        <span 
+            class="w-3 h-3 rounded-full border flex items-center justify-center shrink-0"
+            :class="selectedVariant && selectedVariant?.store?.gid === variant?.store?.gid ? 'border-black' : 'border-grey'"
+        >
+            <span 
+                class="w-1.5 h-1.5 rounded-full bg-black transition-opacity duration-300"
+                :class="selectedVariant && selectedVariant?.store?.gid === variant?.store?.gid ? 'opacity-100' : 'opacity-0'"
+            ></span>
+        </span>
+        <span>{{ variant.store.title }}</span>
     </label>
 </template>
 

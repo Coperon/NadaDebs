@@ -1,6 +1,47 @@
 <template>
-    <button @click="handleClick($event)" @mouseenter="handleMouseEnter($event)" @mouseleave="showOptionsWarning = false" :disabled="isOutOfStock" class="btn w-fit h-fit uppercase">{{ isOutOfStock ? 'Sold out' :'Add to Cart'}}</button>
-    <span v-if="showOptionsWarning" class="text-[#e17100] text-[14px]">Select your options</span>
+    <div>
+        <div v-if="!product?.buyOptions?.onlyInquire" class="text-a2 text-grey lowercase mb-2">
+            <template v-if="isOutOfStock && !product?.buyOptions?.inquireWhenOutOfStock">
+                Sold out
+            </template>
+            <template v-else-if="product?.store?.variants?.length > 1 && !selectedVariant">
+                Please select a variant
+            </template>
+            <template v-else-if="product?.store?.variants?.length > 1 && selectedVariant">
+                {{ isOutOfStock ? 'Sold out' : 'In stock' }}
+            </template>
+        </div>
+
+        <button 
+            v-if="product?.buyOptions?.onlyInquire || (product?.buyOptions?.inquireWhenOutOfStock && isOutOfStock)" 
+            class="w-full"
+            :class="{'opacity-50 pointer-events-none cursor-not-allowed': product?.store?.variants?.length > 1 && !selectedVariant}"
+            :disabled="product?.store?.variants?.length > 1 && !selectedVariant"
+        >
+            <CommonButton>Inquire</CommonButton>
+        </button>
+
+        <button 
+            v-else-if="!isOutOfStock" 
+            class="w-full"
+            @click="handleClick($event)"
+            :class="{'opacity-50 pointer-events-none cursor-not-allowed': product?.store?.variants?.length > 1 && !selectedVariant}"
+        >
+            <CommonButton>Add to Cart</CommonButton>
+        </button>
+
+        
+        <!-- <button 
+            @click="handleClick($event)" 
+            @mouseenter="handleMouseEnter($event)" 
+            @mouseleave="showOptionsWarning = false" 
+            :disabled="isOutOfStock"
+        >
+            <CommonButton>
+                {{ isOutOfStock ? 'Sold out' :'Add to Cart'}}
+            </CommonButton>
+        </button> -->
+    </div>
 </template>
 
 <script setup>
@@ -56,13 +97,5 @@ const handleClick = (event) => {
         return false
     }
     addToCart(props.product, getActiveVariant.value?.store?.gid)
-}
-
-const handleMouseEnter = (event) => {
-    if (noVariantSelected.value) {
-        showOptionsWarning.value = true
-    } else {
-        showOptionsWarning.value = false
-    }
 }
 </script>

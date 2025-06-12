@@ -94,7 +94,16 @@ export default {
         {
             name: 'secondaryImage',
             title: 'Secondary Image',
+            description: 'If filled, it will be displayed when hovering over the main image and on the product page',
             type: 'image',
+            group: 'editorial',
+        },
+        {
+            name: 'moreImages',
+            title: 'More Images',
+            description: 'If filled, it will be displayed on the product page',
+            type: 'array',
+            of: [{ type: 'image' }],
             group: 'editorial',
         },
         {
@@ -125,6 +134,71 @@ export default {
             to: [{ type: 'furnitureCategory' }],
             group: 'editorial',
             hidden: ({ parent }) => parent?.category !== 'furniture',
+        },
+        {
+            name: 'description',
+            title: 'Description',
+            type: 'text',
+            group: 'editorial',
+        },
+        {
+            name: 'metaFields',
+            title: 'Meta Fields',
+            type: 'array',
+            of: [{
+                type: 'object',
+                fields: [
+                    {
+                        name: 'title',
+                        title: 'Title',
+                        type: 'string',
+                        validation: (Rule) => Rule.required(),
+                    },
+                    {
+                        name: 'description',
+                        title: 'Description',
+                        type: 'text',
+                        rows: 3,
+                        validation: (Rule) => Rule.required(),
+                    },
+                ]
+            }],
+            group: 'editorial',
+        },
+        {
+            name: 'crafts',
+            title: 'Crafts',
+            type: 'array',
+            of: [{ type: 'reference', to: [{ type: 'craft' }] }],
+            group: 'editorial',
+        },
+        {
+            name: 'buyOptions',
+            title: 'Buy / Inquire options',
+            type: 'object',
+            fields: [
+                {
+                    name: 'onlyInquire',
+                    title: 'Only Inquire',
+                    type: 'boolean',
+                    description: 'If true, the product will only be available for inquiry',
+                },
+                {
+                    name: 'hidePrice',
+                    title: 'Hide Price',
+                    type: 'boolean',
+                    description: 'If true, the price will not be shown on the product page',
+                    hidden: ({ parent }) => !parent?.onlyInquire,
+                },
+                {
+                    name: 'inquireWhenOutOfStock',
+                    title: 'Inquire when out of stock',
+                    type: 'boolean',
+                    description: 'If true, the product will be available for inquiry when out of stock',
+                    hidden: ({ parent }) => parent?.onlyInquire,
+                },
+            ],
+            group: 'editorial',
         },
         {
             name: 'isFeatured',
@@ -173,9 +247,10 @@ export default {
             displayTitle: 'title',
             title: 'store.title',
             variants: 'store.variants',
+            buyOptions: 'buyOptions',
         },
         prepare(selection) {
-            const { isDeleted, options, previewImage, priceRange, status, title, displayTitle, variants } = selection
+            const { isDeleted, options, previewImage, priceRange, status, title, displayTitle, variants, buyOptions } = selection
             const optionCount = options?.length
             const variantCount = variants?.length
 
@@ -184,7 +259,7 @@ export default {
                 optionCount ? pluralize('option', optionCount, true) : 'No options',
             ]
 
-            let subtitle = getPriceRange(priceRange)
+            let subtitle = buyOptions?.onlyInquire && buyOptions?.hidePrice ? '' : getPriceRange(priceRange)
             if (status !== 'active') {
                 subtitle = '(Unavailable in Shopify)'
             }

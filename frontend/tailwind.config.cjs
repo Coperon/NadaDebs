@@ -24,7 +24,8 @@ module.exports = {
                 sand: '#E0DCD6',
                 beige: '#F1EAE4',
                 'primary-button': '#F8EFD7',
-                grey: '#A1A1A1'
+                grey: '#A1A1A1',
+                'light-grey': '#EFEFEF'
             },
             // Typography styles
             fontSize: {

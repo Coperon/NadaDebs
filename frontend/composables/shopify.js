@@ -288,7 +288,7 @@ export const fetchShopifyProductPrice = async (productGid, country) => {
 }
 
 export const fetchVariantAvailability = async (variantGid, productGid, country) => {
-    console.log('Fetching variant availability for:', variantGid, productGid, 'in country:', country);
+    // console.log('Fetching variant availability for:', variantGid, productGid, 'in country:', country);
   const query = `
     query getVariant($productId: ID!, $country: CountryCode) @inContext(country: $country) {
       product(id: $productId) {
@@ -305,7 +305,7 @@ export const fetchVariantAvailability = async (variantGid, productGid, country) 
   `
   const data = await makeGraphQLRequest(query, { productId: productGid, country })
   const variants = data?.product?.variants?.edges || []
-  console.log('Variants:', variants) // Log the fetched variants for debugging
+//   console.log('Variants:', variants) // Log the fetched variants for debugging
   const variant = variants.find(v => v.node.id === variantGid)
   return variant?.node?.availableForSale
 }

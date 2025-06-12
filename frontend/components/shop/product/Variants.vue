@@ -1,5 +1,5 @@
 <template>
-    <div v-if="variants && variants?.length > 1" class="flex gap-2">
+    <div v-if="variants && variants?.length > 1" class="grid grid-cols-2 gap-y-2 gap-x-6">
         <template v-for="(variant, index) in variants" :key="variant._id">
             <input
                 type="radio"

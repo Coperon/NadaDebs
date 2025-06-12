@@ -19,6 +19,7 @@ export const getObjects = async () => {
                 title,
                 slug,
             },
+            buyOptions,
             isFeatured,
             store {
                 createdAt,
