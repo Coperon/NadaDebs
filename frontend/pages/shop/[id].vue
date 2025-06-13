@@ -14,12 +14,13 @@
                 <header>
                     <div class="text-p2 text-grey mb-1">Collection name</div>
                     <h1 class="text-a1-bold uppercase">{{ productData?.store?.title }}</h1>
-                    <div class="mt-1">
-                        <ShopProductPrice
-                            :price="selectedVariant ? { minVariantPrice: selectedVariant.store.price, maxVariantPrice: selectedVariant.store.price } : productData?.store?.priceRange"
-                            :productGid="productData?.store?.gid" 
-                            :isHidden="productData?.buyOptions?.hidePrice && productData?.buyOptions?.onlyInquire"
-                        />
+                    <div class="mt-1 text-p2">
+                        <template v-if="productData?.buyOptions?.onlyInquire && productData?.buyOptions?.hidePrice">
+                            Price upon request
+                        </template>
+                        <template v-else>
+                            {{ formatPrice(selectedVariant?.store?.price, siteSettingsData?.currencyCode) }}
+                        </template>
                     </div>
                 </header>
 
@@ -29,7 +30,11 @@
 
                 <div class="mt-6">
                     <div v-if="productData?.store?.variants && productData?.store?.variants?.length > 1" class="border-t border-light-grey py-4">
-                        <div class="text-a2 font-medium uppercase">Variants</div>
+                        <div class="text-a2 font-medium uppercase">
+                            <template v-for="(option, index) in productData?.store?.options" :key="option._id">
+                                {{ option.name }}{{ index < productData?.store?.options.length - 1 ? ' / ' : '' }}
+                            </template>
+                        </div>
                         <div class="mt-4">
                             <ShopProductVariants 
                                 :variants="productData?.store?.variants"           
@@ -77,7 +82,7 @@ const productData = await getProductBySlug(route.params.id)
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
 const countryStore = useCountryStore()
-const selectedVariant = ref(null)
+const selectedVariant = ref(productData?.value?.store?.variants?.[0])
 const variantAvailability = ref({})
 const variantAvailabilityLoading = ref(false)
 

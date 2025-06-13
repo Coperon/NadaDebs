@@ -124,13 +124,16 @@
 
                         <div class="px-4 mt-2.5 lg:mt-5">
                             <h2 class="text-h2">{{ object.store.title }}</h2>
-                            <div class="mt-1.5 text-grey group-hover:text-black transition-colors">
-                                <ShopProductPrice 
-                                    :productGid="object?.store?.gid" 
-                                    :price="object?.store?.priceRange" 
-                                    :isHidden="object?.buyOptions?.onlyInquire && object?.buyOptions?.hidePrice" 
-                                    :hasVariants="object?.store?.variants?.length > 1"
-                                />
+                            <div class="mt-1.5 text-grey group-hover:text-black transition-colors text-p2">
+                                <template v-if="object?.buyOptions?.onlyInquire && object?.buyOptions?.hidePrice">
+                                    Price upon request
+                                </template>
+                                <template v-else-if="object?.store?.priceRange?.minVariantPrice !== object?.store?.priceRange?.maxVariantPrice">
+                                    {{ formatPrice(object?.store?.priceRange?.minVariantPrice, siteSettingsData?.currencyCode) }} - {{ formatPrice(object?.store?.priceRange?.maxVariantPrice, siteSettingsData?.currencyCode) }}
+                                </template>
+                                <template v-else>
+                                    {{ formatPrice(object?.store?.priceRange?.minVariantPrice, siteSettingsData?.currencyCode) }}
+                                </template>
                             </div>
                         </div>
                     </NuxtLink>
@@ -158,6 +161,7 @@ import { getObjectsCategories } from '@/data/objectsCategories'
 const objectsPageData = await getObjectsPage()
 const categories = await getObjectsCategories()
 const allProducts = await getObjects()
+const siteSettingsData = inject('siteSettingsData')
 
 const route = useRoute()
 const router = useRouter()

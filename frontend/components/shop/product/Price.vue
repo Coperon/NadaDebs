@@ -4,12 +4,12 @@
             <span>Price upon request</span>
         </template>
         <template v-else>
-            <span v-if="hasVariants && countryStore?.country && livePrice && livePrice?.minVariantPrice && livePrice?.maxVariantPrice && livePrice?.minVariantPrice != livePrice?.maxVariantPrice">
+            <span v-if="countryStore.country && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount != livePrice.maxVariantPrice?.amount">
                 {{ formatPrice(livePrice.minVariantPrice, siteSettingsData?.currencyCode) }} - {{
                     formatPrice(livePrice.maxVariantPrice, siteSettingsData?.currencyCode) }}
             </span>
             <span class="relative"
-                v-else-if="countryStore?.country">
+                v-else-if="countryStore.country">
                 {{ formatPrice(livePrice.minVariantPrice, siteSettingsData?.currencyCode) }}
             </span>
         </template>
@@ -30,11 +30,6 @@ const props = defineProps({
         default: null
     },
     isHidden: {
-        type: Boolean,
-        required: false,
-        default: false
-    },
-    hasVariants: {
         type: Boolean,
         required: false,
         default: false
