@@ -3,8 +3,11 @@
 
         <div class="flex flex-col sm:flex-row sm:items-start">
             <div class="h-[calc(100svh-3.25rem)] sm:h-[calc(100svh-4.25rem)] sm:sticky sm:top-[4.25rem] sm:w-1/2 xl:w-2/3">
-                <ShopProductGallery :featuredImage="productData?.featuredImage"
-                    :secondaryImage="productData?.secondaryImage" :moreImages="productData?.moreImages" />
+                <ShopProductGallery 
+                    :featuredImage="selectedVariant && selectedVariant.image ? selectedVariant.image : productData?.featuredImage"
+                    :secondaryImage="productData?.secondaryImage" 
+                    :moreImages="productData?.moreImages" 
+                />
             </div>
 
             <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pt-5 pb-10 sm:py-10 sm:w-1/2 xl:w-1/3">
@@ -13,7 +16,7 @@
                     <h1 class="text-a1-bold uppercase">{{ productData?.store?.title }}</h1>
                     <div class="mt-1">
                         <ShopProductPrice
-                            :price="selectedVariant ? { minVariantPrice: selectedVariant.store.price, maxVariantPrice: selectedVariant.store.price } : {}"
+                            :price="selectedVariant ? { minVariantPrice: selectedVariant.store.price, maxVariantPrice: selectedVariant.store.price } : productData?.store?.priceRange"
                             :productGid="productData?.store?.gid" 
                             :isHidden="productData?.buyOptions?.hidePrice && productData?.buyOptions?.onlyInquire"
                         />

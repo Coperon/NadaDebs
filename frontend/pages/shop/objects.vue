@@ -129,6 +129,7 @@
                                     :productGid="object?.store?.gid" 
                                     :price="object?.store?.priceRange" 
                                     :isHidden="object?.buyOptions?.onlyInquire && object?.buyOptions?.hidePrice" 
+                                    :hasVariants="object?.store?.variants?.length > 1"
                                 />
                             </div>
                         </div>
