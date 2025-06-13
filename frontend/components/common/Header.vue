@@ -15,7 +15,7 @@
                 @click="toggleMenuState"
             ></div>
             <div class="bg-white absolute inset-y-0 left-0 w-full sm:max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
-                <div class="px-4 sm:hidden">
+                <div class="px-4 hidden">
                     <div class="shrink-0 border-t border-b border-current py-1.5 flex items-center text-a2 font-medium lowercase">
                         <div class="flex-1 pr-2-5 py-1">Search</div>
                         <div class="flex-1 pl-2.5 py-1 border-l border-current">Favorites (0)</div>
@@ -184,8 +184,8 @@
             :class="{ 'text-white': isTopNavTransparent && route.name === 'our-world-about-nada-debs' }"
         >
             <div class="hidden md:flex flex-1 items-center justify-end gap-6">
-                <span class="lowercase text-a2 font-medium">Search</span>
-                <span class="lowercase text-a2 font-medium">Favorites (0)</span>
+                <span class="hidden lowercase text-a2 font-medium">Search</span>
+                <span class="hidden lowercase text-a2 font-medium">Favorites (0)</span>
                 <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
             </div>
 
