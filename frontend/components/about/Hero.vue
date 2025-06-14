@@ -17,6 +17,7 @@
                 playsinline
                 :src="hero?.video"
                 class="absolute inset-0 w-full h-full object-cover"
+                :class="{ 'opacity-0': !canAutoplay }"
             />
         </div>
 
@@ -71,6 +72,7 @@ const props = defineProps({
 
 const playVideo = ref(false)
 const video = ref(null)
+const { canAutoplay } = useVideoAutoplay(video)
 
 const handlePlayVideo = () => {
     playVideo.value = true
