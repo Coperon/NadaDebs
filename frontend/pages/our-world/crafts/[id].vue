@@ -22,12 +22,14 @@
                             />
                             <video
                                 v-if="craftData?.thumbnail?.video"
+                                ref="thumbnailVideoRef"
                                 muted
                                 loop
                                 autoplay
                                 playsinline
                                 :src="craftData?.thumbnail?.video"
                                 class="absolute inset-0 w-full h-full object-cover"
+                                :class="{ 'opacity-0': !canAutoplay }"
                             />
                         </div>
 
@@ -106,4 +108,8 @@ useSeoObject(
     craftData?.value?.title,
     craftData?.value?.cover,
 )
+
+// Handle thumbnail video
+const thumbnailVideoRef = ref(null)
+const { canAutoplay } = useVideoAutoplay(thumbnailVideoRef)
 </script>
