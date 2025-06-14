@@ -26,10 +26,11 @@
                 >
                     <NuxtLink 
                         :to="`${route}/${item.slug.current}`"
+                        class="group"
                         :class="showFeatured && item.isFeatured ? 'lg:flex lg:flex-col lg:h-full' : ''"
                     >
                         <div 
-                            class="relative overflow-hidden"
+                            class="relative overflow-hidden group-hover:opacity-50 transition-opacity duration-300"
                             :class="showFeatured && item.isFeatured ? 'aspect-square sm:aspect-auto lg:flex-grow' : 'aspect-[3/2]'"
                         >
                             <CommonMediaImage
@@ -42,12 +43,12 @@
                         </div>
 
                         <div class="px-4 mt-2.5 lg:mt-5">
-                            <h2 class="text-h2 uppercase flex flex-col gap-1.5">
+                            <h2 class="text-h2 uppercase flex flex-col">
                                 <span v-if="isCollaboration" class="font-light">Nada Debs x</span>
                                 <span>{{ item.title }}</span>
                             </h2>
 
-                            <div v-if="!isCollaboration && item?.year" class="text-p2 mt-1.5">
+                            <div v-if="!isCollaboration && item?.year" class="text-p2">
                                 <span v-if="item?.location">{{ item.location }}, </span>
                                 <span v-if="item?.year">{{ item.year }}</span>
                             </div>

@@ -43,7 +43,7 @@
 
                         <div class="px-4 mt-2.5 lg:mt-5">
                             <h3 class="text-h2 uppercase">{{ person?.name }}</h3>
-                            <p class="text-p2 mt-1.5">{{ person?.role }}</p>
+                            <p class="text-p2">{{ person?.role }}</p>
                         </div>
                     </div>
                 </div>

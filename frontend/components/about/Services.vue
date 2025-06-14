@@ -17,7 +17,7 @@
                 <div class="px-4 mt-2.5 lg:mt-5">
                     <h3 class="text-h2 uppercase">{{ service.title }}</h3>
 
-                    <div v-if="service.continuationText" class="text-p2 mt-1.5">
+                    <div v-if="service.continuationText" class="text-p2">
                         {{ service.continuationText }}
                     </div>
                 </div>
