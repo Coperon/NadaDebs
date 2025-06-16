@@ -26,7 +26,7 @@
                     <div class="submenu overflow-hidden transition-all duration-300 ease-in-out" :style="{ maxHeight: activeMenu === 'shop' ? menuHeights.shop + 'px' : '0px' }">
                         <ul class="pt-2 flex flex-col items-center gap-2">
                             <li><NuxtLink to="/shop/objects" class="lowercase">Objects</NuxtLink></li>
-                            <li><NuxtLink to="" class="lowercase">Furniture</NuxtLink></li>
+                            <li><NuxtLink to="/shop/furniture" class="lowercase">Furniture</NuxtLink></li>
                             <li><NuxtLink to="" class="lowercase">Collections</NuxtLink></li>
                         </ul>
                     </div>
@@ -62,7 +62,7 @@
                         <Transition name="fade">
                             <ul v-if="activeMenu === 'shop'" class="absolute top-full left-0 pt-2 flex flex-col items-start text-a2">
                                 <li><NuxtLink @mouseenter="hoveredSubmenu = 'objects'" @mouseleave="hoveredSubmenu = null" to="/shop/objects" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'objects' }">Objects</NuxtLink></li>
-                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'furniture'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'furniture' }">Furniture</NuxtLink></li>
+                                <li><NuxtLink @mouseenter="hoveredSubmenu = 'furniture'" @mouseleave="hoveredSubmenu = null" to="/shop/furniture" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'furniture' }">Furniture</NuxtLink></li>
                                 <li><NuxtLink @mouseenter="hoveredSubmenu = 'collections'" @mouseleave="hoveredSubmenu = null" to="" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'collections' }">Collections</NuxtLink></li>
                             </ul>
                         </Transition>
