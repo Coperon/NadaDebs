@@ -18,9 +18,7 @@
             </div>
 
             <div v-if="workWithUsData?.team && workWithUsData?.team.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
-                <div class="px-4 sm:px-6 lg:px-8 xl:px-12">
-                    <h2 class="text-h2 uppercase text-center">Our Team</h2>
-                </div>
+                <CommonAsideHeading title="Our Team" />
 
                 <div class="mt-10 grid grid-cols-12 gap-x-2.5 gap-y-8 xl:gap-y-12">
                     <div 

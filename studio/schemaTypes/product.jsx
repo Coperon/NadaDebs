@@ -173,6 +173,23 @@ export default {
             group: 'editorial',
         },
         {
+            name: 'makingOf',
+            title: 'Making of',
+            type: 'array',
+            of: [{ type: 'image'}],
+            options: {
+                layout: 'grid',
+            },
+            group: 'editorial',
+        },
+        {
+            name: 'relatedProducts',
+            title: 'Related Products',
+            type: 'array',
+            of: [{ type: 'reference', to: [{ type: 'product' }] }],
+            group: 'editorial',
+        },
+        {
             name: 'buyOptions',
             title: 'Buy / Inquire options',
             type: 'object',

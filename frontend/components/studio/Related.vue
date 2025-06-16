@@ -1,9 +1,6 @@
 <template>
-    <aside v-if="relatedProjects && relatedProjects?.length > 0" class="pb-12">
-        <div class="px-4 py-12 xl:pt-24">
-            <h2 class="text-a2-bold uppercase text-center">Explore More</h2>
-        </div>
-
+    <aside v-if="relatedProjects && relatedProjects?.length > 0" class="pb-20 sm:pb-24 lg:pb-30">
+        <CommonAsideHeading title="Related Projects" />
         <div>
             <StudioGrid 
                 :items="relatedProjects" 

@@ -1,16 +1,15 @@
 <template>
     <div class="pt-[3.25rem] sm:pt-[4.25rem] pb-20 md:pb-24 lg:pb-30">
-
         <div class="flex flex-col sm:flex-row sm:items-start">
             <div class="h-[calc(100svh-3.25rem)] sm:h-[calc(100svh-4.25rem)] sm:sticky sm:top-[4.25rem] sm:w-1/2 xl:w-2/3">
                 <ShopProductGallery 
-                    :featuredImage="selectedVariant && selectedVariant.image ? selectedVariant.image : productData?.featuredImage"
+                    :featuredImage="productData?.featuredImage"
                     :secondaryImage="productData?.secondaryImage" 
                     :moreImages="productData?.moreImages" 
                 />
             </div>
 
-            <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pt-5 pb-10 sm:py-10 sm:w-1/2 xl:w-1/3">
+            <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pt-5 sm:pt-10 sm:w-1/2 xl:w-1/3">
                 <header>
                     <div class="text-p2 text-grey mb-1">Collection name</div>
                     <h1 class="text-a1-bold uppercase">{{ productData?.store?.title }}</h1>
@@ -69,6 +68,23 @@
             </div>
         </div>
 
+        <!-- Crafts -->
+         <div v-if="productData?.crafts && productData?.crafts?.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
+            <CommonAsideHeading title="Crafts used in this product" />
+            <CraftsGrid :crafts="productData?.crafts" />
+         </div>
+
+        <!-- Making of -->
+        <div v-if="productData?.makingOf && productData?.makingOf?.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
+            <CommonAsideHeading title="Making of" />
+            <ShopProductMakingOf :images="productData?.makingOf" />
+        </div>
+
+        <!-- Related Products -->
+        <div v-if="productData?.relatedProducts && productData?.relatedProducts?.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
+            <CommonAsideHeading title="You may also like" />
+            <ShopProductsGrid :products="productData?.relatedProducts" />
+        </div>
     </div>
 </template>
 

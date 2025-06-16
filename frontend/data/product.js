@@ -19,7 +19,37 @@ export const getProductBySlug = async productSlug => {
       description,
       metaFields,
       buyOptions,
-      crafts,
+      crafts[]->{
+        ...,
+      },
+      makingOf[] {
+        ${imageQuery}
+      },
+      relatedProducts[]->{
+        _id,
+        title,
+        hidden,
+        featuredImage {
+            ${imageQuery}
+        },
+        secondaryImage {
+            ${imageQuery}
+        },
+        buyOptions,
+        store {
+            priceRange,
+            slug,
+            title,
+            gid,
+            variants[]->{
+                store {
+                    inventory {
+                        isAvailable
+                    }
+                }
+            }
+        }
+      },
       store {
         status,
         isDeleted,
