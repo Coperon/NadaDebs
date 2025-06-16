@@ -6,6 +6,14 @@ import pluralize from 'pluralize-esm'
 import ProductHiddenInput from '../src/components/inputs/ProductHidden'
 import ShopifyDocumentStatus from '../src/components/media/ShopifyDocumentStatus'
 import { getPriceRange } from '../src/utils/getPriceRange'
+import categoryField from './fields/productCategory'
+import objectsCategoryField from './fields/objectsCategory'
+import furnitureCategoryField from './fields/furnitureCategory'
+import productDescriptionField from './fields/productDescription'
+import metaFieldsField from './fields/metaFields'
+import relatedCraftsField from './fields/relatedCrafts'
+import makingOfField from './fields/makingOf'
+import relatedProductsField from './fields/relatedProducts'
 // import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
 
 const GROUPS = [
@@ -88,105 +96,56 @@ export default {
             name: 'featuredImage',
             title: 'Featured Image',
             type: 'image',
-            validation: (Rule) => Rule.required(),
+            description: 'If set, this image will be used as the main product image instead of the one from Shopify.',
             group: 'editorial',
         },
         {
             name: 'secondaryImage',
             title: 'Secondary Image',
-            description: 'If filled, it will be displayed when hovering over the main image and on the product page',
+            description: 'If set, this image will appear when hovering over the main image and on the product page.',
             type: 'image',
             group: 'editorial',
         },
         {
             name: 'moreImages',
             title: 'More Images',
-            description: 'If filled, it will be displayed on the product page',
+            description: 'Additional images to display on the product page.',
             type: 'array',
             of: [{ type: 'image' }],
             group: 'editorial',
         },
         {
-            name: 'category',
-            title: 'Category',
-            type: 'string',
-            options: {
-                list: [
-                    { title: 'Objects', value: 'objects' },
-                    { title: 'Furniture', value: 'furniture' },
-                ],
-            },
+            ...categoryField,
             group: 'editorial',
-            validation: (Rule) => Rule.required(),
         },
         {
-            name: 'objectsCategory',
-            title: 'Type',
-            type: 'reference',
-            to: [{ type: 'objectsCategory' }],
+            ...objectsCategoryField,
             group: 'editorial',
             hidden: ({ parent }) => parent?.category !== 'objects',
         },
         {
-            name: 'furnitureCategory',
-            title: 'Type',
-            type: 'reference',
-            to: [{ type: 'furnitureCategory' }],
+            ...furnitureCategoryField,
             group: 'editorial',
             hidden: ({ parent }) => parent?.category !== 'furniture',
         },
         {
-            name: 'description',
-            title: 'Description',
-            type: 'text',
+            ...productDescriptionField,
             group: 'editorial',
         },
         {
-            name: 'metaFields',
-            title: 'Meta Fields',
-            type: 'array',
-            of: [{
-                type: 'object',
-                fields: [
-                    {
-                        name: 'title',
-                        title: 'Title',
-                        type: 'string',
-                        validation: (Rule) => Rule.required(),
-                    },
-                    {
-                        name: 'description',
-                        title: 'Description',
-                        type: 'text',
-                        rows: 3,
-                        validation: (Rule) => Rule.required(),
-                    },
-                ]
-            }],
+            ...metaFieldsField,
             group: 'editorial',
         },
         {
-            name: 'crafts',
-            title: 'Crafts',
-            type: 'array',
-            of: [{ type: 'reference', to: [{ type: 'craft' }] }],
+            ...relatedCraftsField,
             group: 'editorial',
         },
         {
-            name: 'makingOf',
-            title: 'Making of',
-            type: 'array',
-            of: [{ type: 'image'}],
-            options: {
-                layout: 'grid',
-            },
+            ...makingOfField,
             group: 'editorial',
         },
         {
-            name: 'relatedProducts',
-            title: 'Related Products',
-            type: 'array',
-            of: [{ type: 'reference', to: [{ type: 'product' }] }],
+            ...relatedProductsField,
             group: 'editorial',
         },
         {
@@ -258,7 +217,8 @@ export default {
         select: {
             isDeleted: 'store.isDeleted',
             options: 'store.options',
-            previewImage: 'featuredImage.asset.url',
+            featuredImage: 'featuredImage.asset.url',
+            previewImage: 'store.previewImageUrl',
             priceRange: 'store.priceRange',
             status: 'store.status',
             displayTitle: 'title',
@@ -267,7 +227,7 @@ export default {
             buyOptions: 'buyOptions',
         },
         prepare(selection) {
-            const { isDeleted, options, previewImage, priceRange, status, title, displayTitle, variants, buyOptions } = selection
+            const { isDeleted, options, featuredImage, previewImage, priceRange, status, title, displayTitle, variants, buyOptions } = selection
             const optionCount = options?.length
             const variantCount = variants?.length
 
@@ -293,7 +253,7 @@ export default {
                         isActive={status === 'active'}
                         isDeleted={isDeleted}
                         type="product"
-                        image={previewImage}
+                        image={featuredImage || previewImage}
                         title={title}
                     />
                 ),

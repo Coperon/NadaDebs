@@ -52,6 +52,7 @@ import productVariant from './productVariant'
 import shopifyProductVariant from './shopify/shopifyProductVariant'
 import proxyString from './shopify/proxyString'
 import shopArchive from './shopArchive'
+import productModel from './productModel'
 
 
 export const schemaTypes = [
@@ -109,4 +110,5 @@ export const schemaTypes = [
   shopifyProductVariant,
   proxyString,
   shopArchive,
+  productModel,
 ]

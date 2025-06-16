@@ -7,7 +7,7 @@
             <template v-else-if="product?.store?.variants?.length > 1 && !selectedVariant">
                 Please select a variant
             </template>
-            <template v-else-if="product?.store?.variants?.length > 1 && selectedVariant">
+            <template v-else>
                 {{ isOutOfStock ? 'Sold out' : 'In stock' }}
             </template>
         </div>

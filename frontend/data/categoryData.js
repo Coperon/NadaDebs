@@ -26,6 +26,7 @@ export const getProducts = async (categoryType) => {
                 slug,
                 title,
                 gid,
+                previewImageUrl,
                 variants[]->{
                     store {
                         inventory {

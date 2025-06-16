@@ -3,9 +3,12 @@
         <div class="flex flex-col sm:flex-row sm:items-start">
             <div class="h-[calc(100svh-3.25rem)] sm:h-[calc(100svh-4.25rem)] sm:sticky sm:top-[4.25rem] sm:w-1/2 xl:w-2/3">
                 <ShopProductGallery 
+                    :previewImage="productData?.store?.previewImageUrl"
                     :featuredImage="productData?.featuredImage"
                     :secondaryImage="productData?.secondaryImage" 
                     :moreImages="productData?.moreImages" 
+                    :modelImages="productData?.productModel?.images"
+                    :title="productData?.store?.title"
                 />
             </div>
 
@@ -23,11 +26,39 @@
                     </div>
                 </header>
 
-                <div v-if="productData?.description" class="mt-8">
-                    <div class="text-p2 whitespace-pre-line">{{ productData?.description }}</div>
+                <div v-if="productData?.description || productData?.productModel?.description" class="mt-8">
+                    <div class="text-p2 whitespace-pre-line">{{ productData?.description || productData?.productModel?.description }}</div>
                 </div>
 
                 <div class="mt-6">
+                    <div v-if="productData?.productModel?.products && productData?.productModel?.products?.length > 0" class="border-t border-light-grey py-4">
+                        <div class="text-a2 font-medium uppercase">{{ productData?.productModel?.optionsLabel }}</div>
+                        <div class="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+                            <div v-for="product in productData?.productModel?.products" :key="product.product._id">
+                                <NuxtLink 
+                                    :to="`/shop/${product.product.store.slug.current}`" 
+                                    class="flex items-center gap-2 hover:text-black transition-colors"
+                                    :class="route.params.id === product.product.store.slug.current ? 'text-black' : 'text-grey'"
+                                >
+                                    <div 
+                                        class="w-4 h-4 rounded-full border relative overflow-hidden"
+                                        :class="route.params.id === product.product.store.slug.current ? 'border-black' : 'border-transparent'"
+                                    >
+                                        <CommonMediaImage
+                                            :image="product.swatch"
+                                            :alt="product.optionName"
+                                            width="32"
+                                            mobileWidth="32"
+                                            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover rounded-full"
+                                            :class="route.params.id === product.product.store.slug.current ? 'w-2.5 h-2.5' : 'w-4 h-4'"
+                                        />
+                                    </div>
+                                    <div class="text-p2">{{ product.optionName }}</div>
+                                </NuxtLink>
+                            </div>
+                        </div>
+                    </div>
+
                     <div v-if="productData?.store?.variants && productData?.store?.variants?.length > 1" class="border-t border-light-grey py-4">
                         <div class="text-a2 font-medium uppercase">
                             <template v-for="(option, index) in productData?.store?.options" :key="option._id">
@@ -46,8 +77,8 @@
                         </div>
                     </div>
 
-                    <template v-if="productData?.metaFields && productData?.metaFields?.length > 0">
-                        <div v-for="metaField in productData?.metaFields" :key="metaField._key" class="border-t border-light-grey py-4">
+                    <template v-if="(productData?.metaFields && productData?.metaFields?.length > 0) || (productData?.productModel?.metaFields && productData?.productModel?.metaFields?.length > 0)">
+                        <div v-for="metaField in productData?.metaFields || productData?.productModel?.metaFields" :key="metaField._key" class="border-t border-light-grey py-4">
                             <div class="text-a2 font-medium uppercase">{{ metaField.title }}</div>
                             <div class="mt-4">
                                 <div class="text-p2">{{ metaField.description }}</div>
@@ -69,21 +100,21 @@
         </div>
 
         <!-- Crafts -->
-         <div v-if="productData?.crafts && productData?.crafts?.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
+         <div v-if="(productData?.crafts && productData?.crafts?.length > 0) || (productData?.productModel?.crafts && productData?.productModel?.crafts?.length > 0)" class="mt-20 sm:mt-24 lg:mt-30">
             <CommonAsideHeading title="Crafts used in this product" />
-            <CraftsGrid :crafts="productData?.crafts" />
+            <CraftsGrid :crafts="productData?.crafts || productData?.productModel?.crafts" />
          </div>
 
         <!-- Making of -->
-        <div v-if="productData?.makingOf && productData?.makingOf?.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
+        <div v-if="(productData?.makingOf && productData?.makingOf?.length > 0) || (productData?.productModel?.makingOf && productData?.productModel?.makingOf?.length > 0)" class="mt-20 sm:mt-24 lg:mt-30">
             <CommonAsideHeading title="Making of" />
-            <ShopProductMakingOf :images="productData?.makingOf" />
+            <ShopProductMakingOf :images="productData?.makingOf || productData?.productModel?.makingOf" />
         </div>
 
         <!-- Related Products -->
-        <div v-if="productData?.relatedProducts && productData?.relatedProducts?.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
+        <div v-if="(productData?.relatedProducts && productData?.relatedProducts?.length > 0) || (productData?.productModel?.relatedProducts && productData?.productModel?.relatedProducts?.length > 0)" class="mt-20 sm:mt-24 lg:mt-30">
             <CommonAsideHeading title="You may also like" />
-            <ShopProductsGrid :products="productData?.relatedProducts" />
+            <ShopProductsGrid :products="productData?.relatedProducts || productData?.productModel?.relatedProducts" />
         </div>
     </div>
 </template>
@@ -107,7 +138,7 @@ async function updateAllVariantAvailability() {
     variantAvailabilityLoading.value = true
     const availability = {}
     for (const variant of productData.value.store.variants) {
-        if (variant?.store?.gid && productData.value?.store?.gid && countryStore.country) {
+        if (variant?.store?.gid && productData.value.store.gid && countryStore.country) {
             try {
                 const available = await fetchVariantAvailability(
                     variant.store.gid,

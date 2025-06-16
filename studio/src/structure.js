@@ -23,6 +23,9 @@ export const structure = (S, context) =>
                     S.listItem().title('Products').id('products').icon(FolderIcon).child(
                         S.documentTypeList('product')
                     ),
+                    S.listItem().title('Product Models').id('productModels').icon(FolderIcon).child(
+                        S.documentTypeList('productModel')
+                    ),
                     S.divider(),
                     S.listItem().title('Shop').id('shopIndex').icon(DocumentIcon).child(
                         S.document().schemaType('shop').documentId('shop')

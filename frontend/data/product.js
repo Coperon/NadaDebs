@@ -41,6 +41,7 @@ export const getProductBySlug = async productSlug => {
             slug,
             title,
             gid,
+            previewImageUrl,
             variants[]->{
                 store {
                     inventory {
@@ -73,6 +74,61 @@ export const getProductBySlug = async productSlug => {
       seo {
         ${seoQuery}
       },
+      "productModel": *[_type == "productModel" && references(^._id)][0]{
+        _id,
+        title,
+        optionsLabel,
+        products[] {
+            product->{
+                _id,
+                store {
+                    title,
+                    slug
+                }
+            },
+            optionName,
+            swatch {
+                ${imageQuery}
+            }
+        },
+        images[]{
+            ${imageQuery}
+        },
+        description,
+        metaFields,
+        crafts[]->{
+            ...,
+        },
+        makingOf[] {
+            ${imageQuery}
+        },
+        relatedProducts[]->{
+            _id,
+            title,
+            hidden,
+            featuredImage {
+                ${imageQuery}
+            },
+            secondaryImage {
+                ${imageQuery}
+            },
+            buyOptions,
+            store {
+                priceRange,
+                slug,
+                title,
+                gid,
+                previewImageUrl,
+                variants[]->{
+                    store {
+                        inventory {
+                            isAvailable
+                        }
+                    }
+                }
+            }
+        },
+      }
     }`
 
     const key = `product-${productSlug}`
