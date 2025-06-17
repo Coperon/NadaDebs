@@ -100,10 +100,10 @@
         </div>
 
         <!-- Crafts -->
-         <div v-if="(productData?.crafts && productData?.crafts?.length > 0) || (productData?.productModel?.crafts && productData?.productModel?.crafts?.length > 0)" class="mt-20 sm:mt-24 lg:mt-30">
-            <CommonAsideHeading title="Crafts used in this product" />
-            <CraftsGrid :crafts="productData?.crafts || productData?.productModel?.crafts" />
-         </div>
+        <div v-if="(productData?.crafts && productData?.crafts?.length > 0) || (productData?.productModel?.crafts && productData?.productModel?.crafts?.length > 0)" class="mt-20 sm:mt-24 lg:mt-30">
+        <CommonAsideHeading title="Crafts used in this product" />
+        <CraftsGrid :crafts="productData?.crafts || productData?.productModel?.crafts" />
+        </div>
 
         <!-- Making of -->
         <div v-if="(productData?.makingOf && productData?.makingOf?.length > 0) || (productData?.productModel?.makingOf && productData?.productModel?.makingOf?.length > 0)" class="mt-20 sm:mt-24 lg:mt-30">
@@ -112,9 +112,9 @@
         </div>
 
         <!-- Related Products -->
-        <div v-if="(productData?.relatedProducts && productData?.relatedProducts?.length > 0) || (productData?.productModel?.relatedProducts && productData?.productModel?.relatedProducts?.length > 0)" class="mt-20 sm:mt-24 lg:mt-30">
+        <div v-if="productData?.relatedProducts && productData?.relatedProducts?.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
             <CommonAsideHeading title="You may also like" />
-            <ShopProductsGrid :products="productData?.relatedProducts || productData?.productModel?.relatedProducts" />
+            <ShopProductsGrid :products="productData?.relatedProducts" />
         </div>
     </div>
 </template>

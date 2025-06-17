@@ -80,8 +80,5 @@ export default {
         {
             ...makingOfField,
         },
-        {
-            ...relatedProductsField,
-        },
     ]
 }

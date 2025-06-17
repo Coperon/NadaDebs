@@ -112,6 +112,9 @@ export default {
             description: 'Additional images to display on the product page.',
             type: 'array',
             of: [{ type: 'image' }],
+            options: {
+                layout: 'grid',
+            },
             group: 'editorial',
         },
         {
