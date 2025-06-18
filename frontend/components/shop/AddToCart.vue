@@ -26,21 +26,10 @@
             class="w-full"
             @click="handleClick($event)"
             :class="{'opacity-50 pointer-events-none cursor-not-allowed': product?.store?.variants?.length > 1 && !selectedVariant}"
+            :disabled="product?.store?.variants?.length > 1 && !selectedVariant"
         >
             <CommonButton>Add to Cart</CommonButton>
         </button>
-
-        
-        <!-- <button 
-            @click="handleClick($event)" 
-            @mouseenter="handleMouseEnter($event)" 
-            @mouseleave="showOptionsWarning = false" 
-            :disabled="isOutOfStock"
-        >
-            <CommonButton>
-                {{ isOutOfStock ? 'Sold out' :'Add to Cart'}}
-            </CommonButton>
-        </button> -->
     </div>
 </template>
 

@@ -1,45 +1,80 @@
 <template>
-  <div
-    class="cart-drawer flex flex-col fixed top-0 right-0 h-full bg-white z-50 overflow-y-auto w-[340px] border text-black"
-    :class="{ 'translate-x-0': cartStore.isCartOpen, 'translate-x-full pointer-events-none': !cartStore.isCartOpen }">
-    <header class="sticky flex justify-between top-0 bg-white z-50 p-[20px]">
-      <h4 class="uppercase">Cart</h4>
-      <button class="uppercase" @click="$emit('close')">Close</button>
-    </header>
-    <div class="p-[20px] h-full">
-      <div v-if="cart?.lineItems?.length" class="h-full flex flex-col">
-        <ul class="flex flex-col gap-y-[20px]">
-          <li v-for="item in cart?.lineItems" :key="item?.id" class="cart-item flex gap-2">
-            <img class="w-[100px] h-auto mr-20px object-contain" :src="item?.variant?.image?.src"
-              :alt="item?.variant?.product?.title" />
-            <div>
-              <h3 class="">{{ item?.variant?.product?.title }}</h3>
-              <template v-for="selectedOption in item?.variant?.selectedOptions">
-                <p><span class="">{{ selectedOption?.name }}: </span>{{ selectedOption?.value }}</p>
-              </template>
-              <p>Quantity: {{ item?.quantity }}</p>
-              <p>Price: {{ formatPrice(item?.variant?.priceV2?.amount, item?.variant?.priceV2?.currencyCode, item?.variant?.priceV2?.symbol) }}</p>
-              <button @click="removeFromCart(item?.id)"
-                class="remove-btn hover:text-[red] transition-colors mt-[10px]">Remove</button>
+    <div 
+        class="fixed z-10 inset-0 text-black transition-opacity duration-300"
+        :class="{ 'opacity-0 pointer-events-none': !cartStore.isCartOpen }"
+    >
+        <div 
+            class="absolute inset-0"
+            :class="route.path.startsWith('/shop/') ? 'bg-beige/20' : 'bg-transparent'"
+            @click="$emit('close')"
+        ></div>
+        
+        <div class="bg-white absolute h-svh right-0 w-full sm:max-w-[24rem] overflow-y-auto">
+            <div class="h-[3.25rem] sm:h-[4.25rem] flex items-center justify-end px-4 sm:px-6 sticky top-0 z-10 bg-white">
+                <button @click="$emit('close')">
+                    <div class="w-6 h-6">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </div>
+                </button>
             </div>
-          </li>
-        </ul>
-        <footer class="sticky bottom-0 left-0 bg-white w-full mt-auto py-[20px]">
-          <div class="cart-total mt-[10px] flex w-full justify-between">
-            <small class="uppercase">Subtotal</small><span>{{ formatPrice(cart?.totalPriceV2?.amount,
-              cart?.totalPriceV2?.currencyCode, cart?.totalPriceV2?.symbol) }}</span>
-          </div>
-          <small class="block mt-[10px] uppercase">Shipping and discount codes are added at checkout.</small>
 
-          <NuxtLink class="mt-[20px] flex w-full border p-[10px] justify-center hover:bg-black hover:text-white uppercase"
-            :to="cart?.checkoutUrl" :disabled="!cart?.checkoutUrl">Checkout</NuxtLink>
-        </footer>
-      </div>
-      <div v-else>
-        <p>Your cart is empty</p>
-      </div>
+            <div class="px-4 sm:px-6 pb-12">
+                <div v-if="cart?.lineItems?.length" class="flex flex-col gap-8">
+                    <div v-for="item in cart?.lineItems" :key="item?.id" class="flex gap-4">
+                        <div class="w-1/2">
+                            <div class="aspect-[4/5] relative overflow-hidden">
+                                <img 
+                                    :src="item?.variant?.image?.src" 
+                                    :alt="item?.variant?.product?.title" 
+                                    class="w-full h-full object-cover"
+                                />
+                            </div>
+                            <button 
+                                @click="removeFromCart(item?.id)"
+                                class="mt-4 text-a2 text-grey lowercase hover:text-black transition-colors"
+                            >Remove product</button>
+                        </div>
+                        <div class="w-1/2">
+                            <h3 class="text-h2">{{ item?.variant?.product?.title }}</h3>
+                            <div class="mt-1">{{ 
+                                formatPrice(item?.variant?.priceV2?.amount,
+                                item?.variant?.priceV2?.currencyCode,
+                                item?.variant?.priceV2?.symbol) 
+                            }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else>
+                    <p>Your cart is empty</p>
+                </div>
+            </div>
+
+            <div v-if="cart?.lineItems?.length" class="sticky bottom-0 bg-white pt-4 pb-12 px-4 sm:px-6">
+                <div class="flex w-full justify-between">
+                    <div class="text-p2 uppercase">Subtotal</div>
+                    <div class="text-h2">{{ 
+                        formatPrice(cart?.totalPriceV2?.amount,
+                        cart?.totalPriceV2?.currencyCode, 
+                        cart?.totalPriceV2?.symbol) 
+                    }}</div>
+                </div>
+
+                <div class="mt-4" v-if="cart?.checkoutUrl">
+                    <NuxtLink :to="cart?.checkoutUrl">
+                        <CommonButton isSecondary>
+                            <div class="flex items-center gap-1.5">
+                                <span>Checkout</span>
+                                <IconsArrow class="w-3 h-auto" />
+                            </div>
+                        </CommonButton>
+                    </NuxtLink>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -47,20 +82,15 @@ import { useCartStore } from '@/stores/cart'
 import { removeFromCart as removeFromCartComposable } from '@/composables/shopify'
 
 const props = defineProps({
-  cart: Object,
+    cart: Object,
 })
 
 const cartStore = useCartStore()
+const route = useRoute()
 
 const removeFromCart = async (lineItemId) => {
-  const updatedCart = await removeFromCartComposable(lineItemId)
-  cartStore.setCart(updatedCart) // Directly update the cart state
-  cartStore.setCartOpen(true) // Open the cart drawer
+    const updatedCart = await removeFromCartComposable(lineItemId)
+    cartStore.setCart(updatedCart) // Directly update the cart state
+    cartStore.setCartOpen(true) // Open the cart drawer
 }
 </script>
-
-<style scoped>
-.cart-drawer {
-  transition: transform 350ms cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-</style>

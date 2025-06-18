@@ -31,6 +31,7 @@ const nuxtApp = useNuxtApp()
 const route = useRoute()
 const previousRouteStore = usePreviousRouteStore()
 const menuState = useMenuStore()
+const cartStore = useCartStore()
 
 const bodyClasses = computed(() => {
     // Default classes
@@ -55,7 +56,7 @@ const bodyClasses = computed(() => {
         classes['bg-white'] = true
     }
 
-    if (menuState.isOpened) {
+    if (menuState.isOpened || cartStore.isCartOpen) {
         classes['overflow-hidden'] = true
     }
 
