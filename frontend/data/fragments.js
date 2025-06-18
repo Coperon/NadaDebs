@@ -6,7 +6,7 @@ asset-> {
     originalFilename
 },
 crop,
-hotspot
+hotspot,
 `
 
 export const linkQuery = `

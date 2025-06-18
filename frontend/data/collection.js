@@ -16,9 +16,7 @@ export const getCollectionBySlug = async collectionSlug => {
         },
         tags,
         aboutTheCollection,
-        lifestyleImages {
-            ${imageQuery}
-        },
+        lifestyleImages,
         featuredText,
         imagesGrid,
         crafts[]->{
@@ -28,6 +26,7 @@ export const getCollectionBySlug = async collectionSlug => {
             ...,
         },
     }`
+    const key = `collection-${collectionSlug}`
     const { data } = await useAsyncData(key, () =>
         $sanity.fetch(query, { collectionSlug: collectionSlug }),
     )

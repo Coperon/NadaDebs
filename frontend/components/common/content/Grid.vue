@@ -1,5 +1,5 @@
 <template>
-    <div v-if="content && content?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pb-20 sm:pb-24 lg:pb-30">
+    <div v-if="content && content?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
         <template v-for="item in content" :key="item._key">
             <div 
                 class="relative overflow-hidden"

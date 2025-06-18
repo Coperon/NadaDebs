@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="pb-20 sm:pb-24 lg:pb-30">
         <div class="h-svh relative overflow-hidden">
             <CommonMediaImage
                 :image="craftData?.cover"

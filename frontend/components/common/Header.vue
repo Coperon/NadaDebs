@@ -181,7 +181,7 @@
         <div 
             ref="topNav"
             class="absolute inset-x-0 top-0 pointer-events-auto p-4 sm:p-6 lg:px-8 xl:px-12 flex md:flex-row-reverse items-center justify-between md:gap-12 shrink-0 transition-colors duration-300"
-            :class="{ 'text-white': isTopNavTransparent && route.name === 'our-world-about-nada-debs' }"
+            :class="{ 'text-white': isTopNavTransparent }"
         >
             <div class="hidden md:flex flex-1 items-center justify-end gap-6">
                 <span class="hidden lowercase text-a2 font-medium">Search</span>
@@ -363,6 +363,7 @@ const updateTopNavBg = () => {
         route.name === 'our-world-about-nada-debs' 
         || route.name === 'our-world-crafts-id' 
         || route.name === 'news-latest-id'
+        || route.name === 'shop-collections-id'
     ) {
         const windowHeight = window.innerHeight
         const topNavHeight = topNav.value.offsetHeight
@@ -395,6 +396,7 @@ onMounted(() => {
         route.name === 'our-world-about-nada-debs' 
         || route.name === 'our-world-crafts-id' 
         || route.name === 'news-latest-id'
+        || route.name === 'shop-collections-id'
     ) && window.scrollY === 0
 })
 

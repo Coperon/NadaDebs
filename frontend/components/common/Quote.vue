@@ -1,13 +1,13 @@
 <template>
-    <div>
+    <div class="flex flex-col gap-5 items-center">
         <div 
-            class="quote max-w-[48ch] text-balance mx-auto"
+            class="quote max-w-[48ch] text-balance mx-auto text-center"
             :class="uppercase ? 'text-h3-upper-mobile sm:text-h3-upper uppercase' : 'text-h3-lower-mobile sm:text-h3-lower'"
         >
             <SanityContent :blocks="text" />
         </div>
 
-        <div class="mt-5 text-a2 font-medium uppercase">Nada Debs</div>
+        <div class="text-a2 font-medium uppercase">Nada Debs</div>
     </div>
 </template>
 
