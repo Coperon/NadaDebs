@@ -14,13 +14,13 @@
                     />
                 </div>
 
-                <div class="px-4 mt-2.5 lg:mt-5">
+                <CommonGridCaption>
                     <h3 class="text-h2 uppercase">{{ service.title }}</h3>
 
                     <div v-if="service.continuationText" class="text-p2">
                         {{ service.continuationText }}
                     </div>
-                </div>
+                </CommonGridCaption>
             </div>
         </div>
 

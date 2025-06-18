@@ -42,7 +42,7 @@
                             />
                         </div>
 
-                        <div class="px-4 mt-2.5 lg:mt-5">
+                        <CommonGridCaption>
                             <h2 class="text-h2 uppercase flex flex-col">
                                 <span v-if="isCollaboration" class="font-light">Nada Debs x</span>
                                 <span>{{ item.title }}</span>
@@ -52,7 +52,7 @@
                                 <span v-if="item?.location">{{ item.location }}, </span>
                                 <span v-if="item?.year">{{ item.year }}</span>
                             </div>
-                        </div>
+                        </CommonGridCaption>
                     </NuxtLink>
                 </div>
             </div>

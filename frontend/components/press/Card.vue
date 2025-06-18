@@ -10,11 +10,11 @@
             />
         </div>
 
-        <div class="px-4 mt-2.5 lg:mt-5">
+        <CommonGridCaption>
             <div class="text-h2 uppercase">
                 {{ formatDate(date) }}
             </div>
-        </div>
+        </CommonGridCaption>
     </div>
 </template>
 

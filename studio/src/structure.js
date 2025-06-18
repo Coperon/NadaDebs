@@ -50,6 +50,16 @@ export const structure = (S, context) =>
                             ),
                         ]),
                     ),
+                    S.listItem().title('Collections').icon(FolderIcon).child(
+                        S.list().title('Collections').items([
+                            S.listItem().title('Collections').id('collectionsIndex').icon(DocumentIcon).child(
+                                S.document().schemaType('collections').documentId('collections')
+                            ),
+                            S.listItem().title('Collections').id('collections').icon(FolderIcon).child(
+                                S.documentTypeList('collection')
+                            ),
+                        ]),
+                    ),
                 ]),
             ),
             S.listItem().title('Our World').icon(EarthAmericasIcon).child(

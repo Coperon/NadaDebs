@@ -38,7 +38,7 @@
                                     <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/shop/objects" class="lowercase">Objects</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="/shop/furniture" class="lowercase">Furniture</NuxtLink></li>
-                                        <li><NuxtLink @click="toggleMenuState" to="" class="lowercase">Collections</NuxtLink></li>
+                                        <li><NuxtLink @click="toggleMenuState" to="/shop/collections" class="lowercase">Collections</NuxtLink></li>
                                     </ul>
                                 </div>
                             </Transition>

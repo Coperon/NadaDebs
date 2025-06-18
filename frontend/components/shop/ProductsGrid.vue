@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <div class="px-4 mt-2.5 lg:mt-5">
+                <CommonGridCaption>
                     <h2 class="text-h2">{{ product.store.title }}</h2>
                     <div class="mt-1 text-grey group-hover:text-black transition-colors">
                         <template v-if="product?.buyOptions?.onlyInquire && product?.buyOptions?.hidePrice">
@@ -47,7 +47,7 @@
                             {{ formatPrice(product?.store?.priceRange?.minVariantPrice, siteSettingsData?.currencyCode) }}
                         </template>
                     </div>
-                </div>
+                </CommonGridCaption>
             </NuxtLink>
         </div>
     </div>

@@ -6,6 +6,8 @@ import objects from './singleton/objects'
 import objectsCategory from './objectsCategory'
 import furniture from './singleton/furniture'
 import furnitureCategory from './furnitureCategory'
+import collections from './singleton/collections'
+import collection from './collection'
 import studio from './singleton/studio'
 import collaborations from './singleton/collaborations'
 import collaboration from './collaboration'
@@ -45,8 +47,8 @@ import inventory from './shopify/inventory'
 import option from './shopify/option'
 import priceRange from './shopify/priceRange'
 import productWithVariant from './shopify/productWithVariant'
-import shopifyCollection from './shopify/shopifyCollection'
-import shopifyCollectionRule from './shopify/shopifyCollectionRule'
+// import shopifyCollection from './shopify/shopifyCollection'
+// import shopifyCollectionRule from './shopify/shopifyCollectionRule'
 import shopifyProduct from './shopify/shopifyProduct'
 import productVariant from './productVariant'
 import shopifyProductVariant from './shopify/shopifyProductVariant'
@@ -65,6 +67,8 @@ export const schemaTypes = [
   objectsCategory,
   furniture,
   furnitureCategory,
+  collections,
+  collection,
   studio,
   collaborations,
   collaboration,
@@ -103,8 +107,8 @@ export const schemaTypes = [
   option,
   priceRange,
   productWithVariant,
-  shopifyCollection,
-  shopifyCollectionRule,
+  // shopifyCollection,
+  // shopifyCollectionRule,
   shopifyProduct,
   productVariant,
   shopifyProductVariant,

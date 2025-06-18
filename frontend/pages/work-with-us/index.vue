@@ -39,10 +39,10 @@
                             />
                         </div>
 
-                        <div class="px-4 mt-2.5 lg:mt-5">
+                        <CommonGridCaption>
                             <h3 class="text-h2 uppercase">{{ person?.name }}</h3>
                             <p class="text-p2">{{ person?.role }}</p>
-                        </div>
+                        </CommonGridCaption>
                     </div>
                 </div>
             </div>
