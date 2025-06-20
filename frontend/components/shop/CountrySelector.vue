@@ -13,7 +13,7 @@
             v-model="countryStore.country" 
             @change="onChange"
             :style="{ width: selectWidth + 'px' }"
-            class="lowercase text-a2 font-medium"
+            class="lowercase text-a2 font-medium bg-transparent"
         >
             <option v-for="country in countries" :key="country.isoCode" :value="country.isoCode">
                 {{ country.name }} ({{ country.currency.symbol }})
