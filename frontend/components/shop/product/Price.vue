@@ -1,18 +1,13 @@
 <template>
-    <div class="price min-h-[1lh] text-p2">
-        <template v-if="isHidden">
-            <span>Price upon request</span>
-        </template>
-        <template v-else>
-            <span v-if="countryStore.country && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount != livePrice.maxVariantPrice?.amount">
-                {{ formatPrice(livePrice.minVariantPrice, siteSettingsData?.currencyCode) }} - {{
-                    formatPrice(livePrice.maxVariantPrice, siteSettingsData?.currencyCode) }}
-            </span>
-            <span class="relative"
-                v-else-if="countryStore.country">
-                {{ formatPrice(livePrice.minVariantPrice, siteSettingsData?.currencyCode) }}
-            </span>
-        </template>
+    <div class="price min-h-[1lh]">
+        <span v-if="countryStore.country && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount != livePrice.maxVariantPrice?.amount">
+            {{ formatPrice(livePrice.minVariantPrice, siteSettingsData?.currencyCode) }} - {{
+                formatPrice(livePrice.maxVariantPrice, siteSettingsData?.currencyCode) }}
+        </span>
+        <span class="relative"
+            v-else-if="countryStore.country">
+            {{ formatPrice(livePrice.minVariantPrice, siteSettingsData?.currencyCode) }}
+        </span>
     </div>
 </template>
 <script setup>
@@ -28,11 +23,6 @@ const props = defineProps({
         type: String,
         required: false,
         default: null
-    },
-    isHidden: {
-        type: Boolean,
-        required: false,
-        default: false
     }
 })
 

@@ -21,7 +21,7 @@
                             Price upon request
                         </template>
                         <template v-else>
-                            {{ formatPrice(selectedVariant?.store?.price, siteSettingsData?.currencyCode) }}
+                            <ShopProductPrice :productGid="productData?.store?.gid" :price="productData?.store?.priceRange" />
                         </template>
                     </div>
                 </header>

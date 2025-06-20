@@ -40,18 +40,8 @@
                         <template v-if="product?.buyOptions?.onlyInquire && product?.buyOptions?.hidePrice">
                             Price upon request
                         </template>
-                            <template v-else-if="product?.store?.priceRange?.minVariantPrice !== product?.store?.priceRange?.maxVariantPrice">
-                            {{ formatPrice(
-                                product?.store?.priceRange?.minVariantPrice, 
-                                siteSettingsData?.currencyCode
-                            ) }} 
-                            - {{ formatPrice(
-                                product?.store?.priceRange?.maxVariantPrice, 
-                                siteSettingsData?.currencyCode
-                            ) }}
-                        </template>
                         <template v-else>
-                            {{ formatPrice(product?.store?.priceRange?.minVariantPrice, siteSettingsData?.currencyCode) }}
+                            <ShopProductPrice :productGid="product?.store?.gid" :price="product?.store?.priceRange" />
                         </template>
                     </div>
                 </CommonGridCaption>
@@ -61,8 +51,6 @@
 </template>
 
 <script setup>
-const siteSettingsData = inject('siteSettingsData')
-
 defineProps({
     products: {
         type: Array,
