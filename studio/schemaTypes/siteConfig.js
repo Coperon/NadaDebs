@@ -63,8 +63,8 @@ export default {
       type: 'string',
       options: {
         list: [
-          {title: 'Euro', value: 'EUR'},
-          // {title: 'US Dollar', value: 'USD'},
+          // {title: 'Euro', value: 'EUR'},
+          {title: 'US Dollar', value: 'USD'},
           // {title: 'Pound Sterling', value: 'GBP'},
         ],
         allowNull: false,

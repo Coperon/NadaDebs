@@ -79,5 +79,5 @@ export const formatPrice = (price, currencyCode='USD', symbol='$') => {
     if (currencyCode === 'USD' || currencyCode === 'GBP') {
         return `${symbol}${priceToPrint}`
     }
-   return `${priceToPrint}${symbol}`
+    return `${priceToPrint}${symbol}`
 }

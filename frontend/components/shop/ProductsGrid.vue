@@ -41,7 +41,14 @@
                             Price upon request
                         </template>
                             <template v-else-if="product?.store?.priceRange?.minVariantPrice !== product?.store?.priceRange?.maxVariantPrice">
-                            {{ formatPrice(product?.store?.priceRange?.minVariantPrice, siteSettingsData?.currencyCode) }} - {{ formatPrice(product?.store?.priceRange?.maxVariantPrice, siteSettingsData?.currencyCode) }}
+                            {{ formatPrice(
+                                product?.store?.priceRange?.minVariantPrice, 
+                                siteSettingsData?.currencyCode
+                            ) }} 
+                            - {{ formatPrice(
+                                product?.store?.priceRange?.maxVariantPrice, 
+                                siteSettingsData?.currencyCode
+                            ) }}
                         </template>
                         <template v-else>
                             {{ formatPrice(product?.store?.priceRange?.minVariantPrice, siteSettingsData?.currencyCode) }}

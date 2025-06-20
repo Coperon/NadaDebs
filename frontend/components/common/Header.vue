@@ -184,8 +184,9 @@
             :class="{ 'text-white': isTopNavTransparent }"
         >
             <div class="hidden md:flex flex-1 items-center justify-end gap-6">
-                <span class="hidden lowercase text-a2 font-medium">Search</span>
-                <span class="hidden lowercase text-a2 font-medium">Favorites (0)</span>
+                <!-- <span class="lowercase text-a2 font-medium">Search</span>
+                <span class="lowercase text-a2 font-medium">Favorites (0)</span> -->
+                <ClientOnly><ShopCountrySelector /></ClientOnly>
                 <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
             </div>
 
