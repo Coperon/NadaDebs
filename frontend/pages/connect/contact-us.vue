@@ -1,6 +1,7 @@
 <template>
     <CommonContactLayout :data="contactData">
         <CommonForm formName="contact">
+            <input type="hidden" name="test" value="test" />
             <CommonFormInput type="text" name="first-name" placeholder="First Name *" required />
             <CommonFormInput type="text" name="last-name" placeholder="Last Name *" required />
             <CommonFormInput type="tel" name="mobile-number" placeholder="Mobile Number *" required />
