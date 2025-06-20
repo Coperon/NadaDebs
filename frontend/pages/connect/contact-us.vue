@@ -1,7 +1,7 @@
 <template>
     <CommonContactLayout :data="contactData">
         <CommonForm formName="contact">
-            <input type="hidden" name="subject" :value="subject" />
+            <input type="hidden" name="inquiry" :value="inquiry" />
             <CommonFormInput type="text" name="first-name" placeholder="First Name *" required />
             <CommonFormInput type="text" name="last-name" placeholder="Last Name *" required />
             <CommonFormInput type="tel" name="mobile-number" placeholder="Mobile Number *" required />
@@ -18,7 +18,7 @@ import { useSeoObject } from '@/composables/seo'
 import { getContact } from '@/data/contact'
 
 const route = useRoute()
-const subject = route.query.subject
+const inquiry = route.query.inquiry
 
 const contactData = await getContact()
 

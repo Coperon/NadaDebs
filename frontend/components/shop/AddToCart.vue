@@ -14,7 +14,7 @@
 
         <NuxtLink 
             v-if="product?.buyOptions?.onlyInquire || (product?.buyOptions?.inquireWhenOutOfStock && isOutOfStock)" 
-            :to="`/connect/contact-us?subject=${product?.store?.title}`"
+            :to="`/connect/contact-us?inquiry=${product?.store?.title}`"
             class="block"
             :class="{'opacity-50 pointer-events-none cursor-not-allowed': product?.store?.variants?.length > 1 && !selectedVariant}"
             :disabled="product?.store?.variants?.length > 1 && !selectedVariant"
