@@ -1,9 +1,20 @@
 <template>
-    <div
-        class="fixed bottom-4 right-4 z-50 bg-white border rounded shadow p-2 flex items-center gap-2 w-[300px]">
-        <label for="country-select" class="text-xs font-semibold">Country:</label>
-        <select id="country-select" v-model="countryStore.country" @change="onChange"
-            class="border rounded px-2 py-1 outline-none w-full">
+    <div class="relative">
+        <span 
+            ref="measureSpan" 
+            class="lowercase text-a2 font-medium absolute invisible whitespace-nowrap"
+        >
+            {{ selectedCountryText }}
+        </span>
+        
+        <select 
+            ref="selectElement"
+            id="country-select" 
+            v-model="countryStore.country" 
+            @change="onChange"
+            :style="{ width: selectWidth + 'px' }"
+            class="lowercase text-a2 font-medium"
+        >
             <option v-for="country in countries" :key="country.isoCode" :value="country.isoCode">
                 {{ country.name }} ({{ country.currency.symbol }})
             </option>
@@ -18,6 +29,21 @@ import { useCountryStore } from '@/stores/country'
 const countryStore = useCountryStore()
 const cartStore = useCartStore()
 const countries = ref([])
+const selectElement = ref(null)
+const measureSpan = ref(null)
+const selectWidth = ref(100)
+
+const selectedCountryText = computed(() => {
+    const selected = countries.value.find(c => c.isoCode === countryStore.country)
+    return selected ? `${selected.name} (${selected.currency.symbol})` : ''
+})
+
+const updateSelectWidth = () => {
+    if (measureSpan.value) {
+        const textWidth = measureSpan.value.offsetWidth
+        selectWidth.value = textWidth + 24
+    }
+}
 
 const fetchCountries = async () => {
     const localization = await getAvailableCountries(countryStore.country)
@@ -26,13 +52,18 @@ const fetchCountries = async () => {
         const first = countries.value[0]
         countryStore.setCountry(first.isoCode, first.currency.symbol, first.currency.isoCode)
     }
+    nextTick(() => {
+        updateSelectWidth()
+    })
 }
 
 const onChange = async () => {
     const selected = countries.value.find(c => c.isoCode === countryStore.country)
     if (selected) {
         countryStore.setCountry(selected.isoCode, selected.currency.symbol, selected.currency.isoCode)
-        // Update cart buyer identity if cart exists
+        nextTick(() => {
+            updateSelectWidth()
+        })
         if (cartStore.cart && cartStore.cart.id) {
             const updatedCart = await updateCartBuyerIdentity(cartStore.cart.id, selected.isoCode)
             if (updatedCart) {
@@ -44,5 +75,11 @@ const onChange = async () => {
 
 onMounted(() => {
     fetchCountries()
+})
+
+watch(selectedCountryText, () => {
+    nextTick(() => {
+        updateSelectWidth()
+    })
 })
 </script>
