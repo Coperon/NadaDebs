@@ -21,7 +21,10 @@
                             Price upon request
                         </template>
                         <template v-else>
-                            <ShopProductPrice :productGid="selectedVariant?.store?.gid" :selectedVariant="selectedVariant" />
+                            <ShopProductPrice 
+                                :productGid="productData?.store?.gid" 
+                                :selectedVariant="selectedVariant" 
+                            />
                         </template>
                     </div>
                 </header>

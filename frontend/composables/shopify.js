@@ -287,6 +287,30 @@ export const fetchShopifyProductPrice = async (productGid, country) => {
   return data?.product?.priceRange
 }
 
+export const fetchVariantPrice = async (variantGid, productGid, country) => {
+  const query = `
+    query getVariantPrice($productId: ID!, $country: CountryCode) @inContext(country: $country) {
+      product(id: $productId) {
+        variants(first: 100) {
+          edges {
+            node {
+              id
+              priceV2 {
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+      }
+    }
+  `
+  const data = await makeGraphQLRequest(query, { productId: productGid, country })
+  const variants = data?.product?.variants?.edges || []
+  const variant = variants.find(v => v.node.id === variantGid)
+  return variant?.node?.priceV2
+}
+
 export const fetchVariantAvailability = async (variantGid, productGid, country) => {
     // console.log('Fetching variant availability for:', variantGid, productGid, 'in country:', country);
   const query = `
