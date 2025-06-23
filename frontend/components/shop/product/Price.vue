@@ -25,6 +25,11 @@ const props = defineProps({
         type: String,
         required: false,
         default: null
+    },
+    selectedVariant: {
+        type: Object,
+        required: false,
+        default: null
     }
 })
 
