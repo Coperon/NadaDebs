@@ -1,15 +1,15 @@
 <template>
-    <div class="price min-h-[1lh]">
-        <span v-if="!loading && countryStore.country && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount != livePrice.maxVariantPrice?.amount">
-            {{ formatPrice(livePrice.minVariantPrice.amount, siteSettingsData?.currencyCode) }} 
-            {{ formatPrice(livePrice.maxVariantPrice.amount, siteSettingsData?.currencyCode) }}
-        </span>
-        <span 
-            class="relative"
+    <div class="price">
+        <div v-if="!loading && countryStore.country && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount != livePrice.maxVariantPrice?.amount" class="flex gap-1">
+            <span>{{ formatPrice(livePrice.minVariantPrice, siteSettingsData?.currencyCode) }}</span>
+            <span>-</span>
+            <span>{{ formatPrice(livePrice.maxVariantPrice, siteSettingsData?.currencyCode) }}</span>
+        </div>
+        <div
             v-else-if="!loading && countryStore.country && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount == livePrice.maxVariantPrice?.amount"
         >
             {{ formatPrice(livePrice.minVariantPrice.amount, siteSettingsData?.currencyCode)}}
-        </span>
+        </div>
     </div>
 </template>
 <script setup>
