@@ -62,13 +62,8 @@ export function formatDate(dateStr) {
     return `${day}/${month}/${year}`
 }
 
-
-export const currencyCodeToSymbol = (currencyCode) => {
-    // Deprecated: always use the symbol from the Shopify API if available
-    return currencyCode || ''
-}
-
-export const formatPrice = (price, currencyCode='USD', symbol='$') => {
+export const formatPrice = (price) => {
+    const countryStore = useCountryStore()
     if (price && typeof price === 'object' && 'amount' in price) {
         price = price.amount
     }
@@ -76,8 +71,8 @@ export const formatPrice = (price, currencyCode='USD', symbol='$') => {
     if (isNaN(numberPrice)) return ''
     let priceToPrint = numberPrice.toString()
     // Prefer API symbol if provided
-    if (currencyCode === 'USD' || currencyCode === 'GBP') {
-        return `${symbol}${priceToPrint}`
+    if (countryStore.currencyCode === 'USD' || countryStore.currencyCode === 'GBP') {
+        return `${countryStore.currencySymbol}${priceToPrint}`
     }
-    return `${priceToPrint}${symbol}`
+    return `${priceToPrint}${countryStore.currencySymbol}`
 }

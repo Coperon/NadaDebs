@@ -40,9 +40,7 @@
                         <div class="w-1/2">
                             <h3 class="text-h2">{{ item?.variant?.product?.title }}</h3>
                             <div class="mt-1">{{ 
-                                formatPrice(item?.variant?.priceV2?.amount,
-                                item?.variant?.priceV2?.currencyCode,
-                                item?.variant?.priceV2?.symbol) 
+                                formatPrice(item?.variant?.priceV2?.amount) 
                             }}</div>
                         </div>
                     </div>
