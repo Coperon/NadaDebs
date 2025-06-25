@@ -180,6 +180,13 @@ export default {
             group: 'editorial',
         },
         {
+            name: 'isPersonalizable',
+            title: 'Is Personalizable',
+            description: 'This will add a "Personalize" button to the product page.',
+            type: 'boolean',
+            group: 'editorial',
+        },
+        {
             name: 'isFeatured',
             title: 'Is Featured',
             description: 'If true, the product will be displayed larger on the index page',

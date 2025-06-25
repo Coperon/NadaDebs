@@ -1,5 +1,11 @@
 <template>
     <CommonContactLayout :data="contactData">
+        <div v-if="inquiry" class="text-p2 py-4 px-6 mb-3 bg-light-grey">
+            <p>
+                You are inquiring about <span class="font-medium">{{ inquiry }}</span>.
+            </p>
+        </div>
+
         <CommonForm formName="contact">
             <input type="hidden" name="inquiry-subject" :value="inquiry" />
             <CommonFormInput type="text" name="first-name" placeholder="First Name *" required />

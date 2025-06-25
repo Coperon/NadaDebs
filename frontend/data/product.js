@@ -19,6 +19,7 @@ export const getProductBySlug = async productSlug => {
         description,
         metaFields,
         buyOptions,
+        isPersonalizable,
         crafts[]->{
             ...,
         },

@@ -126,6 +126,14 @@
                         :variantAvailabilityLoading="variantAvailabilityLoading"
                     />
                 </div>
+
+                <div v-if="productData?.isPersonalizable" class="mt-6 text-p2">
+                    Personalize this product. 
+                    <NuxtLink :to="`/connect/contact-us?inquiry=${productData?.store?.title}`" class="font-medium inline-flex gap-1.5 items-center hover:text-grey transition-colors duration-300">
+                        <span>Contact us</span>
+                        <IconsArrow class="w-3 h-auto" />
+                    </NuxtLink>
+                </div>
             </div>
         </div>
 
