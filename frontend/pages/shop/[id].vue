@@ -155,7 +155,7 @@
         <!-- Making of -->
         <div v-if="(productData?.makingOf && productData?.makingOf?.length > 0) || (productData?.productModel?.makingOf && productData?.productModel?.makingOf?.length > 0)" class="mt-20 sm:mt-24 lg:mt-30">
             <CommonAsideHeading title="Making of" />
-            <ShopProductMakingOf :images="productData?.makingOf || productData?.productModel?.makingOf" />
+            <ShopProductMakingOf :mediaItems="productData?.makingOf || productData?.productModel?.makingOf" />
         </div>
 
         <!-- Related Products -->

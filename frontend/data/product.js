@@ -24,7 +24,10 @@ export const getProductBySlug = async productSlug => {
             ...,
         },
         makingOf[] {
-            ${imageQuery}
+            image {
+                ${imageQuery}
+            },
+            video,
         },
         relatedProducts[]->{
             _id,
@@ -101,7 +104,10 @@ export const getProductBySlug = async productSlug => {
                 ...,
             },
             makingOf[] {
-                ${imageQuery}
+                image {
+                    ${imageQuery}
+                },
+                video,
             },
         },
         "collection": *[_type == "collection" && references(^._id)][0]{
