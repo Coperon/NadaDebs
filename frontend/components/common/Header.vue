@@ -205,6 +205,29 @@
                 </div>
 
                 <div class="hidden xl:flex justify-center flex-grow text-a2 lowercase">
+                    <ul v-if="route.path.startsWith('/shop/')" class="flex gap-6">
+                        <li>
+                            <NuxtLink 
+                                to="/shop/objects" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/shop/objects' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Objects</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink 
+                                to="/shop/furniture" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/shop/furniture' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Furniture</NuxtLink>
+                        </li>
+                        <li>
+                            <NuxtLink 
+                                to="/shop/collections" 
+                                class="hover:opacity-100 transition-opacity duration-300"
+                                :class="route.path === '/shop/collections' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                            >Collections</NuxtLink>
+                        </li>
+                    </ul>
                     <ul v-if="route.path.startsWith('/studio/')" class="flex gap-6">
                         <li>
                             <NuxtLink 
