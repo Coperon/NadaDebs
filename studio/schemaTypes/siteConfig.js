@@ -155,6 +155,14 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
+      name: 'shippingPolicy',
+      title: 'Shipping & ReturnsPolicy',
+      type: 'reference',
+      to: [{type: 'legal'}],
+      group: 'legalLinks',
+      validation: (Rule) => Rule.required(),
+    },
+    {
       name: 'seo',
       title: 'SEO',
       type: 'seo',

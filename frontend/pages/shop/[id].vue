@@ -134,6 +134,15 @@
                         <IconsArrow class="w-3 h-auto" />
                     </NuxtLink>
                 </div>
+
+                <div v-if="siteSettingsData?.shippingPolicy" class="mt-10">
+                    <NuxtLink 
+                        :to="`/legal/${siteSettingsData?.shippingPolicy?.slug.current}`"
+                        class="text-a2 lowercase text-grey hover:text-black transition-colors" 
+                    >
+                        Shipping & Returns Policy
+                    </NuxtLink>
+                </div>
             </div>
         </div>
 

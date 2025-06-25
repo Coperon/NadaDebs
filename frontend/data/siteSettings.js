@@ -35,6 +35,11 @@ export const siteSettings = async () => {
             title,
             slug,
         },
+        shippingPolicy -> {
+            _id,
+            title,
+            slug,
+        },
     }`
     const { data } = await useAsyncData('siteSettings', () =>
         $sanity.fetch(query),
