@@ -137,7 +137,8 @@
 
                 <div v-if="siteSettingsData?.shippingPolicy" class="mt-10">
                     <NuxtLink 
-                        :to="`/legal/${siteSettingsData?.shippingPolicy?.slug.current}`"
+                        :to="`/info/${siteSettingsData?.shippingPolicy?.slug.current}`"
+                        target="_blank"
                         class="text-a2 lowercase text-grey hover:text-black transition-colors" 
                     >
                         Shipping & Returns Policy

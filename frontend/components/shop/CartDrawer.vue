@@ -25,13 +25,17 @@
                 <div v-if="cart?.lineItems?.length" class="flex flex-col gap-8">
                     <div v-for="item in cart?.lineItems" :key="item?.id" class="flex gap-4">
                         <div class="w-1/2">
-                            <div class="aspect-[4/5] relative overflow-hidden">
+                            <NuxtLink 
+                                :to="`/shop/${item?.variant?.product?.handle}`"
+                                @click="cartStore.setCartOpen(false)"
+                                class="block aspect-[4/5] relative overflow-hidden hover:opacity-50 transition-opacity duration-300"
+                            >
                                 <img 
                                     :src="item?.variant?.image?.src" 
                                     :alt="item?.variant?.product?.title" 
                                     class="w-full h-full object-cover"
                                 />
-                            </div>
+                            </NuxtLink>
                             <button 
                                 @click="removeFromCart(item?.id)"
                                 class="mt-4 text-a2 text-grey lowercase hover:text-black transition-colors"
@@ -39,7 +43,10 @@
                         </div>
                         <div class="w-1/2">
                             <h3 class="text-h2">{{ item?.variant?.product?.title }}</h3>
-                            <div class="mt-1">{{ 
+                            <div v-if="item?.variant?.selectedOptions?.length > 0" class="mt-1.5 text-p2 text-grey">
+                                {{ item?.variant?.selectedOptions[0]?.value }}
+                            </div>
+                            <div class="mt-3">{{ 
                                 formatPrice(item?.variant?.priceV2?.amount) 
                             }}</div>
                         </div>

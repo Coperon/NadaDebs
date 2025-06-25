@@ -41,7 +41,8 @@ const transformCartData = (cartData) => {
                     priceV2: variant.priceV2,
                     selectedOptions: isDefaultVariant ? [] : variant.selectedOptions,
                     product: variant.product ? { // Add null check for product
-                        title: variant.product.title
+                        title: variant.product.title,
+                        handle: variant.product.handle
                     } : null
                 }
             };
@@ -72,6 +73,7 @@ const cartFragment = `
                             }
                             product {
                                 title
+                                handle
                             }
                             selectedOptions {
                                 name
