@@ -14,7 +14,13 @@
 
             <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pt-5 sm:pt-10 sm:w-1/2 xl:w-1/3">
                 <header>
-                    <div class="text-p2 text-grey mb-1">Collection name</div>
+                    <div v-if="productData?.collection" class="mb-1">
+                        <NuxtLink 
+                            v-if="productData?.collection" 
+                            :to="`/shop/collections/${productData.collection.slug.current}`"
+                            class="text-p2 text-grey hover:text-black transition-colors"
+                        >{{ productData.collection.title }}</NuxtLink>
+                    </div>
                     <h1 class="text-a1-bold uppercase">{{ productData?.store?.title }}</h1>
                     <div class="mt-1 text-p2">
                         <template v-if="productData?.buyOptions?.onlyInquire && productData?.buyOptions?.hidePrice">
@@ -81,11 +87,32 @@
                     </div>
 
                     <template v-if="(productData?.metaFields && productData?.metaFields?.length > 0) || (productData?.productModel?.metaFields && productData?.productModel?.metaFields?.length > 0)">
-                        <div v-for="metaField in productData?.metaFields || productData?.productModel?.metaFields" :key="metaField._key" class="border-t border-light-grey py-4">
-                            <div class="text-a2 font-medium uppercase">{{ metaField.title }}</div>
-                            <div class="mt-4">
-                                <div class="text-p2">{{ metaField.description }}</div>
-                            </div>
+                        <div 
+                            v-for="metaField in productData?.metaFields || productData?.productModel?.metaFields" 
+                            :key="metaField._key" 
+                            class="border-t border-light-grey"
+                        >
+                            <button 
+                                @click="toggleMetaField(metaField._key)"
+                                class="w-full flex items-center justify-between text-left hover:text-black transition-colors py-4"
+                            >
+                                <div 
+                                    class="text-a2 font-medium uppercase transition-colors duration-300 hover:text-black"
+                                    :class="openMetaFields.has(metaField._key) ? 'text-black' : 'text-grey'"
+                                >{{ metaField.title }}</div>
+                                <div class="transition-transform object-center duration-300" :class="openMetaFields.has(metaField._key) ? 'rotate-45' : 'rotate-0'">
+                                    <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                </div>
+                            </button>
+                            <Transition name="fade">
+                                <div v-if="openMetaFields.has(metaField._key)" class="overflow-hidden max-h-48">
+                                    <div class="pb-4">
+                                        <div class="text-p2">{{ metaField.description }}</div>
+                                    </div>
+                                </div>
+                            </Transition>
                         </div>
                     </template>
                 </div>
@@ -135,6 +162,15 @@ const countryStore = useCountryStore()
 const selectedVariant = ref(productData?.value?.store?.variants?.[0])
 const variantAvailability = ref({})
 const variantAvailabilityLoading = ref(false)
+const openMetaFields = ref(new Set())
+
+function toggleMetaField(key) {
+    if (openMetaFields.value.has(key)) {
+        openMetaFields.value.delete(key)
+    } else {
+        openMetaFields.value.add(key)
+    }
+}
 
 async function updateAllVariantAvailability() {
     if (!productData.value?.store?.variants) return
@@ -189,3 +225,16 @@ useSeoObject(
     productData?.value?.featuredImage,
 )
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    max-height: 0;
+}
+</style>

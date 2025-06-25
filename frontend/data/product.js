@@ -102,6 +102,11 @@ export const getProductBySlug = async productSlug => {
             makingOf[] {
                 ${imageQuery}
             },
+        },
+        "collection": *[_type == "collection" && references(^._id)][0]{
+            _id,
+            title,
+            slug,
         }
     }`
 
