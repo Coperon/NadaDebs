@@ -13,8 +13,8 @@
             :centerLabel="'Furniture'"
             :rightLabel="'Collections'"
             :leftUrl="'/shop/objects'"
-            :centerUrl="''"
-            :rightUrl="''"
+            :centerUrl="'/shop/furniture'"
+            :rightUrl="'/shop/collections'"
         />
     </div>
 </template>

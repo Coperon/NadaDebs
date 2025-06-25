@@ -108,10 +108,54 @@
                 Load More +
             </button>
         </div>
+
+        <aside class="mt-20 sm:mt-24 lg:mt-30 lg:relative">
+            <div class="text-p2 lowercase text-center lg:absolute lg:top-1/2 lg:-translate-y-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:w-1/3">Continue Exploring</div>
+            <div class="mt-6 flex flex-col gap-6 sm:flex-row lg:justify-between">
+                <NuxtLink 
+                    :to="route.name === 'shop-objects' ? '/shop/furniture' : '/shop/objects'" 
+                    class="group aspect-[4/5] relative overflow-hidden flex items-center justify-center sm:w-1/2 lg:w-1/3"
+                    :class="isMounted && isTouchDevice() ? 'text-white' : 'text-black hover:text-white transition-colors duration-300'"
+                >
+                    <CommonMediaImage
+                        :image="route.name === 'shop-objects' ? shopData?.furniture?.image : shopData?.objects?.image"
+                        :alt="route.name === 'shop-objects' ? 'Furniture' : 'Objects'"
+                        width="1536"
+                        mobileWidth="768"
+                        class="absolute inset-0 w-full h-full object-cover"
+                        :class="isMounted && isTouchDevice() ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 transition-opacity duration-300'"
+                    />
+                    <div class="text-h1-mobile sm:text-h1 uppercase relative">
+                        {{ route.name === 'shop-objects' ? 'Furniture' : 'Objects' }}
+                    </div>
+                </NuxtLink>
+                <NuxtLink 
+                    to="/shop/collections" 
+                    class="group aspect-[4/5] relative overflow-hidden flex items-center justify-center sm:w-1/2 lg:w-1/3"
+                    :class="isMounted && isTouchDevice() ? 'text-white' : 'text-black hover:text-white transition-colors duration-300'"
+                >
+                    <CommonMediaImage
+                        :image="shopData?.collections?.image"
+                        alt="Collections"
+                        width="1536"
+                        mobileWidth="768"
+                        class="absolute inset-0 w-full h-full object-cover"
+                        :class="isMounted && isTouchDevice() ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 transition-opacity duration-300'"
+                    />
+                    <div class="text-h1-mobile sm:text-h1 uppercase relative">
+                        Collections
+                    </div>
+                </NuxtLink>
+            </div>
+        </aside>
     </div>
 </template>
 
 <script setup>
+import { isTouchDevice } from '@/utils'
+import { getShopPageData } from '@/data/shopPage'
+const shopData = await getShopPageData()
+
 const props = defineProps({
     pageData: {
         type: Object,
@@ -142,6 +186,7 @@ const currentPage = ref(1)
 const isFilterOpen = ref(false)
 const isTypeListOpen = ref(true)
 const isSortingOpen = ref(true)
+const isMounted = ref(false)
 
 const filterText = computed(() => {
     const filters = []
@@ -237,6 +282,10 @@ watch([selectedCategory, selectedSort, showInStockOnly], ([newCategory, newSort,
     
     router.replace({ query })
 }, { deep: true })
+
+onMounted(() => {
+    isMounted.value = true
+})
 </script>
 
 <style scoped>

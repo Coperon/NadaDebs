@@ -13,7 +13,7 @@
                         :alt="product.store.title"
                         :width="product.isFeatured ? '1024' : '512'"
                         :mobileWidth="product.isFeatured ? '1024' : '512'"
-                        class="w-full h-full object-contain"
+                        class="absolute inset-0 w-full h-full object-contain"
                         :class="product.isFeatured ? 'absolute inset-0' : ''"
                     />
                     <img 
@@ -22,7 +22,7 @@
                         :srcset="`${product?.store?.previewImageUrl}?w=512 512w, ${product?.store?.previewImageUrl}?w=1024 1024w`"
                         :sizes="product.isFeatured ? '(min-width: 1280px) 1024px, (min-width: 768px) 1024px, 512px' : '(min-width: 1280px) 512px, (min-width: 768px) 512px, 256px'"
                         :alt="product.store.title" 
-                        class="w-full h-full object-contain" 
+                        class="absolute inset-0 w-full h-full object-contain" 
                     />
                     <CommonMediaImage
                         v-if="product?.secondaryImage"
