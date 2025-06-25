@@ -113,15 +113,23 @@ const initSwiper = () => {
         pagination: {
             el: '.swiper-pagination',
         },
+        freeMode: {
+            enabled: false,
+        },
         mousewheel: {
             enabled: true,
             forceToAxis: true,
-            releaseOnEdges: true,
+            releaseOnEdges: false,
         },
-        freeMode: true,
         breakpoints: {
             640: {
                 direction: 'vertical',
+                freeMode: {
+                    enabled: true,
+                },
+                mousewheel: {
+                    releaseOnEdges: true,
+                },
             }
         }
     })
