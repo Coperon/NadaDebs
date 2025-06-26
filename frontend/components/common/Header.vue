@@ -181,7 +181,7 @@
         <div 
             ref="topNav"
             class="absolute inset-x-0 top-0 pointer-events-auto p-4 sm:p-6 lg:px-8 xl:px-12 flex md:flex-row-reverse items-center justify-between md:gap-12 shrink-0 transition-colors duration-300"
-            :class="{ 'text-white': isTopNavTransparent }"
+            :class="{ 'text-white': isTopNavTransparent && route.name !== 'our-world-crafts-id' }"
         >
             <div class="hidden md:flex flex-1 items-center justify-end gap-6">
                 <!-- <span class="lowercase text-a2 font-medium">Search</span>
