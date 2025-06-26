@@ -17,6 +17,9 @@ export const getBespokePage = async () => {
                 ${imageQuery}
             },
         },
+        relatedProducts[]->{
+            ...,
+        },
         seo {
             ${seoQuery}
         },

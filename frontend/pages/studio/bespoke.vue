@@ -46,6 +46,12 @@
                 </div>
             </div>
         </div>
+
+        <!-- Related Products -->
+        <div v-if="bespokeData?.relatedProducts && bespokeData?.relatedProducts?.length > 0" class="pb-20 sm:pb-24 lg:pb-30">
+            <CommonAsideHeading title="Featured Furniture and Objects" />
+            <ShopProductsGrid :products="bespokeData?.relatedProducts" />
+        </div>
     </div>
 </template>
 

@@ -4,37 +4,39 @@
             <NuxtLink :to="`/shop/${product.store.slug.current}`" class="group">
                 <div 
                     v-if="product?.featuredImage || product?.store?.previewImageUrl" 
-                    class="relative overflow-hidden bg-beige/30" 
+                    class="relative overflow-hidden bg-white" 
                     :class="product.isFeatured ? 'aspect-auto' : 'aspect-[4/5]'"
                 >
-                    <CommonMediaImage
-                        v-if="product?.featuredImage"
-                        :image="product.featuredImage"
-                        :alt="product.store.title"
-                        :width="product.isFeatured ? '1024' : '512'"
-                        :mobileWidth="product.isFeatured ? '1024' : '512'"
-                        class="absolute inset-0 w-full h-full object-contain"
-                        :class="product.isFeatured ? 'absolute inset-0' : ''"
-                    />
-                    <img 
-                        v-else 
-                        :src="product?.store?.previewImageUrl" 
-                        :srcset="`${product?.store?.previewImageUrl}?w=512 512w, ${product?.store?.previewImageUrl}?w=1024 1024w`"
-                        :sizes="product.isFeatured ? '(min-width: 1280px) 1024px, (min-width: 768px) 1024px, 512px' : '(min-width: 1280px) 512px, (min-width: 768px) 512px, 256px'"
-                        :alt="product.store.title" 
-                        class="absolute inset-0 w-full h-full object-contain" 
-                    />
-                    <CommonMediaImage
-                        v-if="product?.secondaryImage"
-                        :image="product.secondaryImage"
-                        :alt="product.store.title"
-                        :width="product.isFeatured ? '1024' : '512'"
-                        :mobileWidth="product.isFeatured ? '1024' : '512'"
-                        class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    />
-                    <div v-if="product.isFeatured" class="flex gap-x-2.5 w-full pointer-events-none">
-                        <div class="aspect-[4/5] flex-1"></div>
-                        <div class="aspect-[4/5] flex-1"></div>
+                    <div class="w-full h-full bg-beige/30">
+                        <CommonMediaImage
+                            v-if="product?.featuredImage"
+                            :image="product.featuredImage"
+                            :alt="product.store.title"
+                            :width="product.isFeatured ? '1024' : '512'"
+                            :mobileWidth="product.isFeatured ? '1024' : '512'"
+                            class="absolute inset-0 w-full h-full object-contain"
+                            :class="product.isFeatured ? 'absolute inset-0' : ''"
+                        />
+                        <img 
+                            v-else 
+                            :src="product?.store?.previewImageUrl" 
+                            :srcset="`${product?.store?.previewImageUrl}?w=512 512w, ${product?.store?.previewImageUrl}?w=1024 1024w`"
+                            :sizes="product.isFeatured ? '(min-width: 1280px) 1024px, (min-width: 768px) 1024px, 512px' : '(min-width: 1280px) 512px, (min-width: 768px) 512px, 256px'"
+                            :alt="product.store.title" 
+                            class="absolute inset-0 w-full h-full object-contain" 
+                        />
+                        <CommonMediaImage
+                            v-if="product?.secondaryImage"
+                            :image="product.secondaryImage"
+                            :alt="product.store.title"
+                            :width="product.isFeatured ? '1024' : '512'"
+                            :mobileWidth="product.isFeatured ? '1024' : '512'"
+                            class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        />
+                        <div v-if="product.isFeatured" class="flex gap-x-2.5 w-full pointer-events-none">
+                            <div class="aspect-[4/5] flex-1"></div>
+                            <div class="aspect-[4/5] flex-1"></div>
+                        </div>
                     </div>
                 </div>
 

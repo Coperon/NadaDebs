@@ -1,5 +1,6 @@
 import {RiProfileLine} from 'react-icons/ri'
 import {IoMdAnalytics} from 'react-icons/io'
+import relatedProductsField from '../fields/relatedProducts'
 
 export default {
     name: 'bespoke',
@@ -99,6 +100,10 @@ export default {
                     }
                 },
             }],
+            group: 'page',
+        },
+        {
+            ...relatedProductsField,
             group: 'page',
         },
         {

@@ -3,7 +3,6 @@ import productDescriptionField from './fields/productDescription'
 import metaFieldsField from './fields/metaFields'
 import relatedCraftsField from './fields/relatedCrafts'
 import makingOfField from './fields/makingOf'
-import relatedProductsField from './fields/relatedProducts'
 
 export default {
     name: 'productModel',
