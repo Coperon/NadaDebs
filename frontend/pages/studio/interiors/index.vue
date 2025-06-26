@@ -3,6 +3,10 @@
         <CommonPageHeader 
             :title="interiorsPageData?.title" 
             :description="interiorsPageData?.description" 
+            :button="{
+                text: 'Inquire',
+                link: '/connect/contact-us',
+            }"
         />
 
         <div v-if="interiorsData && interiorsData.length > 0">

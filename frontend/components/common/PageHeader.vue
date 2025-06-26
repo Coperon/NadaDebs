@@ -4,6 +4,11 @@
         <div class="max-w-[62ch] mx-auto whitespace-pre-line">
             {{ description }}
         </div>
+        <div v-if="button" class="flex justify-center">
+            <NuxtLink :to="button.link">
+                <CommonButton>{{ button.text }}</CommonButton>
+            </NuxtLink>
+        </div>
     </header>
 </template>
 
@@ -16,6 +21,10 @@ defineProps({
     description: {
         type: String,
         required: true,
+    },
+    button: {
+        type: Object,
+        required: false,
     },
 })
 </script>

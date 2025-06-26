@@ -3,6 +3,10 @@
         <CommonPageHeader 
             :title="bespokeData?.title" 
             :description="bespokeData?.description" 
+            :button="{
+                text: 'Inquire',
+                link: '/connect/contact-us',
+            }"
         />
 
         <div v-if="bespokeData?.featuredImage" class="portrait:aspect-square landscape:aspect-auto landscape:h-screen relative overflow-hidden">

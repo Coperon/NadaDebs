@@ -3,6 +3,10 @@
         <CommonPageHeader 
             :title="collaborationsPageData?.title" 
             :description="collaborationsPageData?.description" 
+            :button="{
+                text: 'Inquire',
+                link: '/connect/contact-us',
+            }"
         />
 
         <div v-if="collaborationsData && collaborationsData.length > 0">
