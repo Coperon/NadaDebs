@@ -51,6 +51,18 @@
         <CommonPageHeader :title="'About ' + craftData?.title" :description="craftData?.description" />
 
         <CommonContentGrid :content="craftData?.content" />
+
+        <!-- Related Products -->
+        <div v-if="combinedProducts.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
+            <CommonAsideHeading title="Pieces featuring this craft" />
+            <ShopProductsGrid :products="combinedProducts" />
+        </div>
+
+        <!-- Related Collections -->
+        <div v-if="craftData?.relatedCollections && craftData?.relatedCollections?.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
+            <CommonAsideHeading title="Collections featuring this craft" />
+            <ShopCollectionsGrid :collections="craftData?.relatedCollections" />
+        </div>
     </div>
 </template>
 
@@ -74,4 +86,25 @@ useSeoObject(
 // Handle thumbnail video
 const thumbnailVideoRef = ref(null)
 const { canAutoplay } = useVideoAutoplay(thumbnailVideoRef)
+
+// Combine and deduplicate products from both direct references and product models
+const combinedProducts = computed(() => {
+    const directProducts = craftData?.value?.relatedProducts || []
+    const productModels = craftData?.value?.relatedProductModels || []
+    
+    // Get all products from product models
+    const productsFromModels = productModels.flatMap(model => 
+        model.products?.map(p => p.product).filter(Boolean) || []
+    )
+    
+    // Combine both arrays
+    const allProducts = [...directProducts, ...productsFromModels]
+    
+    // Remove duplicates based on _id
+    const uniqueProducts = allProducts.filter((product, index, self) => 
+        index === self.findIndex(p => p._id === product._id)
+    )
+    
+    return uniqueProducts
+})
 </script>

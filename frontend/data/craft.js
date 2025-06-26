@@ -21,7 +21,20 @@ export const getCraftBySlug = async craftSlug => {
         cover {
             ${imageQuery}
         },
-        content
+        content,
+        "relatedProducts": *[_type == "product" && references(^._id) && !(_id in path("drafts.**"))]|order(store.createdAt desc){
+            ...,
+        },
+        "relatedProductModels": *[_type == "productModel" && references(^._id) && !(_id in path("drafts.**"))]{
+            products[] {
+                product->{
+                    ...,
+                }
+            }
+        },
+        "relatedCollections": *[_type == "collection" && references(^._id) && !(_id in path("drafts.**"))]|order(year desc, createdAt desc) {
+            ...,
+        }
     }`
     const key = `craft-${craftSlug}`
     const { data } = await useAsyncData(key, () =>
