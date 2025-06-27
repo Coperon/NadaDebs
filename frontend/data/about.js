@@ -20,6 +20,16 @@ export const getAboutData = async () => {
             title,
             text
         },
+        markers[] {
+            location,
+            coordinates,
+            category,
+            title,
+            text,
+            image {
+                ${imageQuery}
+            }
+        },
         handmadeHeartmade {
             title,
             handmade,

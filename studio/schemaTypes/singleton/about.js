@@ -104,6 +104,76 @@ export default {
             ]
         },
         {
+            name: 'markers',
+            title: 'Map Markers',
+            type: 'array',
+            group: 'page',
+            of: [{
+                type: 'object',
+                fields: [
+                    {
+                        name: 'location',
+                        title: 'Location',
+                        type: 'string',
+                        validation: (Rule) => Rule.required(),
+                    },
+                    {
+                        name: 'coordinates',
+                        title: 'Coordinates',
+                        type: 'object',
+                        options: {
+                            columns: 2,
+                        },
+                        fields: [
+                            {
+                                name: 'x',
+                                title: 'X',
+                                type: 'number',
+                                validation: (Rule) => Rule.required(),
+                            },
+                            {
+                                name: 'y',
+                                title: 'Y',
+                                type: 'number',
+                                validation: (Rule) => Rule.required(),
+                            }
+                        ],
+                        validation: (Rule) => Rule.required(),
+                        description: 'Use this map to get the coordinates: https://nadadebs.netlify.app/map',
+                    },
+                    {
+                        name: 'category',
+                        title: 'Category',
+                        type: 'string',
+                        validation: (Rule) => Rule.required(),
+                        options: {
+                            list: [
+                                { title: 'Nada\'s Journey', value: 'N' },
+                                { title: 'Craft Stories', value: 'C' },
+                            ],
+                        },
+                    },
+                    {
+                        name: 'title',
+                        title: 'Title',
+                        type: 'string',
+                        validation: (Rule) => Rule.required(),
+                    },
+                    {
+                        name: 'text',
+                        title: 'Text',
+                        type: 'text',
+                        rows: 2,
+                    },
+                    {
+                        name: 'image',
+                        title: 'Image',
+                        type: 'image',
+                    }
+                ]
+            }]
+        },
+        {
             name: 'handmadeHeartmade',
             title: 'Handmade / Heartmade',
             type: 'object',

@@ -7,6 +7,7 @@
         <div class="py-20 sm:py-24 lg:py-30 flex flex-col gap-20 sm:gap-24 lg:gap-30">
             <AboutNada
                 :aboutNada="aboutData?.aboutNadaDebs"
+                :markers="aboutData?.markers"
                 :handmadeHeartmade="aboutData?.handmadeHeartmade"
             />
             <AboutStudio
