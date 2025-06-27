@@ -224,7 +224,7 @@
                             <NuxtLink 
                                 to="/shop/collections" 
                                 class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/shop/collections' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                                :class="route.path === '/shop/collections' || route.name === 'shop-collections-id' ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Collections</NuxtLink>
                         </li>
                     </ul>
@@ -233,14 +233,14 @@
                             <NuxtLink 
                                 to="/studio/collaborations" 
                                 class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/studio/collaborations' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                                :class="route.path === '/studio/collaborations' || route.name === 'studio-collaborations-id' ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Collaborations</NuxtLink>
                         </li>
                         <li>
                             <NuxtLink 
                                 to="/studio/interiors" 
                                 class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/studio/interiors' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                                :class="route.path === '/studio/interiors' || route.name === 'studio-interiors-id' ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Interiors</NuxtLink>
                         </li>
                         <li>
@@ -263,7 +263,7 @@
                             <NuxtLink 
                                 to="/our-world/crafts" 
                                 class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/our-world/crafts' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                                :class="route.path === '/our-world/crafts' || route.name === 'our-world-crafts-id' ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Contemporary Crafts</NuxtLink>
                         </li>
                     </ul>
@@ -272,7 +272,7 @@
                             <NuxtLink
                                 to="/news/latest"
                                 class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/news/latest' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                                :class="route.path === '/news/latest' || route.name === 'news-latest-id' ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Latest</NuxtLink>
                         </li>
                         <li>
