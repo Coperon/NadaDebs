@@ -210,14 +210,14 @@
                             <NuxtLink 
                                 to="/shop/objects" 
                                 class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/shop/objects' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                                :class="isObjectsActive ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Objects</NuxtLink>
                         </li>
                         <li>
                             <NuxtLink 
                                 to="/shop/furniture" 
                                 class="hover:opacity-100 transition-opacity duration-300"
-                                :class="route.path === '/shop/furniture' ? 'font-medium opacity-100' : 'font-light opacity-30'"
+                                :class="isFurnitureActive ? 'font-medium opacity-100' : 'font-light opacity-30'"
                             >Furniture</NuxtLink>
                         </li>
                         <li>
@@ -314,6 +314,7 @@
 
 <script setup>
 import { useCartStore } from '@/stores/cart'
+import { useCurrentProductStore } from '@/stores/currentProduct'
 
 const props = defineProps({
     infoPages: {
@@ -324,6 +325,7 @@ const props = defineProps({
 
 const menuState = useMenuStore()
 const cartStore = useCartStore()
+const currentProductStore = useCurrentProductStore()
 const route = useRoute()
 
 const parentRouteSlug = computed(() => {
@@ -350,6 +352,21 @@ const parentRouteSlug = computed(() => {
     }
 
     return 'Nada Debs'
+})
+
+// Computed properties for product category highlighting
+const isMounted = ref(false)
+
+const isObjectsActive = computed(() => {
+    if (route.path === '/shop/objects') return true
+    if (isMounted.value && route.name === 'shop-id' && currentProductStore.currentProduct?.category === 'objects') return true
+    return false
+})
+
+const isFurnitureActive = computed(() => {
+    if (route.path === '/shop/furniture') return true
+    if (isMounted.value && route.name === 'shop-id' && currentProductStore.currentProduct?.category === 'furniture') return true
+    return false
 })
 
 const topNav = ref(null)
@@ -422,6 +439,9 @@ onMounted(() => {
         || route.name === 'news-latest-id'
         || route.name === 'shop-collections-id'
     ) && window.scrollY === 0
+    
+    // Set mounted state to true after component is mounted
+    isMounted.value = true
 })
 
 onUnmounted(() => {

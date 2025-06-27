@@ -177,10 +177,23 @@ const productData = await getProductBySlug(route.params.id)
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
 const countryStore = useCountryStore()
+const currentProductStore = useCurrentProductStore()
 const selectedVariant = ref(productData?.value?.store?.variants?.[0])
 const variantAvailability = ref({})
 const variantAvailabilityLoading = ref(false)
 const openMetaFields = ref(new Set())
+
+// Set the current product in the global store
+watch(() => productData.value, (newProductData) => {
+  if (newProductData) {
+    currentProductStore.setCurrentProduct(newProductData)
+  }
+}, { immediate: true })
+
+// Clear the current product when leaving the page
+onUnmounted(() => {
+  currentProductStore.clearCurrentProduct()
+})
 
 function toggleMetaField(key) {
     if (openMetaFields.value.has(key)) {

@@ -7,6 +7,7 @@ export const getProductBySlug = async productSlug => {
         _id,
         title,
         hidden,
+        category,
         featuredImage {
             ${imageQuery}
         },
