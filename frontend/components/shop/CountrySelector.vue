@@ -41,7 +41,7 @@ const selectedCountryText = computed(() => {
 const updateSelectWidth = () => {
     if (measureSpan.value) {
         const textWidth = measureSpan.value.offsetWidth
-        selectWidth.value = textWidth + 24
+        selectWidth.value = textWidth + 20
     }
 }
 

@@ -51,6 +51,7 @@ export default {
             title: 'Cover',
             type: 'image',
             group: 'content',
+            validation: (Rule) => Rule.required(),
         },
         {
             name: 'date',
