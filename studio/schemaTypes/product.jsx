@@ -121,15 +121,71 @@ export default {
             ...categoryField,
             group: 'editorial',
         },
+        // {
+        //     ...objectsCategoryField,
+        //     group: 'editorial',
+        //     hidden: ({ parent }) => parent?.category !== 'objects',
+        // },
         {
-            ...objectsCategoryField,
+            name: 'objectsCategory',
+            title: 'Type',
+            type: 'reference',
+            to: [{ type: 'objectsCategory' }],
             group: 'editorial',
             hidden: ({ parent }) => parent?.category !== 'objects',
+            options: {
+                filter: '!defined(parentType)',
+            },
         },
         {
-            ...furnitureCategoryField,
+            name: 'objectsSubtype',
+            title: 'Subtype',
+            type: 'reference',
+            to: [{ type: 'objectsCategory' }],
+            group: 'editorial',
+            hidden: ({ parent }) => !parent?.objectsType,
+            options: {
+                filter: ({ parent }) => {
+                    if (!parent?.objectsType) return false
+                    return {
+                    filter: 'parentType._ref == $parentRef',
+                    params: { parentRef: parent.objectsType._ref }
+                    }
+                }
+            }
+        },
+        // {
+        //     ...furnitureCategoryField,
+        //     group: 'editorial',
+        //     hidden: ({ parent }) => parent?.category !== 'furniture',
+        // },
+        {
+            name: 'furnitureCategory',
+            title: 'Type',
+            type: 'reference',
+            to: [{ type: 'furnitureCategory' }],
             group: 'editorial',
             hidden: ({ parent }) => parent?.category !== 'furniture',
+            options: {
+                filter: '!defined(parentType)',
+            },
+        },
+        {
+            name: 'furnitureSubtype',
+            title: 'Subtype',
+            type: 'reference',
+            to: [{ type: 'furnitureCategory' }],
+            group: 'editorial',
+            hidden: ({ parent }) => !parent?.furnitureType,
+            options: {
+                filter: ({ parent }) => {
+                    if (!parent?.furnitureType) return false
+                    return {
+                    filter: 'parentType._ref == $parentRef',
+                    params: { parentRef: parent.furnitureType._ref }
+                    }
+                }
+            }
         },
         {
             ...productDescriptionField,

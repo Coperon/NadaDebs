@@ -60,8 +60,20 @@ export const getCategories = async (categoryType) => {
     const query = groq`*[_type == "${categoryType}Category" && !(_id in path("drafts.**"))]|order(title asc){
         _id,
         title,
-        slug
+        slug,
+        "parentTitle": parentType->title,
+        "isSubType": defined(parentType),
+        "parentId": parentType->_id
     }`
     const { data } = await useAsyncData(`${categoryType}Categories`, () => $sanity.fetch(query))
-    return data
+    
+    const mainTypes = data.value.filter(type => !type.isSubType)
+    const subTypes = data.value.filter(type => type.isSubType)
+
+    const hierarchical = mainTypes.map(main => ({
+        ...main,
+        subTypes: subTypes.filter(sub => sub.parentId === main._id)
+    }))
+
+    return hierarchical
 } 

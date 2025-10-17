@@ -29,10 +29,27 @@
                             <li 
                                 v-for="type in categoriesWithProducts" 
                                 :key="type._id" 
-                                class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
-                                :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                class="mb-1.5"
                             >
-                                <button @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current" class="lowercase">{{ type.title }}</button>
+                                <div 
+                                    class="flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
+                                    :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                >
+                                    <button @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current" class="lowercase">{{ type.title }}</button>
+                                </div>
+
+                                <ul v-if="type.subTypes?.length" class="ml-4 mt-1">
+                                    <li 
+                                        v-for="sub in type.subTypes" 
+                                        :key="sub._id"
+                                        class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
+                                        :class="selectedCategory === sub.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                    >
+                                        <button @click="selectedCategory = selectedCategory === sub.slug.current ? null : sub.slug.current" class="lowercase">
+                                            {{ sub.title }}
+                                        </button>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
