@@ -18,6 +18,10 @@ export const getProducts = async (categoryType) => {
                 title,
                 slug,
             },
+            ${categoryType}Subtype->{
+                title,
+                slug,
+            },
             buyOptions,
             isFeatured,
             store {
@@ -61,9 +65,9 @@ export const getCategories = async (categoryType) => {
         _id,
         title,
         slug,
-        "parentTitle": parentType->title,
-        "isSubType": defined(parentType),
-        "parentId": parentType->_id
+        "parentTitle": parentCategory->title,
+        "isSubType": defined(parentCategory),
+        "parentId": parentCategory->_id
     }`
     const { data } = await useAsyncData(`${categoryType}Categories`, () => $sanity.fetch(query))
     

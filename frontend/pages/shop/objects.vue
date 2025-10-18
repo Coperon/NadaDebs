@@ -3,7 +3,7 @@
         :pageData="objectsPageData" 
         :categories="categories" 
         :allProducts="allProducts"
-        categoryKey="objectsCategory"
+        categoryKey="objects"
     />
 </template>
 

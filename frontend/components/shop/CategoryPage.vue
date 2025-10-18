@@ -35,7 +35,10 @@
                                     class="flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
                                     :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
                                 >
-                                    <button @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current" class="lowercase">{{ type.title }}</button>
+                                    <button 
+                                        @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current"
+                                        class="lowercase"
+                                    >{{ type.title }}</button>
                                 </div>
 
                                 <ul v-if="type.subTypes?.length" class="ml-4 mt-1">
@@ -233,9 +236,12 @@ const filteredProducts = computed(() => {
     
     // Apply category filter if selected
     if (selectedCategory.value) {
-        products = products.filter(product => 
-            product[props.categoryKey]?.slug?.current === selectedCategory.value
-        )
+        products = products.filter(product => {
+            const mainCategoryMatch = product[`${props.categoryKey}Category`]?.slug?.current === selectedCategory.value
+            const subCategoryMatch = product[`${props.categoryKey}Subtype`]?.slug?.current === selectedCategory.value
+            
+            return mainCategoryMatch || subCategoryMatch
+        })
     }
 
     // Apply stock filter if enabled
@@ -265,11 +271,16 @@ const filteredProducts = computed(() => {
 const categoriesWithProducts = computed(() => {
     if (!props.categories || !props.allProducts?.items) return []
     
-    return props.categories.filter(category => 
-        props.allProducts.items.some(product => 
-            product[props.categoryKey]?.slug?.current === category.slug.current
+    return props.categories.filter(category => {
+        const hasMainCategoryProducts = props.allProducts.items.some(product => 
+            product[`${props.categoryKey}Category`]?.slug?.current === category.slug.current
         )
-    )
+        const hasSubCategoryProducts = props.allProducts.items.some(product => 
+            product[`${props.categoryKey}Subtype`]?.slug?.current === category.slug.current
+        )
+
+        return hasMainCategoryProducts || hasSubCategoryProducts
+    })
 })
 
 const displayedItems = computed(() => {

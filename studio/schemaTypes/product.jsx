@@ -143,13 +143,13 @@ export default {
             type: 'reference',
             to: [{ type: 'objectsCategory' }],
             group: 'editorial',
-            hidden: ({ parent }) => !parent?.objectsType,
+            hidden: ({ parent }) => !parent?.objectsCategory,
             options: {
                 filter: ({ parent }) => {
-                    if (!parent?.objectsType) return false
+                    if (!parent?.objectsCategory) return false
                     return {
                     filter: 'parentType._ref == $parentRef',
-                    params: { parentRef: parent.objectsType._ref }
+                    params: { parentRef: parent.objectsCategory._ref }
                     }
                 }
             }
@@ -176,13 +176,13 @@ export default {
             type: 'reference',
             to: [{ type: 'furnitureCategory' }],
             group: 'editorial',
-            hidden: ({ parent }) => !parent?.furnitureType,
+            hidden: ({ parent }) => !parent?.furnitureCategory,
             options: {
                 filter: ({ parent }) => {
-                    if (!parent?.furnitureType) return false
+                    if (!parent?.furnitureCategory) return false
                     return {
                     filter: 'parentType._ref == $parentRef',
-                    params: { parentRef: parent.furnitureType._ref }
+                    params: { parentRef: parent.furnitureCategory._ref }
                     }
                 }
             }

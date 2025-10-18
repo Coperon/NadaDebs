@@ -3,7 +3,7 @@
         :pageData="furniturePageData" 
         :categories="categories" 
         :allProducts="allProducts"
-        categoryKey="furnitureCategory"
+        categoryKey="furniture"
     />
 </template>
 
