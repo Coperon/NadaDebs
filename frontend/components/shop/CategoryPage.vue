@@ -29,30 +29,53 @@
                             <li 
                                 v-for="type in categoriesWithProducts" 
                                 :key="type._id" 
-                                class="mb-1.5"
+                                class="mb-1.5 break-inside-avoid"
                             >
-                                <div 
-                                    class="flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
-                                    :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
-                                >
-                                    <button 
-                                        @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current"
-                                        class="lowercase"
-                                    >{{ type.title }}</button>
-                                </div>
-
-                                <ul v-if="type.subTypes?.length" class="ml-4 mt-1">
-                                    <li 
-                                        v-for="sub in type.subTypes" 
-                                        :key="sub._id"
-                                        class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
-                                        :class="selectedCategory === sub.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                <template v-if="type.subTypes?.length">
+                                    <div 
+                                        v-if="type.subTypes?.length"
+                                        class="pl-4"
                                     >
-                                        <button @click="selectedCategory = selectedCategory === sub.slug.current ? null : sub.slug.current" class="lowercase">
-                                            {{ sub.title }}
+                                        <button
+                                            @click="toggleCategory(type._id)"
+                                            class="lowercase"
+                                            :class="selectedCategory === type.slug.current || isAnySubcategorySelected(type) ? 'font-medium' : ''"
+                                        >
+                                            {{ type.title }}
+                                            {{ expandedCategories.includes(type._id) ? '-' : '+' }}
                                         </button>
-                                    </li>
-                                </ul>
+                                    </div>
+
+                                    <ul v-if="expandedCategories.includes(type._id)" class="mt-1.5 ml-4 break-inside-avoid">
+                                        <li 
+                                            v-for="sub in type.subTypes" 
+                                            :key="sub._id"
+                                            class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
+                                            :class="selectedCategory === sub.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                        >
+                                            <button @click="selectedCategory = selectedCategory === sub.slug.current ? null : sub.slug.current" class="lowercase">
+                                                {{ sub.title }}
+                                            </button>
+                                        </li>
+                                        <li 
+                                            class="flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
+                                            :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                        >
+                                            <button @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current" class="lowercase">All</button>
+                                        </li>
+                                    </ul>
+                                </template>
+                                <template v-else>
+                                    <div
+                                        class="flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
+                                        :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                    >
+                                        <button 
+                                            @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current"
+                                            class="lowercase"
+                                        >{{ type.title }}</button>
+                                    </div>
+                                </template>
                             </li>
                         </ul>
                     </div>
@@ -207,22 +230,31 @@ const isFilterOpen = ref(false)
 const isTypeListOpen = ref(true)
 const isSortingOpen = ref(true)
 const isMounted = ref(false)
+const expandedCategories = ref([])
 
 const filterText = computed(() => {
-    const filters = []
-    
-    if (selectedCategory.value) {
-        const category = categoriesWithProducts.value.find(cat => cat.slug.current === selectedCategory.value)
-        if (category) {
-            filters.push(category.title.toLowerCase())
+    if (!selectedCategory.value) return '0'
+
+    const selectedCategoryData = categoriesWithProducts.value.find(cat => 
+        cat.slug.current === selectedCategory.value
+    )
+
+    if (selectedCategoryData) {
+        return selectedCategoryData.title.toLowerCase()
+    }
+
+    for (const mainCategory of categoriesWithProducts.value) {
+        if (mainCategory.subTypes) {
+            const subCategory = mainCategory.subTypes.find(sub => 
+                sub.slug.current === selectedCategory.value
+            )
+            if (subCategory) {
+                return `${mainCategory.title.toLowerCase()}, ${subCategory.title.toLowerCase()}`
+            }
         }
     }
-    
-    if (showInStockOnly.value) {
-        filters.push('in stock')
-    }
-    
-    return filters.length > 0 ? filters.join(', ') : '0'
+
+    return '0'
 })
 
 watch(isFilterOpen, (newValue) => {
@@ -294,6 +326,20 @@ const hasMoreItems = computed(() => {
 
 const loadMore = () => {
     currentPage.value++
+}
+
+const toggleCategory = (categoryId) => {
+    const index = expandedCategories.value.indexOf(categoryId)
+    if (index > -1) {
+        expandedCategories.value.splice(index, 1)
+    } else {
+        expandedCategories.value.push(categoryId)
+    }
+}
+
+const isAnySubcategorySelected = (category) => {
+    if (!category.subTypes?.length) return false
+    return category.subTypes.some(sub => selectedCategory.value === sub.slug.current)
 }
 
 watch(selectedCategory, () => {
