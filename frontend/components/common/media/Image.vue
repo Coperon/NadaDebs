@@ -1,5 +1,5 @@
 <template>
-    <picture>
+    <picture v-if="isValidImage">
         <source
             media="(min-width: 1537px)"
             :srcset="largeSrcset"
@@ -84,6 +84,11 @@ const mbSizes = {
 }
 
 
+// Check if image is valid
+const isValidImage = computed(() => {
+    return props.image && props.image.asset && props.image.asset._ref
+})
+
 // Get original image dimensions
 const originalWidth = props.image?.asset?.metadata?.dimensions?.width
 const originalHeight = props.image?.asset?.metadata?.dimensions?.height
@@ -91,6 +96,10 @@ const realWidth = ref(originalWidth)
 const realHeight = ref(originalHeight)
 
 const getImageUrl = (image, width, height) => {
+    // Return empty string if image is null or doesn't have required properties
+    if (!image || !image.asset || !image.asset._ref) {
+        return ''
+    }
 
     width = Math.round(width)
     height = height ? Math.round(height) : null
