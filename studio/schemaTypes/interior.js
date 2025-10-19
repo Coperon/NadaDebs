@@ -68,7 +68,39 @@ export default {
             name: 'images',
             title: 'Images',
             type: 'array',
-            of: [{ type: 'image' }],
+            of: [
+                {
+                    type: 'object',
+                    name: 'media',
+                    title: 'Media',
+                    fields: [
+                        {
+                            name: 'image',
+                            title: 'Image',
+                            type: 'image',
+                            validation: (Rule) => Rule.required(),
+                        },
+                        {
+                            name: 'video',
+                            title: 'Video',
+                            type: 'url',
+                            description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
+                        },
+                    ],
+                    preview: {
+                        select: {
+                            media: 'image',
+                        },
+                        prepare(selection) {
+                            const {media} = selection
+                            return {
+                                title: 'Media',
+                                media: media,
+                            }
+                        }
+                    }
+                }
+            ],
             options: {
                 layout: 'grid',
             },

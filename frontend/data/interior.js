@@ -14,7 +14,10 @@ export const getInteriorBySlug = async interiorSlug => {
         location,
         year,
         images[] {
-            ${imageQuery}
+            image {
+                ${imageQuery}
+            },
+            video,
         },
         featuredImage {
             ${imageQuery}

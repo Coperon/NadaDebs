@@ -29,13 +29,22 @@
                 v-if="images && images?.length > 0" 
                 class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-2.5 xl:shrink-0 xl:relative xl:bg-beige"
             >
-                <div v-for="image in images" :key="image._key">
+                <div v-for="image in images" :key="image._key" class="relative">
                     <CommonMediaImage
-                        :image="image"
-                        :alt="image.alt"
+                        :image="image.image"
+                        :alt="image.image.alt"
                         width="1536"
                         mobileWidth="768"
                         class="w-full h-auto xl:w-auto xl:h-full xl:shrink-0"
+                    />
+                    <video
+                        v-if="image.video"
+                        muted
+                        loop
+                        autoplay
+                        playsinline
+                        :src="image.video"
+                        class="absolute inset-0 w-full h-full object-cover"
                     />
                 </div>
 

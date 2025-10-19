@@ -13,7 +13,10 @@ export const getCollaborationBySlug = async collaborationSlug => {
         description,
         year,
         images[] {
-            ${imageQuery}
+            image {
+                ${imageQuery}
+            },
+            video,
         },
         featuredImage {
             ${imageQuery}
