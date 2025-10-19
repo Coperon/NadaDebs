@@ -39,31 +39,37 @@
                                         <button
                                             @click="toggleCategory(type._id)"
                                             class="lowercase"
-                                            :class="selectedCategory === type.slug.current || isAnySubcategorySelected(type) ? 'font-medium' : ''"
+                                            :class="{
+                                                'font-medium': isMounted && (selectedCategory === type.slug.current || isAnySubcategorySelected(type))
+                                            }"
                                         >
                                             {{ type.title }}
-                                            {{ expandedCategories.includes(type._id) ? '-' : '+' }}
+                                            <ClientOnly>
+                                                {{ expandedCategories.includes(type._id) ? '-' : '+' }}
+                                            </ClientOnly>
                                         </button>
                                     </div>
 
-                                    <ul v-if="expandedCategories.includes(type._id)" class="mt-1.5 ml-4 break-inside-avoid">
-                                        <li 
-                                            v-for="sub in type.subTypes" 
-                                            :key="sub._id"
-                                            class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
-                                            :class="selectedCategory === sub.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
-                                        >
-                                            <button @click="selectedCategory = selectedCategory === sub.slug.current ? null : sub.slug.current" class="lowercase">
-                                                {{ sub.title }}
-                                            </button>
-                                        </li>
-                                        <li 
-                                            class="flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
-                                            :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
-                                        >
-                                            <button @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current" class="lowercase">All</button>
-                                        </li>
-                                    </ul>
+                                    <ClientOnly>
+                                        <ul v-if="expandedCategories.includes(type._id)" class="mt-1.5 ml-4 break-inside-avoid">
+                                            <li 
+                                                v-for="sub in type.subTypes" 
+                                                :key="sub._id"
+                                                class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
+                                                :class="selectedCategory === sub.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                            >
+                                                <button @click="selectedCategory = selectedCategory === sub.slug.current ? null : sub.slug.current" class="lowercase">
+                                                    {{ sub.title }}
+                                                </button>
+                                            </li>
+                                            <li 
+                                                class="flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
+                                                :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                            >
+                                                <button @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current" class="lowercase">All</button>
+                                            </li>
+                                        </ul>
+                                    </ClientOnly>
                                 </template>
                                 <template v-else>
                                     <div
@@ -338,7 +344,9 @@ const toggleCategory = (categoryId) => {
 }
 
 const isAnySubcategorySelected = (category) => {
-    if (!category.subTypes?.length) return false
+    if (!isMounted.value) return false
+    if (!category?.subTypes?.length) return false
+    if (!selectedCategory.value) return false
     return category.subTypes.some(sub => selectedCategory.value === sub.slug.current)
 }
 
