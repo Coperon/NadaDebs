@@ -3,7 +3,7 @@
         <div @mousemove="handleMouseMove">
             <img 
                 ref="mapImage" 
-                src="/map.svg" 
+                src="/world-map.svg" 
                 class="w-full h-auto" 
             />
         </div>
