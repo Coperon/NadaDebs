@@ -190,7 +190,7 @@ export const initShopify = async () => {
     const storePublicAccessToken = runtimeConfig?.public?.shopifyStorefrontAccessToken;
     shopiClient = createStorefrontApiClient({
         storeDomain: storeDomain,
-        apiVersion: '2025-01',
+        apiVersion: '2025-04',
         publicAccessToken: storePublicAccessToken
     });
 

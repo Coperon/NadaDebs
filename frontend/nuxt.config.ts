@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 const sanityId = process.env.SANITY_PROJECT_ID
 const sanityDataset = process.env.SANITY_PROJECT_DATASET
 const sanityApiVersion = process.env.SANITY_API_VERSION
