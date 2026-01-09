@@ -15,7 +15,7 @@
         <img
             :class="$attrs.class"
             :src="mediumSize"
-            :alt="$attrs.alt || image?.asset?.altText || filenameWithoutExtension"
+            :alt="$attrs.alt || (image?.asset || image)?.altText || filenameWithoutExtension"
             :width="realWidth"
             :height="realHeight"
             :loading="$attrs.loading || (useLazy ? 'lazy' : 'eager')"
@@ -74,44 +74,68 @@ const desktopImageLimitpx = 4000
 const mobileImageLimitpx = 2000
 
 const lgSizes = {
-    width: props.width,
-    height: props.height,
+    width: Number(props.width),
+    height: props.height ? Number(props.height) : null,
 }
 
 const mbSizes = {
-    width: props.mobileWidth || props.width,
-    height: props.mobileHeight,
+    width: Number(props.mobileWidth || props.width),
+    height: props.mobileHeight ? Number(props.mobileHeight) : null,
 }
 
 
 // Check if image is valid
 const isValidImage = computed(() => {
-    return props.image && props.image.asset && props.image.asset._ref
+    if (!props.image) return false
+    
+    // When asset is dereferenced with asset->, it has _id directly
+    // When asset is referenced, it has _ref
+    // The asset might also be at the root level if it's already the asset object
+    const asset = props.image.asset || props.image
+    
+    if (!asset) return false
+    
+    // Check for either reference format or dereferenced format
+    return !!(asset._ref || asset._id)
 })
 
 // Get original image dimensions
-const originalWidth = props.image?.asset?.metadata?.dimensions?.width
-const originalHeight = props.image?.asset?.metadata?.dimensions?.height
+// Handle both referenced (image.asset) and dereferenced (asset at root) formats
+const asset = props.image?.asset || props.image
+const originalWidth = asset?.metadata?.dimensions?.width
+const originalHeight = asset?.metadata?.dimensions?.height
 const realWidth = ref(originalWidth)
 const realHeight = ref(originalHeight)
 
 const getImageUrl = (image, width, height) => {
-    // Return empty string if image is null or doesn't have required properties
-    if (!image || !image.asset || !image.asset._ref) {
+    // Handle both referenced and dereferenced asset formats
+    const asset = image?.asset || image
+    
+    if (!asset || (!asset._ref && !asset._id)) {
         return ''
     }
 
-    width = Math.round(width)
-    height = height ? Math.round(height) : null
-    let imageBuilder 
-    if (props?.format != 'auto') {
-        imageBuilder = builder.image(image).width(width).format(props.format).quality(props.quality).auto('format').fit('max')
-    } else {
-        imageBuilder = builder.image(image).width(width).quality(props.quality).auto('format').fit('max')
-    }
-    if (height) imageBuilder = imageBuilder.height(height)
+    try {
+        width = Math.round(width)
+        height = height ? Math.round(height) : null
+        
+        // If asset is dereferenced, we need to reconstruct the image object format
+        // that the builder expects: { asset: { _ref: '...' } } or { asset: { _id: '...' } }
+        const imageForBuilder = image.asset ? image : { asset: asset }
+        
+        let imageBuilder 
+        if (props?.format != 'auto') {
+            imageBuilder = builder.image(imageForBuilder).width(width).format(props.format).quality(props.quality).auto('format').fit('max')
+        } else {
+            imageBuilder = builder.image(imageForBuilder).width(width).quality(props.quality).auto('format').fit('max')
+        }
+        if (height) imageBuilder = imageBuilder.height(height)
 
-    return imageBuilder.url();
+        return imageBuilder.url()
+    } catch (error) {
+        console.error('getImageUrl: Error building image URL', error, { image, width, height })
+        return ''
+    }
 }
 
 
@@ -166,7 +190,8 @@ const mobileSrcset = computed(() => {
 
 // Get filename without extension
 const filenameWithoutExtension = computed(() => {
-    return props.image?.asset?.originalFilename ? props.image?.asset?.originalFilename.split('.').slice(0, -1).join('.') : ''
+    const asset = props.image?.asset || props.image
+    return asset?.originalFilename ? asset.originalFilename.split('.').slice(0, -1).join('.') : ''
 })
 
 onBeforeMount(() => {
@@ -178,8 +203,9 @@ onBeforeMount(() => {
             realWidth.value = originalWidth
             realHeight.value = originalHeight
         } else {
-            realWidth.value = props.mobileWidth
-            realHeight.value = originalHeight * (props.mobileWidth / originalWidth)
+            const mobileWidthNum = Number(props.mobileWidth || props.width)
+            realWidth.value = mobileWidthNum
+            realHeight.value = originalHeight * (mobileWidthNum / originalWidth)
         }
     })
 })

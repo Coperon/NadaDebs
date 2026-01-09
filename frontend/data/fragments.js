@@ -1,5 +1,6 @@
 export const imageQuery = `
 asset-> {
+    _id,
     metadata,
     url,
     altText,
