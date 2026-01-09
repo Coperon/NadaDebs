@@ -29,31 +29,34 @@
             ref="servicesContainer"
             class="hidden sm:flex mt-20 sm:mt-24 lg:mt-30 h-svh isolate"
         >
-            <div class="w-1/2 p-4 sm:p-6 lg:p-8 xl:p-12">
-                <ul class="flex flex-col items-center text-center justify-center gap-8 h-full">
-                    <li 
-                        v-for="(service, index) in services?.services" 
-                        :key="index"
-                        @click="handleServiceClick(index)"
-                        class="cursor-pointer"
-                    >
-                        <h3 
-                            :class="[
-                                activeIndex === index ? 'text-a2-bold' : 'text-a2 opacity-30',
-                                'uppercase transition-opacity duration-300 hover:opacity-100'
-                            ]"
+            <div class="w-1/2 p-4 sm:p-6 lg:p-8 xl:p-12 flex items-center justify-center">
+                <div>
+                    <p class="text-p2 text-center mb-8">Nada Debs’ scope of services entail:</p>
+                    <ul class="flex flex-col items-center text-center justify-center gap-8 h-full">
+                        <li 
+                            v-for="(service, index) in services?.services" 
+                            :key="index"
+                            @click="handleServiceClick(index)"
+                            class="cursor-pointer"
                         >
-                            {{ service.title }}
-                        </h3>
+                            <h3 
+                                :class="[
+                                    activeIndex === index ? 'text-a2-bold' : 'text-a2 opacity-30',
+                                    'uppercase transition-opacity duration-300 hover:opacity-100'
+                                ]"
+                            >
+                                {{ service.title }}
+                            </h3>
 
-                        <div 
-                            v-if="service.continuationText && activeIndex === index" 
-                            class="text-p2 mt-1 max-w-[48ch] text-balance transition-all duration-300"
-                        >
-                            {{ service.continuationText }}
-                        </div>
-                    </li>
-                </ul>
+                            <div 
+                                v-if="service.continuationText && activeIndex === index" 
+                                class="text-p2 mt-1 max-w-[48ch] text-balance transition-all duration-300"
+                            >
+                                {{ service.continuationText }}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <div class="w-1/2 relative overflow-hidden">
