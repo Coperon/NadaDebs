@@ -26,6 +26,12 @@ export const structure = (S, context) =>
                     S.listItem().title('Product Models').id('productModels').icon(FolderIcon).child(
                         S.documentTypeList('productModel')
                     ),
+                    S.listItem().title('Product Variants').id('productVariants').icon(FolderIcon).child(
+                        S.documentList()
+                            .title('Product Variants')
+                            .filter('_type == "productVariant" && store.title != "Default Title"')
+                            .defaultOrdering([{field: '_createdAt', direction: 'desc'}])
+                    ),
                     S.divider(),
                     S.listItem().title('Shop').id('shopIndex').icon(DocumentIcon).child(
                         S.document().schemaType('shop').documentId('shop')
