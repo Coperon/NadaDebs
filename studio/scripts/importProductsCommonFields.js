@@ -121,7 +121,7 @@ async function processCrafts(craftString) {
 async function main() {
   try {
     // Read CSV file
-    const csvPath = path.join(__dirname, '../imports/allproductsfinal_with_description.csv')
+    const csvPath = path.join(__dirname, '../imports/allproductsfinal_with_description_and_category.csv')
     const csvContent = fs.readFileSync(csvPath, 'utf-8')
 
     // Parse CSV
@@ -183,7 +183,7 @@ async function main() {
       // Process crafts
       const craftString = row['Craft']?.trim()
       const crafts = await processCrafts(craftString || '')
-      
+
       // Check if crafts need updating
       const currentCraftIds = (product.crafts || []).map(c => c._ref).sort()
       const newCraftIds = crafts.map(c => c._ref).sort()
@@ -210,6 +210,22 @@ async function main() {
         updateData.description = ''
         hasUpdates = true
         console.log(`  ✓ Clearing description`)
+      }
+
+      // Process category
+      const category = row['Category']?.trim() || ''
+      if (category) {
+        // Only update if different or not set
+        if (product.category !== category) {
+          updateData.category = category
+          hasUpdates = true
+          console.log(`  ✓ Setting category: ${category}`)
+        }
+      } else if (product.category) {
+        // If CSV is empty but product has a category, clear it
+        updateData.category = ''
+        hasUpdates = true
+        console.log(`  ✓ Clearing category`)
       }
 
       // Process featured image
