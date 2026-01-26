@@ -57,7 +57,7 @@ export default {
             title: 'Thumbnail',
             type: 'object',
             group: 'content',
-            validation: (Rule) => Rule.required(),
+            // validation: (Rule) => Rule.required(),
             fields: [
                 {
                     title: 'Image',
@@ -78,14 +78,14 @@ export default {
             title: 'Cover',
             type: 'image',
             group: 'content',
-            validation: (Rule) => Rule.required(),
+            // validation: (Rule) => Rule.required(),
         },
         {
             ...contentGridField,
             name: 'content',
             title: 'Content',
             group: 'content',
-            validation: (Rule) => Rule.required(),
+            // validation: (Rule) => Rule.required(),
         },
         {
             title: 'SEO',

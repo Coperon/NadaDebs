@@ -22,6 +22,18 @@ export default {
     },
   ],
   fields: [
+    // Shop
+    {
+      name: 'shop',
+      type: 'object',
+      fields: [
+        {
+          name: 'domain',
+          type: 'string',
+        },
+      ],
+      hidden: true,
+    },
     // Created at
     {
       fieldset: 'status',

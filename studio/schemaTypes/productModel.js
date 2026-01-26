@@ -46,13 +46,20 @@ export default {
                         name: 'swatch',
                         title: 'Swatch',
                         type: 'image',
-                        validation: (Rule) => Rule.required(),
+                        // validation: (Rule) => Rule.required(),
                     },
                 ],
                 preview: {
                     select: {
                         title: 'product.store.title',
-                        media: 'swatch',
+                        swatch: 'swatch',
+                        productFeaturedImage: 'product.featuredImage',
+                    },
+                    prepare({ title, swatch, productFeaturedImage }) {
+                        return {
+                            title: title || 'Untitled',
+                            media: swatch || productFeaturedImage,
+                        }
                     },
                 },
             }],

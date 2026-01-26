@@ -25,12 +25,48 @@ export default {
       name: 'variants',
       title: 'Variants',
       options: {
-        collapsed: true,
+        collapsed: false,
         collapsible: true,
+      },
+      hidden: ({parent}) => {
+        // Hide if only one variant with title "Default Title"
+        const variants = parent?.store?.variants
+        if (!variants || variants.length !== 1) return false
+        
+        // We can't easily check the variant title from here since it's a reference
+        // So we hide if there's exactly 1 variant (likely Default Title)
+        return variants.length === 1
       },
     },
   ],
   fields: [
+    // Variants
+    {
+      fieldset: 'variants',
+      name: 'variants',
+      title: 'Variants',
+      type: 'array',
+      of: [
+        {
+          title: 'Variant',
+          type: 'reference',
+          weak: true,
+          to: [{type: 'productVariant'}],
+        },
+      ],
+    },
+    // Shop
+    {
+      name: 'shop',
+      type: 'object',
+      fields: [
+        {
+          name: 'domain',
+          type: 'string',
+        },
+      ],
+      hidden: true,
+    },
     // Created at
     {
       fieldset: 'status',
@@ -140,21 +176,6 @@ export default {
       of: [
         {
           type: 'option',
-        },
-      ],
-    },
-    // Variants
-    {
-      fieldset: 'variants',
-      name: 'variants',
-      title: 'Variants',
-      type: 'array',
-      of: [
-        {
-          title: 'Variant',
-          type: 'reference',
-          weak: true,
-          to: [{type: 'productVariant'}],
         },
       ],
     },

@@ -1,8 +1,11 @@
 import {CopyIcon} from '@sanity/icons'
 import {defineField, defineType} from 'sanity'
 
+import {FaShopify} from 'react-icons/fa'
+import {MdOutlineModeEditOutline} from 'react-icons/md'
 import ProductVariantHiddenInput from '../src/components/inputs/ProductVariantHidden'
 import ShopifyDocumentStatus from '../src/components/media/ShopifyDocumentStatus'
+import metaFieldsField from './fields/metaFields'
 
 export default defineType({
   name: 'productVariant',
@@ -11,8 +14,15 @@ export default defineType({
   icon: CopyIcon,
   groups: [
     {
+      name: 'editorial',
+      title: 'Editorial',
+      icon: MdOutlineModeEditOutline,
+      default: true,
+    },
+    {
       name: 'shopifySync',
-      title: 'Shopify sync',
+      title: 'Shopify Sync',
+      icon: FaShopify,
     },
   ],
   fields: [
@@ -44,6 +54,23 @@ export default defineType({
       type: 'shopifyProductVariant',
       group: 'shopifySync',
     }),
+    // Meta fields (editorial)
+    defineField({
+      ...metaFieldsField,
+      group: 'editorial',
+    }),
+    {
+      name: 'images',
+      title: 'Images',
+      description: 'Additional images to display on the product page.',
+      type: 'array',
+      of: [{type: 'image'}],
+      options: {
+        layout: 'grid',
+      },
+      group: 'editorial',
+      hidden: ({parent}) => parent?.store?.title === 'Default Title',
+    },
   ],
   preview: {
     select: {
@@ -66,8 +93,8 @@ export default defineType({
             title={title}
           />
         ),
-        subtitle: sku,
-        title,
+        subtitle: status,
+        title: `${title != 'Default Title' ? `${sku} - ${title}` : 'Default'}`,
       }
     },
   },

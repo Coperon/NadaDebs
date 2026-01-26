@@ -10,6 +10,7 @@ export default {
                 title: 'Title',
                 type: 'string',
                 validation: (Rule) => Rule.required(),
+                initialValue: 'Dimensions'
             },
             {
                 name: 'description',
