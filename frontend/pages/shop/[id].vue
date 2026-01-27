@@ -43,15 +43,15 @@
                     <div v-if="productData?.productModel?.products && productData?.productModel?.products?.length > 0" class="border-t border-light-grey py-4">
                         <div class="text-a2 font-medium uppercase">{{ productData?.productModel?.optionsLabel }}</div>
                         <div class="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-                            <div v-for="product in productData?.productModel?.products" :key="product.product._id">
+                            <div v-for="product in productData?.productModel?.products" :key="product?.product?._id">
                                 <NuxtLink 
-                                    :to="`/shop/${product.product.store.slug.current}`" 
+                                    :to="`/shop/${product.product?.store?.slug?.current}`" 
                                     class="flex items-center gap-2 hover:text-black transition-colors"
-                                    :class="route.params.id === product.product.store.slug.current ? 'text-black' : 'text-grey'"
+                                    :class="route.params.id === product?.product?.store?.slug?.current ? 'text-black' : 'text-grey'"
                                 >
                                     <div 
                                         class="w-4 h-4 rounded-full border relative overflow-hidden"
-                                        :class="route.params.id === product.product.store.slug.current ? 'border-black' : 'border-transparent'"
+                                        :class="route.params.id === product?.product?.store?.slug?.current ? 'border-black' : 'border-transparent'"
                                     >
                                         <CommonMediaImage
                                             :image="product.swatch"
@@ -59,10 +59,10 @@
                                             width="32"
                                             mobileWidth="32"
                                             class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover rounded-full"
-                                            :class="route.params.id === product.product.store.slug.current ? 'w-2.5 h-2.5' : 'w-4 h-4'"
+                                            :class="route.params.id === product?.product?.store?.slug?.current ? 'w-2.5 h-2.5' : 'w-4 h-4'"
                                         />
                                     </div>
-                                    <div class="text-p2">{{ product.optionName }}</div>
+                                    <div class="text-p2">{{ product?.optionName }}</div>
                                 </NuxtLink>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
 
                     <div v-if="productData?.store?.variants && productData?.store?.variants?.length > 1" class="border-t border-light-grey py-4">
                         <div class="text-a2 font-medium uppercase">
-                            <template v-for="(option, index) in productData?.store?.options" :key="option._id">
+                            <template v-for="(option, index) in productData?.store?.options" :key="option?._id">
                                 {{ option.name }}{{ index < productData?.store?.options.length - 1 ? ' / ' : '' }}
                             </template>
                         </div>
@@ -215,14 +215,14 @@ async function updateAllVariantAvailability() {
                     productData.value.store.gid,
                     countryStore.country
                 )
-                availability[variant.store.gid] = available === true
+                availability[variant?.store?.gid] = available === true
             } catch (e) {
-                availability[variant.store.gid] =
-                    variant.store?.inventory ? variant.store.inventory.isAvailable !== false : false
+                availability[variant?.store?.gid] =
+                    variant?.store?.inventory ? variant?.store?.inventory?.isAvailable !== false : false
             }
         } else {
-            availability[variant.store.gid] =
-                variant.store?.inventory ? variant.store.inventory.isAvailable !== false : false
+            availability[variant?.store?.gid] =
+                variant?.store?.inventory ? variant?.store?.inventory?.isAvailable !== false : false
         }
     }
     variantAvailability.value = availability
@@ -234,11 +234,11 @@ const allVariantsUnavailable = computed(() => {
     if (variantAvailabilityLoading.value) return false // Don't show sold out while loading
     if (!productData.value?.store?.variants) return true
     return productData.value.store.variants.every(v => {
-        if (v?.store?.gid && variantAvailability.value[v.store.gid] !== undefined) {
-            return !variantAvailability.value[v.store.gid]
+        if (v?.store?.gid && variantAvailability.value[v?.store?.gid] !== undefined) {
+            return !variantAvailability.value[v?.store?.gid]
         }
         // fallback to static inventory if needed
-        if (v.store?.inventory && v.store.inventory.management !== 'NOT_MANAGED' && v.store.inventory.isAvailable === false) return true
+        if (v?.store?.inventory && v?.store?.inventory?.management !== 'NOT_MANAGED' && v?.store?.inventory?.isAvailable === false) return true
         return false
     })
 })
