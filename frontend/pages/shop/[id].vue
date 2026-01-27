@@ -51,7 +51,7 @@
                                         :class="route.params.id === product?.product?.store?.slug?.current ? 'text-black' : 'text-grey'"
                                     >
                                         <div 
-                                            class="w-4 h-4 rounded-full border relative overflow-hidden"
+                                            class="w-4 h-4 rounded-full border relative overflow-hidden bg-beige"
                                             :class="route.params.id === product?.product?.store?.slug?.current ? 'border-black' : 'border-transparent'"
                                         >
                                             <CommonMediaImage

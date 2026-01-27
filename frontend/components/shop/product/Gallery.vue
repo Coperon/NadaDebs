@@ -11,7 +11,7 @@
                     :image="featuredImage"
                     width="1536"
                     mobileWidth="768"
-                    class="absolute inset-0 w-full h-full object-cover"
+                    class="absolute inset-0 w-full h-full object-contain"
                 />
                 <img
                     v-else
