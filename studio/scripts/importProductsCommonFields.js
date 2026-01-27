@@ -155,7 +155,8 @@ async function main() {
         isPersonalizable,
         crafts,
         description,
-        featuredImage
+        featuredImage,
+        category
       }`
 
       const product = await client.fetch(productQuery, { title: productName })
@@ -213,7 +214,7 @@ async function main() {
       }
 
       // Process category
-      const category = row['Category']?.trim() || ''
+      const category = row['Category']?.trim().toLowerCase() || ''
       if (category) {
         // Only update if different or not set
         if (product.category !== category) {
