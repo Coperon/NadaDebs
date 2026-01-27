@@ -298,8 +298,7 @@ export default {
             const variantCount = variants?.length
 
             let description = [
-                variantCount ? pluralize('variant', variantCount, true) : 'No variants',
-                optionCount ? pluralize('option', optionCount, true) : 'No options',
+                variantCount > 1 ? pluralize('variant', variantCount, true) : 'No variants',
             ]
 
             let subtitle = buyOptions?.onlyInquire && buyOptions?.hidePrice ? '' : getPriceRange(priceRange)
@@ -311,8 +310,7 @@ export default {
             }
 
             return {
-                description: description.join(' / '),
-                subtitle,
+                subtitle: [subtitle, ...description].filter(Boolean).join(' / '),
                 title: displayTitle || title,
                 media: (
                     <ShopifyDocumentStatus
