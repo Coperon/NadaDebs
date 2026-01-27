@@ -3,6 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-start">
             <div class="h-[calc(100svh-3.25rem)] sm:h-[calc(100svh-4.25rem)] sm:sticky sm:top-[4.25rem] sm:w-1/2 xl:w-2/3">
                 <ShopProductGallery 
+                    v-if="productData?.store?.previewImageUrl"
                     :previewImage="productData?.store?.previewImageUrl"
                     :featuredImage="productData?.featuredImage"
                     :secondaryImage="productData?.secondaryImage" 
