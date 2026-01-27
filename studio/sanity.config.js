@@ -32,7 +32,7 @@ export const shopifyDomain = process.env.SANITY_STUDIO_SHOPIFY_DOMAIN
 
 export default defineConfig({
   name: 'default',
-  title: 'LLOS Content Studio',
+  title: 'Nada Debs Content Studio',
   projectId: projectId,
   dataset: dataset,
   icon: BrandLogo,
