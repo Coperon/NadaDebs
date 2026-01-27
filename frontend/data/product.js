@@ -86,6 +86,9 @@ export const getProductBySlug = async productSlug => {
             products[] {
                 product->{
                     _id,
+                    featuredImage {
+                        ${imageQuery}
+                    },
                     store {
                         title,
                         slug

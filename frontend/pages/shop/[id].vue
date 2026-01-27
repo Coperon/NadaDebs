@@ -43,28 +43,36 @@
                     <div v-if="productData?.productModel?.products && productData?.productModel?.products?.length > 0" class="border-t border-light-grey py-4">
                         <div class="text-a2 font-medium uppercase">{{ productData?.productModel?.optionsLabel }}</div>
                         <div class="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-                            <div v-for="product in productData?.productModel?.products" :key="product?.product?._id">
-                                <NuxtLink 
-                                    :to="`/shop/${product.product?.store?.slug?.current}`" 
-                                    class="flex items-center gap-2 hover:text-black transition-colors"
-                                    :class="route.params.id === product?.product?.store?.slug?.current ? 'text-black' : 'text-grey'"
-                                >
-                                    <div 
-                                        class="w-4 h-4 rounded-full border relative overflow-hidden"
-                                        :class="route.params.id === product?.product?.store?.slug?.current ? 'border-black' : 'border-transparent'"
+                            <template v-for="product in productData?.productModel?.products" :key="product?.product?._id">
+                                <div v-if="product.product?.store?.slug?.current">
+                                    <NuxtLink 
+                                        :to="`/shop/${product.product?.store?.slug?.current}`" 
+                                        class="flex items-center gap-2 hover:text-black transition-colors"
+                                        :class="route.params.id === product?.product?.store?.slug?.current ? 'text-black' : 'text-grey'"
                                     >
-                                        <CommonMediaImage
-                                            :image="product.swatch"
-                                            :alt="product.optionName"
-                                            width="32"
-                                            mobileWidth="32"
-                                            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover rounded-full"
-                                            :class="route.params.id === product?.product?.store?.slug?.current ? 'w-2.5 h-2.5' : 'w-4 h-4'"
-                                        />
-                                    </div>
-                                    <div class="text-p2">{{ product?.optionName }}</div>
-                                </NuxtLink>
-                            </div>
+                                        <div 
+                                            class="w-4 h-4 rounded-full border relative overflow-hidden"
+                                            :class="route.params.id === product?.product?.store?.slug?.current ? 'border-black' : 'border-transparent'"
+                                        >
+                                            <CommonMediaImage
+                                                v-if="product?.swatch || product?.product?.featuredImage"
+                                                :image="product.swatch || product?.product?.featuredImage"
+                                                :alt="product.optionName"
+                                                width="32"
+                                                mobileWidth="32"
+                                                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover rounded-full"
+                                                :class="[
+                                                    route.params.id === product?.product?.store?.slug?.current ? 'w-2.5 h-2.5' : 'w-4 h-4',
+                                                    // {
+                                                    //     'scale-[2]': !product.swatch
+                                                    // }
+                                                ]" 
+                                            />
+                                        </div>
+                                        <div class="text-p2">{{ product?.optionName }}</div>
+                                    </NuxtLink>
+                                </div>  
+                            </template>
                         </div>
                     </div>
 
