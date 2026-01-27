@@ -208,7 +208,7 @@ async function updateAllVariantAvailability() {
     variantAvailabilityLoading.value = true
     const availability = {}
     for (const variant of productData.value.store.variants) {
-        if (variant?.store?.gid && productData.value.store.gid && countryStore.country) {
+        if (variant?.store?.gid && productData?.value?.store?.gid && countryStore?.country) {
             try {
                 const available = await fetchVariantAvailability(
                     variant.store.gid,
