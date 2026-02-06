@@ -3,8 +3,9 @@ import { imageQuery, seoQuery } from "./fragments"
 
 export const getProducts = async (categoryType) => {
     const { $sanity } = useNuxtApp()
-    const query = groq`{
-        "items": *[_type == "product" && category == "${categoryType}" && !(_id in path("drafts.**"))]|order(store.createdAt desc) {
+    const pageId = categoryType
+    const query = groq`*[_id == $pageId][0] {
+        "items": productOrder[]->{
             _id,
             title,
             hidden,
@@ -41,7 +42,7 @@ export const getProducts = async (categoryType) => {
             }
         }
     }`
-    const { data } = await useAsyncData(`${categoryType}Products`, () => $sanity.fetch(query))
+    const { data } = await useAsyncData(`${categoryType}Products`, () => $sanity.fetch(query, { pageId }))
     return data
 }
 

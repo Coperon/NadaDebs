@@ -94,6 +94,12 @@
                         <ul v-if="isSortingOpen" class="mt-2">
                             <li 
                                 class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
+                                :class="selectedSort === 'custom' ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                            >
+                                <button @click="selectedSort = 'custom'" class="lowercase">Custom</button>
+                            </li>
+                            <li 
+                                class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
                                 :class="selectedSort === 'lowestPrice' ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
                             >
                                 <button @click="selectedSort = 'lowestPrice'" class="lowercase">Lowest Price</button>
@@ -134,7 +140,7 @@
                             <CommonButton isSecondary>Show Results</CommonButton>
                         </button>
 
-                        <button @click="selectedCategory = null; showInStockOnly = false; selectedSort = 'recent'" class="text-a2 lowercase text-grey hover:text-black transition-colors">Reset Filters</button>
+                        <button @click="selectedCategory = null; showInStockOnly = false; selectedSort = 'custom'" class="text-a2 lowercase text-grey hover:text-black transition-colors">Reset Filters</button>
                     </div>
                 </div>
             </div>
@@ -228,7 +234,7 @@ const route = useRoute()
 const router = useRouter()
 
 const selectedCategory = ref(route.query.type || null)
-const selectedSort = ref(route.query.sort || 'recent')
+const selectedSort = ref(route.query.sort || 'custom')
 const showInStockOnly = ref(route.query.stock === 'true')
 const itemsPerPage = 24
 const currentPage = ref(1)
@@ -292,6 +298,8 @@ const filteredProducts = computed(() => {
     // Apply sorting
     return [...products].sort((a, b) => {
         switch (selectedSort.value) {
+            case 'custom':
+                return 0
             case 'lowestPrice':
                 return (a.store?.priceRange?.minVariantPrice || Infinity) - (b.store?.priceRange?.minVariantPrice || Infinity)
             case 'highestPrice':
@@ -301,7 +309,7 @@ const filteredProducts = computed(() => {
             case 'oldest':
                 return new Date(a.store?.createdAt || 0) - new Date(b.store?.createdAt || 0)
             default:
-                return new Date(b.store?.createdAt || 0) - new Date(a.store?.createdAt || 0)
+                return 0
         }
     })
 })
@@ -359,7 +367,7 @@ watch([selectedCategory, selectedSort, showInStockOnly], ([newCategory, newSort,
     const query = {}
     
     if (newCategory) query.type = newCategory
-    if (newSort !== 'recent') query.sort = newSort
+    if (newSort !== 'custom') query.sort = newSort
     if (newInStock) query.stock = 'true'
     
     router.replace({ query })
