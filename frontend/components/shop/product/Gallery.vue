@@ -5,7 +5,7 @@
         id="product-gallery"
     >
         <div class="swiper-wrapper">
-            <div v-if="featuredImage || previewImage" class="swiper-slide relative overflow-hidden">
+            <div v-if="featuredImage || (previewImage && previewImage.trim())" class="swiper-slide relative overflow-hidden">
                 <CommonMediaImage
                     v-if="featuredImage"
                     :image="featuredImage"
@@ -14,7 +14,7 @@
                     class="absolute inset-0 w-full h-full object-contain"
                 />
                 <img
-                    v-else
+                    v-else-if="previewImage && previewImage.trim()"
                     :src="previewImage"
                     :srcset="`${previewImage}?width=768 768w, ${previewImage}?width=1536 1536w`"
                     sizes="(min-width: 640px) 1536px, 768px"
@@ -70,7 +70,7 @@ const swiperContainer = ref(null)
 const props = defineProps({
     previewImage: {
         type: String,
-        required: true,
+        default: '',
     },
     featuredImage: {
         type: Object,

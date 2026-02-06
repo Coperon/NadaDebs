@@ -66,6 +66,9 @@ export const getProductBySlug = async productSlug => {
             options,
             variants[]->{
                 ...,
+                images[] {
+                    ${imageQuery}
+                },
             },
             createdAt,
             updatedAt,

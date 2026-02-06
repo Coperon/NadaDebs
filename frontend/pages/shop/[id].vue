@@ -3,11 +3,11 @@
         <div class="flex flex-col sm:flex-row sm:items-start">
             <div class="h-[calc(100svh-3.25rem)] sm:h-[calc(100svh-4.25rem)] sm:sticky sm:top-[4.25rem] sm:w-1/2 xl:w-2/3">
                 <ShopProductGallery 
-                    v-if="productData?.store?.previewImageUrl"
-                    :previewImage="productData?.store?.previewImageUrl"
-                    :featuredImage="productData?.featuredImage"
-                    :secondaryImage="productData?.secondaryImage" 
-                    :moreImages="productData?.moreImages" 
+                    v-if="hasGalleryImages"
+                    :previewImage="activePreviewImage"
+                    :featuredImage="activeFeaturedImage"
+                    :secondaryImage="activeSecondaryImage" 
+                    :moreImages="activeMoreImages" 
                     :modelImages="productData?.productModel?.images"
                     :title="productData?.store?.title"
                 />
@@ -199,6 +199,17 @@ watch(() => productData.value, (newProductData) => {
   }
 }, { immediate: true })
 
+// Sync selectedVariant to first variant when product loads (handles init timing for variable products)
+watch(
+  () => productData.value?.store?.variants,
+  (variants) => {
+    if (variants?.length > 1 && !selectedVariant.value) {
+      selectedVariant.value = variants[0]
+    }
+  },
+  { immediate: true }
+)
+
 // Clear the current product when leaving the page
 onUnmounted(() => {
   currentProductStore.clearCurrentProduct()
@@ -247,6 +258,40 @@ const activeMetaFields = computed(() => {
     }
     return productData?.value?.metaFields || productData?.value?.productModel?.metaFields || []
 })
+
+// Gallery images: use selected variant's preview + images when product has multiple variants
+const hasMultipleVariants = computed(() => (productData?.value?.store?.variants?.length ?? 0) > 1)
+const activePreviewImage = computed(() => {
+    if (hasMultipleVariants.value && selectedVariant?.value?.store?.previewImageUrl) {
+        return selectedVariant.value.store.previewImageUrl
+    }
+    return productData?.value?.store?.previewImageUrl ?? ''
+})
+// For variable products with no Shopify preview URL, use first variant editorial image as main image
+const activeFeaturedImage = computed(() => {
+    if (hasMultipleVariants.value && selectedVariant?.value?.images?.[0]) {
+        return selectedVariant.value.images[0]
+    }
+    return productData?.value?.featuredImage
+})
+const activeSecondaryImage = computed(() => productData?.value?.secondaryImage)
+const activeMoreImages = computed(() => {
+    if (hasMultipleVariants.value && selectedVariant?.value?.images?.length > 0) {
+        return selectedVariant.value.images.slice(1)
+    }
+    return productData?.value?.moreImages ?? []
+})
+
+// Show gallery when we have any image source (preview URL, featured, secondary, more, or model images)
+const hasGalleryImages = computed(() =>
+    !!(
+        activePreviewImage.value ||
+        activeFeaturedImage.value ||
+        activeSecondaryImage.value ||
+        (activeMoreImages.value?.length > 0) ||
+        (productData?.value?.productModel?.images?.length > 0)
+    )
+)
 
 // Compute if all variants are unavailable for initial AddToCart state
 const allVariantsUnavailable = computed(() => {
