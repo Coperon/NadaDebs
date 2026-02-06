@@ -95,9 +95,9 @@
                         </div>
                     </div>
 
-                    <template v-if="(productData?.metaFields && productData?.metaFields?.length > 0) || (productData?.productModel?.metaFields && productData?.productModel?.metaFields?.length > 0)">
+                    <template v-if="activeMetaFields.length > 0">
                         <div 
-                            v-for="metaField in productData?.metaFields || productData?.productModel?.metaFields" 
+                            v-for="metaField in activeMetaFields" 
                             :key="metaField._key" 
                             class="border-t border-light-grey"
                         >
@@ -237,6 +237,16 @@ async function updateAllVariantAvailability() {
     variantAvailability.value = availability
     variantAvailabilityLoading.value = false
 }
+
+// Meta fields: use selected variant's when product has multiple variants, else product/productModel
+const activeMetaFields = computed(() => {
+    const hasMultipleVariants = productData?.value?.store?.variants?.length > 1
+    const variantMetaFields = selectedVariant?.value?.metaFields
+    if (hasMultipleVariants && selectedVariant?.value && variantMetaFields?.length > 0) {
+        return variantMetaFields
+    }
+    return productData?.value?.metaFields || productData?.value?.productModel?.metaFields || []
+})
 
 // Compute if all variants are unavailable for initial AddToCart state
 const allVariantsUnavailable = computed(() => {
