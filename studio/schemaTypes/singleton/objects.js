@@ -43,6 +43,32 @@ export default {
             validation: (Rule) => Rule.required(),
         },
         {
+            name: 'productOrder',
+            title: 'Product order',
+            type: 'array',
+            description: 'Add and reorder products to display on this page. Only products in this list will be shown. Drag to using the handler to reorder. If you can\'t find a product, it might be already in the list.',
+            group: 'page',
+            of: [
+                {
+                    type: 'reference',
+                    to: [{ type: 'product' }],
+                    options: {
+                        filter: ({ document }) => {
+                            const productOrder = document?.productOrder || []
+                            const selectedRefs = productOrder.map((item) => item._ref).filter(Boolean)
+                            if (selectedRefs.length === 0) {
+                                return 'category == "objects"'
+                            }
+                            return {
+                                filter: 'category == "objects" && !(_id in $selectedRefs)',
+                                params: { selectedRefs },
+                            }
+                        }
+                    },
+                },
+            ],
+        },
+        {
             name: 'seo',
             title: 'SEO',
             type: 'seo',
