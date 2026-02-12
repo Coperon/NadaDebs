@@ -1,32 +1,39 @@
 import { createStorefrontApiClient } from '@shopify/storefront-api-client';
 import { useCartStore } from '@/stores/cart';
-import { useCountryStore } from '@/stores/country'
+import { useCountryStore } from '@/stores/country';
+
+// Constants
+const CART_LINES_LIMIT = 10;
+const VARIANTS_LIMIT = 100;
+const CART_COOKIE_NAME = 'shopify_cart_id';
+const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 let shopiClient;
 
 const makeGraphQLRequest = async (query, variables) => {
+    if (!shopiClient) {
+        console.error('Shopify client not initialized. Call initShopify() first.');
+        return null;
+    }
     const { data, errors } = await shopiClient.request(query, { variables });
     if (errors) {
         console.error('GraphQL Errors:', errors);
         return null;
     }
-    // console.log('GraphQL Response:', JSON.stringify(data, null, 2)); // Log full response
     return data;
 };
 
 const transformCartData = (cartData) => {
+    if (!cartData) return null;
+    
     return {
-        id: cartData?.id,
-        checkoutUrl: cartData?.checkoutUrl,
-        lineItems: cartData?.lines.edges.map(edge => {
+        id: cartData.id,
+        checkoutUrl: cartData.checkoutUrl,
+        lineItems: cartData.lines.edges.map(edge => {
             const variant = edge.node.merchandise;
             if (!variant.product) {
-                console.warn('Missing product for variant:', variant?.id); // Log missing product
+                console.warn('Missing product for variant:', variant?.id);
             }
-            const options = variant.selectedOptions.reduce((acc, option) => {
-                acc[option.name.toLowerCase()] = option.value;
-                return acc;
-            }, {});
 
             // Handle default variant case
             const isDefaultVariant = variant.selectedOptions.length === 1 && variant.selectedOptions[0].name === 'Title';
@@ -40,14 +47,14 @@ const transformCartData = (cartData) => {
                     image: variant.image,
                     priceV2: variant.priceV2,
                     selectedOptions: isDefaultVariant ? [] : variant.selectedOptions,
-                    product: variant.product ? { // Add null check for product
+                    product: variant.product ? {
                         title: variant.product.title,
                         handle: variant.product.handle
                     } : null
                 }
             };
         }),
-        totalPriceV2: cartData?.estimatedCost.totalAmount
+        totalPriceV2: cartData.estimatedCost.totalAmount
     };
 };
 
@@ -55,7 +62,7 @@ const cartFragment = `
     fragment CartFragment on Cart {
         id
         checkoutUrl
-        lines(first: 10) {
+        lines(first: ${CART_LINES_LIMIT}) {
             edges {
                 node {
                     id
@@ -188,90 +195,124 @@ export const initShopify = async () => {
     const runtimeConfig = useRuntimeConfig();
     const storeDomain = runtimeConfig?.public?.shopifyStoreDomain;
     const storePublicAccessToken = runtimeConfig?.public?.shopifyStorefrontAccessToken;
+    
     shopiClient = createStorefrontApiClient({
-        storeDomain: storeDomain,
+        storeDomain,
         apiVersion: '2025-04',
         publicAccessToken: storePublicAccessToken
     });
 
     const cartStore = useCartStore();
-    const cartIdCookie = useCookie('shopify_cart_id');
+    const cartIdCookie = useCookie(CART_COOKIE_NAME, {
+        maxAge: CART_COOKIE_MAX_AGE,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production'
+    });
+    
     const cartId = cartIdCookie.value;
     if (cartId) {
         const data = await makeGraphQLRequest(cartQuery, { cartId });
-        if (!data) return;
+        if (!data?.cart) return shopiClient;
 
         const cart = transformCartData(data.cart);
-        cartStore.setCart(cart);
+        if (cart) {
+            cartStore.setCart(cart);
+        }
     }
 
     return shopiClient;
 };
 
 export const addToCart = async (product, variantId) => {
-    if (!variantId && product.store.variants && product.store.variants.length > 0) {
-        variantId = product.store.variants[0].store.gid // Default to the first variant if none selected
+    if (!variantId && product?.store?.variants?.length > 0) {
+        variantId = product.store.variants[0].store.gid;
     }
-    const cartStore = useCartStore();
-    const cartIdCookie = useCookie('shopify_cart_id');
-    let merchandiseId = variantId || '';
+    
+    const merchandiseId = variantId || '';
     if (!merchandiseId) {
         console.error('No valid merchandise ID available for this product');
-        return;
+        return null;
     }
+    
+    const cartStore = useCartStore();
+    const countryStore = useCountryStore();
+    const cartIdCookie = useCookie(CART_COOKIE_NAME, {
+        maxAge: CART_COOKIE_MAX_AGE,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production'
+    });
+    
     const lineItems = [{ merchandiseId, quantity: 1 }];
-
     const cart = cartStore.cart;
-    if (cart && cart.id) {
+    
+    if (cart?.id) {
         const data = await makeGraphQLRequest(cartLinesAddMutation, {
             cartId: cart.id,
             lines: lineItems
         });
-        if (!data) return;
+        
+        if (!data?.cartLinesAdd) return null;
+        if (data.cartLinesAdd.userErrors?.length > 0) {
+            console.error('Cart add errors:', data.cartLinesAdd.userErrors);
+            return null;
+        }
 
         const updatedCart = transformCartData(data.cartLinesAdd.cart);
-        cartStore.setCart(updatedCart);
-        cartStore.setCartOpen(true); // Open the cart drawer
-        return updatedCart; // Return the updated cart state
+        if (updatedCart) {
+            cartStore.setCart(updatedCart);
+            cartStore.setCartOpen(true);
+        }
+        return updatedCart;
     } else {
-        // Use buyerIdentity for market context
-        const { useCountryStore } = await import('@/stores/country')
-        const countryStore = useCountryStore()
         const data = await makeGraphQLRequest(cartCreateMutation, {
             input: {
                 lines: lineItems,
                 buyerIdentity: { countryCode: countryStore.country }
             }
         });
-        if (!data) return;
+        
+        if (!data?.cartCreate) return null;
+        if (data.cartCreate.userErrors?.length > 0) {
+            console.error('Cart create errors:', data.cartCreate.userErrors);
+            return null;
+        }
 
         const newCart = transformCartData(data.cartCreate.cart);
-        cartStore.setCart(newCart);
-        cartIdCookie.value = newCart.id;
-        cartStore.setCartOpen(true); // Open the cart drawer
-        return newCart; // Return the new cart state
+        if (newCart) {
+            cartStore.setCart(newCart);
+            cartIdCookie.value = newCart.id;
+            cartStore.setCartOpen(true);
+        }
+        return newCart;
     }
 };
 
 export const removeFromCart = async (lineItemId) => {
     const cartStore = useCartStore();
-    const cartIdCookie = useCookie('shopify_cart_id');
+    const cartIdCookie = useCookie(CART_COOKIE_NAME);
     const cartId = cartIdCookie.value;
 
     if (!cartId) {
         console.error('No cart ID found');
-        return;
+        return null;
     }
 
     const data = await makeGraphQLRequest(cartLinesRemoveMutation, {
         cartId,
         lineIds: [lineItemId]
     });
-    if (!data) return;
+    
+    if (!data?.cartLinesRemove) return null;
+    if (data.cartLinesRemove.userErrors?.length > 0) {
+        console.error('Cart remove errors:', data.cartLinesRemove.userErrors);
+        return null;
+    }
 
     const updatedCart = transformCartData(data.cartLinesRemove.cart);
-    cartStore.setCart(updatedCart);
-    return updatedCart; // Return the updated cart state
+    if (updatedCart) {
+        cartStore.setCart(updatedCart);
+    }
+    return updatedCart;
 };
 
 export const fetchShopifyProductPrice = async (productGid, country) => {
@@ -284,16 +325,16 @@ export const fetchShopifyProductPrice = async (productGid, country) => {
         }
       }
     }
-  `
-  const data = await makeGraphQLRequest(query, { id: productGid, country })
-  return data?.product?.priceRange
-}
+  `;
+  const data = await makeGraphQLRequest(query, { id: productGid, country });
+  return data?.product?.priceRange;
+};
 
 export const fetchVariantPrice = async (variantGid, productGid, country) => {
   const query = `
     query getVariantPrice($productId: ID!, $country: CountryCode) @inContext(country: $country) {
       product(id: $productId) {
-        variants(first: 100) {
+        variants(first: ${VARIANTS_LIMIT}) {
           edges {
             node {
               id
@@ -306,19 +347,18 @@ export const fetchVariantPrice = async (variantGid, productGid, country) => {
         }
       }
     }
-  `
-  const data = await makeGraphQLRequest(query, { productId: productGid, country })
-  const variants = data?.product?.variants?.edges || []
-  const variant = variants.find(v => v.node.id === variantGid)
-  return variant?.node?.priceV2
-}
+  `;
+  const data = await makeGraphQLRequest(query, { productId: productGid, country });
+  const variants = data?.product?.variants?.edges || [];
+  const variant = variants.find(v => v.node.id === variantGid);
+  return variant?.node?.priceV2;
+};
 
 export const fetchVariantAvailability = async (variantGid, productGid, country) => {
-    // console.log('Fetching variant availability for:', variantGid, productGid, 'in country:', country);
   const query = `
     query getVariant($productId: ID!, $country: CountryCode) @inContext(country: $country) {
       product(id: $productId) {
-        variants(first: 100) {
+        variants(first: ${VARIANTS_LIMIT}) {
           edges {
             node {
               id
@@ -328,13 +368,12 @@ export const fetchVariantAvailability = async (variantGid, productGid, country) 
         }
       }
     }
-  `
-  const data = await makeGraphQLRequest(query, { productId: productGid, country })
-  const variants = data?.product?.variants?.edges || []
-//   console.log('Variants:', variants) // Log the fetched variants for debugging
-  const variant = variants.find(v => v.node.id === variantGid)
-  return variant?.node?.availableForSale
-}
+  `;
+  const data = await makeGraphQLRequest(query, { productId: productGid, country });
+  const variants = data?.product?.variants?.edges || [];
+  const variant = variants.find(v => v.node.id === variantGid);
+  return variant?.node?.availableForSale;
+};
 
 export const updateCartBuyerIdentity = async (cartId, countryCode) => {
   const mutation = `
@@ -356,5 +395,17 @@ export const updateCartBuyerIdentity = async (cartId, countryCode) => {
     cartId,
     buyerIdentity: { countryCode }
   });
-  return data?.cartBuyerIdentityUpdate?.cart;
+  
+  if (!data?.cartBuyerIdentityUpdate) return null;
+  if (data.cartBuyerIdentityUpdate.userErrors?.length > 0) {
+    console.error('Cart buyer identity update errors:', data.cartBuyerIdentityUpdate.userErrors);
+    return null;
+  }
+  
+  const updatedCart = transformCartData(data.cartBuyerIdentityUpdate.cart);
+  if (updatedCart) {
+    const cartStore = useCartStore();
+    cartStore.setCart(updatedCart);
+  }
+  return updatedCart;
 };
