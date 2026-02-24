@@ -248,7 +248,6 @@ export default {
             description: 'If true, the product will be displayed larger on the index page',
             type: 'boolean',
             group: 'editorial',
-            hidden: true
         },
         {
             title: 'SEO',
