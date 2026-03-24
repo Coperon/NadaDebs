@@ -229,6 +229,7 @@ export default {
                     name: 'inquireWhenOutOfStock',
                     title: 'Inquire when out of stock',
                     type: 'boolean',
+                    initialValue: true,
                     description: 'If true, the product will be available for inquiry when out of stock',
                     hidden: ({ parent }) => parent?.onlyInquire,
                 },
