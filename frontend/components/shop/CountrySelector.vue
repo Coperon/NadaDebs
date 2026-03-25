@@ -47,7 +47,9 @@ const updateSelectWidth = () => {
 
 const fetchCountries = async () => {
     const localization = await getAvailableCountries(countryStore.country)
-    countries.value = localization?.availableCountries || []
+    const available = localization?.availableCountries || []
+    const collator = new Intl.Collator(undefined, { usage: 'sort', sensitivity: 'base' })
+    countries.value = [...available].sort((a, b) => collator.compare(a?.name || '', b?.name || ''))
     if (!countries.value.find(c => c.isoCode === countryStore.country) && countries.value.length > 0) {
         const first = countries.value[0]
         countryStore.setCountry(first.isoCode, first.currency.symbol, first.currency.isoCode)
