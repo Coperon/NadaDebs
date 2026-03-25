@@ -52,6 +52,17 @@ export default {
                     type: 'url',
                     description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
                 },
+                {
+                    title: 'Mobile Image',
+                    name: 'mobileImage',
+                    type: 'image',
+                },
+                {
+                    title: 'Mobile Video URL',
+                    name: 'mobileVideo',
+                    type: 'url',
+                    description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
+                },
             ]
         },
         {
@@ -72,6 +83,17 @@ export default {
                     type: 'url',
                     description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
                 },
+                {
+                    title: 'Mobile Image',
+                    name: 'mobileImage',
+                    type: 'image',
+                },
+                {
+                    title: 'Mobile Video URL',
+                    name: 'mobileVideo',
+                    type: 'url',
+                    description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
+                },
             ]
         },
         {
@@ -89,6 +111,17 @@ export default {
                 {
                     title: 'Video URL',
                     name: 'video',
+                    type: 'url',
+                    description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
+                },
+                {
+                    title: 'Mobile Image',
+                    name: 'mobileImage',
+                    type: 'image',
+                },
+                {
+                    title: 'Mobile Video URL',
+                    name: 'mobileVideo',
                     type: 'url',
                     description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
                 },

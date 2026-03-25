@@ -4,16 +4,22 @@
             <HomeMedia
                 :image="homeData?.ourWorld?.image"
                 :videoUrl="homeData?.ourWorld?.video"
+                :mobileImage="homeData?.ourWorld?.mobileImage"
+                :mobileVideoUrl="homeData?.ourWorld?.mobileVideo"
                 :class="{ 'opacity-100 z-20': activeImage === 'ourWorld', 'opacity-0 z-10': previousImage === 'ourWorld', 'opacity-0 z-0': activeImage !== 'ourWorld' && previousImage !== 'ourWorld' }"
             />
             <HomeMedia
                 :image="homeData?.shop?.image"
                 :videoUrl="homeData?.shop?.video"
+                :mobileImage="homeData?.shop?.mobileImage"
+                :mobileVideoUrl="homeData?.shop?.mobileVideo"
                 :class="{ 'opacity-100 z-20': activeImage === 'shop', 'opacity-0 z-10': previousImage === 'shop', 'opacity-0 z-0': activeImage !== 'shop' && previousImage !== 'shop' }"
             />
             <HomeMedia
                 :image="homeData?.studio?.image"
                 :videoUrl="homeData?.studio?.video"
+                :mobileImage="homeData?.studio?.mobileImage"
+                :mobileVideoUrl="homeData?.studio?.mobileVideo"
                 :class="{ 'opacity-100 z-20': activeImage === 'studio', 'opacity-0 z-10': previousImage === 'studio', 'opacity-0 z-0': activeImage !== 'studio' && previousImage !== 'studio' }"
             />
         </div>

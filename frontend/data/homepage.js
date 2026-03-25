@@ -14,19 +14,31 @@ export const getHomepageData = async () => {
             image {
                 ${imageQuery}
             },
-            video
+            video,
+            mobileImage {
+                ${imageQuery}
+            },
+            mobileVideo
         },
         shop {
             image {
                 ${imageQuery}
             },
-            video
+            video,
+            mobileImage {
+                ${imageQuery}
+            },
+            mobileVideo
         },
         studio {
             image {
                 ${imageQuery}
             },
-            video
+            video,
+            mobileImage {
+                ${imageQuery}
+            },
+            mobileVideo
         }
     }
     `
