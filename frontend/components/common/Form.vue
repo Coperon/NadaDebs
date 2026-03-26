@@ -1,5 +1,5 @@
 <template>
-    <form :name="formName" method="POST" data-netlify="true">
+    <form :name="formName" method="POST" data-netlify="true" @submit="onSubmit">
         <input type="hidden" name="form-name" :value="formName" />
         <div class="grid grid-cols-1 gap-3">
             <slot />
@@ -11,9 +11,16 @@
 
         <div class="mt-10 flex justify-center">
             <button type="submit" class="appearance-none">
-                <CommonButton>Send</CommonButton>
+                <CommonButton>{{ isSubmitting ? 'Sending…' : 'Send' }}</CommonButton>
             </button>
         </div>
+
+        <p v-if="submitState === 'success'" class="mt-4 text-center text-a2">
+            Thanks — we received your message.
+        </p>
+        <p v-else-if="submitState === 'error'" class="mt-4 text-center text-a2 text-red-600">
+            {{ submitError || 'Something went wrong sending your message. Please try again.' }}
+        </p>
     </form>
 </template>
 
@@ -22,8 +29,46 @@ const props = defineProps({
     formName: {
         type: String,
         required: true
+    },
+    endpoint: {
+        type: String,
+        default: null
     }
 })
 
 const siteSettingsData = inject('siteSettingsData')
+
+const isSubmitting = ref(false)
+const submitState = ref('idle') // 'idle' | 'success' | 'error'
+const submitError = ref('')
+
+async function onSubmit(e) {
+    if (!props.endpoint) return
+
+    e.preventDefault()
+    if (isSubmitting.value) return
+
+    isSubmitting.value = true
+    submitState.value = 'idle'
+    submitError.value = ''
+
+    try {
+        const form = e.target
+        const formData = new FormData(form)
+        const payload = Object.fromEntries(formData.entries())
+
+        await $fetch(props.endpoint, {
+            method: 'POST',
+            body: payload
+        })
+
+        submitState.value = 'success'
+        form.reset()
+    } catch (err) {
+        submitState.value = 'error'
+        submitError.value = err?.data?.message || err?.message || ''
+    } finally {
+        isSubmitting.value = false
+    }
+}
 </script>
