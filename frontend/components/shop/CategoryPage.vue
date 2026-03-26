@@ -38,7 +38,7 @@
                                     >
                                         <button
                                             @click="toggleCategory(type._id)"
-                                            class="lowercase"
+                                            class="lowercase text-left"
                                             :class="{
                                                 'font-medium': isMounted && (selectedCategory === type.slug.current || isAnySubcategorySelected(type))
                                             }"
@@ -58,7 +58,7 @@
                                                 class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
                                                 :class="selectedCategory === sub.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
                                             >
-                                                <button @click="selectedCategory = selectedCategory === sub.slug.current ? null : sub.slug.current" class="lowercase">
+                                                <button @click="selectedCategory = selectedCategory === sub.slug.current ? null : sub.slug.current" class="lowercase text-left">
                                                     {{ sub.title }}
                                                 </button>
                                             </li>
