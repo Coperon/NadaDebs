@@ -35,6 +35,7 @@
     "postcss": "^8.5.3",
     "postcss-pxtorem": "^6.1.0",
     "postcss-viewport-unit-fallback": "^1.0.1",
+    "resend": "^6.9.4",
     "swiper": "^11.2.6",
     "tailwindcss": "^3.4.0",
     "vanilla-cookieconsent": "^3.1.0",
