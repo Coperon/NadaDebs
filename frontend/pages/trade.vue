@@ -1,6 +1,6 @@
 <template>
     <CommonContactLayout :data="tradeData">
-        <CommonForm formName="trade" endpoint="/api/send">
+        <CommonForm formName="trade" formType="trade" endpoint="/api/send">
             <CommonFormInput type="text" name="company-name" placeholder="Company Name *" required />
             <CommonFormInput type="url" name="company-website" placeholder="Company Website *" required />
             <CommonFormInput type="text" name="type-of-business" placeholder="Type of Business *" required />

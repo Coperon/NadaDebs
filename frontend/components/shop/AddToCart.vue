@@ -14,7 +14,7 @@
 
         <NuxtLink 
             v-if="product?.buyOptions?.onlyInquire || (product?.buyOptions?.inquireWhenOutOfStock && isOutOfStock)" 
-            :to="`/connect/contact-us?inquiry=${product?.store?.title}`"
+            :to="inquiryLink"
             class="block"
             :class="{'opacity-50 pointer-events-none cursor-not-allowed': product?.store?.variants?.length > 1 && !selectedVariant}"
             :disabled="product?.store?.variants?.length > 1 && !selectedVariant"
@@ -42,6 +42,7 @@ const props = defineProps({
     allVariantsUnavailable: Boolean, // <-- new prop
     variantAvailabilityLoading: Boolean // <-- add this line
 })
+const siteUrl = 'https://nadadebs.netlify.app'
 
 const showOptionsWarning = ref(false)
 
@@ -60,6 +61,23 @@ const noVariantSelected = computed(() => {
     return (
         props?.product?.store?.variants?.length > 1 &&
         !props?.selectedVariant )
+})
+
+const inquiryLink = computed(() => {
+    const slug = props.product?.store?.slug?.current
+    const productPagePath = slug ? `/shop/${slug}` : ''
+    const productPageLink = siteUrl && productPagePath ? `${siteUrl}${productPagePath}` : productPagePath
+
+    return {
+        path: '/connect/contact-us',
+        query: {
+            inquiry: props.product?.store?.title || '',
+            inquiryTitle: props.product?.store?.title || '',
+            inquiryImage: props.product?.store?.previewImageUrl || '',
+            inquiryLink: productPageLink,
+            inquiryProductId: props.product?.store?.id || props.product?.store?.gid || ''
+        }
+    }
 })
 
 const isOutOfStock = computed(() => {

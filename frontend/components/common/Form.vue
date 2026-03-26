@@ -33,6 +33,10 @@ const props = defineProps({
     endpoint: {
         type: String,
         default: null
+    },
+    formType: {
+        type: String,
+        default: null
     }
 })
 
@@ -56,6 +60,7 @@ async function onSubmit(e) {
         const form = e.target
         const formData = new FormData(form)
         const payload = Object.fromEntries(formData.entries())
+        payload.formType = props.formType || props.formName
 
         await $fetch(props.endpoint, {
             method: 'POST',

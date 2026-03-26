@@ -138,7 +138,7 @@
 
                 <div v-if="productData?.isPersonalizable" class="mt-6 text-p2">
                     Personalize this product. 
-                    <NuxtLink :to="`/connect/contact-us?inquiry=${productData?.store?.title}`" class="font-medium inline-flex gap-1.5 items-center hover:text-grey transition-colors duration-300">
+                    <NuxtLink :to="inquiryLink" class="font-medium inline-flex gap-1.5 items-center hover:text-grey transition-colors duration-300">
                         <span>Contact us</span>
                         <IconsArrow class="w-3 h-auto" />
                     </NuxtLink>
@@ -182,6 +182,7 @@ import { getProductBySlug } from '@/data/product'
 
 const route = useRoute()
 const productData = await getProductBySlug(route.params.id)
+const siteUrl = 'https://nadadebs.netlify.app'
 
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
@@ -280,6 +281,23 @@ const activeMoreImages = computed(() => {
         return selectedVariant.value.images.slice(1)
     }
     return productData?.value?.moreImages ?? []
+})
+
+const inquiryLink = computed(() => {
+    const slug = productData?.value?.store?.slug?.current
+    const productPagePath = slug ? `/shop/${slug}` : ''
+    const productPageLink = siteUrl && productPagePath ? `${siteUrl}${productPagePath}` : productPagePath
+
+    return {
+        path: '/connect/contact-us',
+        query: {
+            inquiry: productData?.value?.store?.title || '',
+            inquiryTitle: productData?.value?.store?.title || '',
+            inquiryImage: productData?.value?.store?.previewImageUrl || '',
+            inquiryLink: productPageLink,
+            inquiryProductId: productData?.value?.store?.id || productData?.value?.store?.gid || ''
+        }
+    }
 })
 
 // Show gallery when we have any image source (preview URL, featured, secondary, more, or model images)
