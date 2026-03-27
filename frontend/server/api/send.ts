@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { escapeHtml, renderEmailLayout, renderFieldsTable, type EmailFieldRow } from '../utils/emailTemplate';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const RESEND_FORMS_ADMIN_EMAIL = process.env.RESEND_FORMS_ADMIN_EMAIL;
@@ -93,15 +94,6 @@ const FORM_CONFIGS = {
 
 type FormType = keyof typeof FORM_CONFIGS;
 
-function escapeHtml(value: unknown) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
 function readBodyValue(body: Record<string, unknown>, key: string) {
   const value = body[key];
   if (value === undefined || value === null) return '';
@@ -150,14 +142,14 @@ export default defineEventHandler(async (event) => {
   const inquiryProductId = readBodyValue(body, 'inquiry-product-id');
   const positionTitle = readBodyValue(body, 'position');
   const positionLink = toAbsoluteUrl(readBodyValue(body, 'position-link'));
-  const fields: Array<{ label: string; textValue: string; htmlValue?: string }> = [];
+  const fields: EmailFieldRow[] = [];
 
   if (formType === 'contact' && inquiryTitle && inquiryLink) {
     const productText = inquiryTitle;
     fields.push({
       label: 'Inquired Product',
       textValue: `${productText} (${inquiryLink})`,
-      htmlValue: `<a href="${escapeHtml(inquiryLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(productText)}</a>`,
+      htmlValue: `<a href="${escapeHtml(inquiryLink)}" target="_blank" rel="noopener noreferrer" style="color:#151515 !important;text-decoration:underline !important;"><span style="color:#151515 !important;text-decoration:underline !important;"><font color="#151515">${escapeHtml(productText)}</font></span></a>`,
     });
   }
 
@@ -172,7 +164,7 @@ export default defineEventHandler(async (event) => {
     fields.push({
       label: 'Position',
       textValue: `${positionTitle} (${positionLink})`,
-      htmlValue: `<a href="${escapeHtml(positionLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(positionTitle)}</a>`,
+      htmlValue: `<a href="${escapeHtml(positionLink)}" target="_blank" rel="noopener noreferrer" style="color:#151515 !important;text-decoration:underline !important;"><span style="color:#151515 !important;text-decoration:underline !important;"><font color="#151515">${escapeHtml(positionTitle)}</font></span></a>`,
     });
   }
 
@@ -182,38 +174,22 @@ export default defineEventHandler(async (event) => {
   }
 
   const fieldsText = fields.map(({ label, textValue }) => `${label}: ${textValue}`).join('\n');
-  const fieldsHtmlRows = fields
-    .map(
-      ({ label, textValue, htmlValue }) => `
-        <tr>
-          <td style="padding:10px 12px;border:1px solid #e5e5e5;background:#fafafa;vertical-align:top;width:180px;"><strong>${escapeHtml(label)}</strong></td>
-          <td style="padding:10px 12px;border:1px solid #e5e5e5;vertical-align:top;white-space:pre-wrap;">${htmlValue || escapeHtml(textValue)}</td>
-        </tr>
-      `.trim()
-    )
-    .join('');
+  const fieldsTableHtml = renderFieldsTable(fields);
 
-  const adminHtml = `
-    <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color:#111;">
-      <h2 style="margin:0 0 12px 0;">${escapeHtml(config.adminTitle)}</h2>
-      <p style="margin:0 0 16px 0;">From <strong>${escapeHtml(firstName)} ${escapeHtml(lastName)}</strong> (${escapeHtml(emailAddress)})</p>
-      <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:720px;">
-        ${fieldsHtmlRows}
-      </table>
-    </div>
-  `.trim();
+  const adminHtml = renderEmailLayout({
+    title: config.adminTitle,
+    introHtml: `<p style="margin:0 0 16px 0;">From <strong>${escapeHtml(firstName)} ${escapeHtml(lastName)}</strong> (${escapeHtml(emailAddress)})</p>`,
+    bodyHtml: fieldsTableHtml,
+  });
 
-  const senderHtml = `
-    <div style="font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color:#111;">
-      <h2 style="margin:0 0 12px 0;">${escapeHtml(config.senderTitle)}</h2>
-      <p style="margin:0 0 16px 0;">Hi ${escapeHtml(firstName)},</p>
+  const senderHtml = renderEmailLayout({
+    title: config.senderTitle,
+    introHtml: `
+      <p style="margin:0 0 12px 0;">Hi ${escapeHtml(firstName)},</p>
       <p style="margin:0 0 16px 0;">Thanks for reaching out. Here’s a copy of what you submitted:</p>
-      <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:720px;">
-        ${fieldsHtmlRows}
-      </table>
-      <p style="margin:16px 0 0 0;">We’ll get back to you as soon as possible.</p>
-    </div>
-  `.trim();
+    `.trim(),
+    bodyHtml: `${fieldsTableHtml}<p style="margin:16px 0 0 0;">We’ll get back to you as soon as possible.</p>`,
+  });
 
   const adminResponse = await resend.emails.send({
     from: RESEND_FROM_EMAIL,
