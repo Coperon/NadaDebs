@@ -17,6 +17,7 @@
             <CommonFormInput type="tel" name="mobile-number" placeholder="Mobile Number *" required />
             <CommonFormInput type="email" name="email-address" placeholder="Email Address *" required />
             <CommonFormInput type="text" name="country" placeholder="Country *" required />
+            <CommonFormInput type="url" name="cv-url" placeholder="CV / Portfolio URL *" required />
             <CommonFormTextarea name="motivation" placeholder="Motivation *" required />
         </CommonForm>
     </CommonContactLayout>

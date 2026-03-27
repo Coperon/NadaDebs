@@ -76,6 +76,7 @@ const FORM_CONFIGS = {
       'mobile-number',
       'email-address',
       'country',
+      'cv-url',
       'motivation',
     ],
     fieldLabels: {
@@ -84,6 +85,7 @@ const FORM_CONFIGS = {
       'mobile-number': 'Mobile Number',
       'email-address': 'Email Address',
       country: 'Country',
+      'cv-url': 'CV / Profile URL',
       motivation: 'Motivation',
     },
   },
