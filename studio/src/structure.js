@@ -153,6 +153,9 @@ export const structure = (S, context) =>
                     S.listItem().title('Open Positions').id('positions').icon(FolderIcon).child(
                         S.documentTypeList('position')
                     ),
+                    S.listItem().title('Apply').id('apply').icon(DocumentIcon).child(
+                        S.document().schemaType('apply').documentId('apply')
+                    ),
                 ])
             ),
             S.listItem().title('Info').icon(FolderIcon).child(

@@ -4,6 +4,7 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const RESEND_FORMS_ADMIN_EMAIL = process.env.RESEND_FORMS_ADMIN_EMAIL;
 const TRADE_ADMIN_EMAIL = process.env.RESEND_TRADE_ADMIN_EMAIL;
 const CONTACT_ADMIN_EMAIL = process.env.RESEND_CONTACT_ADMIN_EMAIL;
+const APPLY_ADMIN_EMAIL = process.env.RESEND_APPLY_ADMIN_EMAIL;
 const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL;
 const RESEND_ALLOW_EXTERNAL_RECIPIENTS = process.env.RESEND_ALLOW_EXTERNAL_RECIPIENTS === 'true';
 const PUBLIC_SITE_URL = 'https://nadadebs.netlify.app';
@@ -65,6 +66,27 @@ const FORM_CONFIGS = {
       message: 'Message',
     },
   },
+  apply: {
+    adminEmail: APPLY_ADMIN_EMAIL || RESEND_FORMS_ADMIN_EMAIL,
+    adminTitle: 'New job application',
+    senderTitle: 'We received your application',
+    requiredFields: [
+      'first-name',
+      'last-name',
+      'mobile-number',
+      'email-address',
+      'country',
+      'motivation',
+    ],
+    fieldLabels: {
+      'first-name': 'First Name',
+      'last-name': 'Last Name',
+      'mobile-number': 'Mobile Number',
+      'email-address': 'Email Address',
+      country: 'Country',
+      motivation: 'Motivation',
+    },
+  },
 } as const;
 
 type FormType = keyof typeof FORM_CONFIGS;
@@ -124,6 +146,8 @@ export default defineEventHandler(async (event) => {
   const inquiryTitle = readBodyValue(body, 'inquiry-title');
   const inquiryLink = toAbsoluteUrl(readBodyValue(body, 'inquiry-link'));
   const inquiryProductId = readBodyValue(body, 'inquiry-product-id');
+  const positionTitle = readBodyValue(body, 'position');
+  const positionLink = toAbsoluteUrl(readBodyValue(body, 'position-link'));
   const fields: Array<{ label: string; textValue: string; htmlValue?: string }> = [];
 
   if (formType === 'contact' && inquiryTitle && inquiryLink) {
@@ -139,6 +163,14 @@ export default defineEventHandler(async (event) => {
     fields.push({
       label: 'Product ID',
       textValue: inquiryProductId,
+    });
+  }
+
+  if (formType === 'apply' && positionTitle && positionLink) {
+    fields.push({
+      label: 'Position',
+      textValue: `${positionTitle} (${positionLink})`,
+      htmlValue: `<a href="${escapeHtml(positionLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(positionTitle)}</a>`,
     });
   }
 

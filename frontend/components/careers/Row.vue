@@ -19,9 +19,9 @@
         </div>
 
         <div v-if="isSingle" class="flex justify-start md:justify-end sm:absolute sm:right-0 sm:top-0 md:static md:w-1/3 lg:w-1/6">
-            <a :href="position?.applyLink" target="_blank">
+            <NuxtLink :to="applyLink">
                 <CommonButton>Apply</CommonButton>
-            </a>
+            </NuxtLink>
         </div>
         <div v-else class="absolute right-0 top-0 md:static md:w-1/3 lg:w-1/6 md:flex md:justify-end">
             <IconsArrow class="w-3 h-auto" />
@@ -42,4 +42,12 @@ const props = defineProps({
         default: false
     }
 })
+
+const applyLink = computed(() => ({
+    path: '/work-with-us/apply',
+    query: {
+        position: props.position?.position || '',
+        positionLink: props.position?.slug?.current ? `/work-with-us/${props.position.slug.current}` : ''
+    }
+}))
 </script>

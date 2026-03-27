@@ -61,11 +61,6 @@ export default {
                     rows: 4,
                     validation: (Rule) => Rule.required(),
                 },
-                {
-                    name: 'applyLink',
-                    title: 'Apply Spontaneously Link',
-                    type: 'url',
-                }
             ],
             group: 'page',
         },

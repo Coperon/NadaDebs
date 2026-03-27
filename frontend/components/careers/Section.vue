@@ -18,14 +18,13 @@
                     </template>
                 </div>
 
-                <div 
-                    v-if="workWithUsData?.openPositions?.applyLink" 
+                <div  
                     class="mt-6 flex"
                     :class="positionsData?.length === 0 ? 'justify-center' : 'justify-start'"
                 >
-                    <a :href="workWithUsData?.openPositions?.applyLink" target="_blank">
+                    <NuxtLink :to="'/work-with-us/apply'">
                         <CommonButton isSecondary>Apply Spontaneously</CommonButton>
-                    </a>
+                    </NuxtLink>
                 </div>
             </div>
         </div>

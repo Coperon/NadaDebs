@@ -22,9 +22,9 @@
                                 <CommonRichText :blocks="positionData?.aboutThePosition" />
                             </div>
                             <div class="mt-12 flex justify-center lg:justify-start">
-                                <a :href="positionData?.applyLink" target="_blank">
+                                <NuxtLink :to="applyLink">
                                     <CommonButton>Apply</CommonButton>
-                                </a>
+                                </NuxtLink>
                             </div>
                         </div>
                     </div>
@@ -44,6 +44,14 @@ import { getPositionBySlug } from '@/data/position'
 
 const route = useRoute()
 const positionData = await getPositionBySlug(route.params.id)
+
+const applyLink = computed(() => ({
+    path: '/work-with-us/apply',
+    query: {
+        position: positionData?.value?.position || '',
+        positionLink: positionData?.value?.slug?.current ? `/work-with-us/${positionData.value.slug.current}` : ''
+    }
+}))
 
 definePageMeta({
     scrollToTop: true,

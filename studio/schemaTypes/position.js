@@ -69,13 +69,6 @@ export default {
             },
         },
         {
-            name: 'applyLink',
-            title: 'Apply Link',
-            type: 'url',
-            group: 'content',
-            validation: (Rule) => Rule.required(),
-        },
-        {
             name: 'aboutThePosition',
             title: 'About the Position',
             type: 'array',
