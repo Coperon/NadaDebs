@@ -81,7 +81,7 @@ export function renderEmailLayout({
         </div>
 
         <div style="${FOOTER_STYLE}">
-          <a href="${escapeHtml(PUBLIC_SITE_URL)}" style="color:${TEXT_COLOR} !important;text-decoration:none !important;"><span style="color:${TEXT_COLOR} !important;text-decoration:none !important;"><font color="${TEXT_COLOR}">nadadebs.com</font></span></a>
+          <a href="https://nadadebs.com" style="color:${TEXT_COLOR} !important;text-decoration:none !important;"><span style="color:${TEXT_COLOR} !important;text-decoration:none !important;"><font color="${TEXT_COLOR}">nadadebs.com</font></span></a>
         </div>
       </div>
     </div>

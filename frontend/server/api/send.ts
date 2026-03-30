@@ -7,7 +7,6 @@ const TRADE_ADMIN_EMAIL = process.env.RESEND_TRADE_ADMIN_EMAIL;
 const CONTACT_ADMIN_EMAIL = process.env.RESEND_CONTACT_ADMIN_EMAIL;
 const APPLY_ADMIN_EMAIL = process.env.RESEND_APPLY_ADMIN_EMAIL;
 const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL;
-const RESEND_ALLOW_EXTERNAL_RECIPIENTS = process.env.RESEND_ALLOW_EXTERNAL_RECIPIENTS === 'true';
 const PUBLIC_SITE_URL = 'https://nadadebs.netlify.app';
 
 if (!RESEND_API_KEY || !RESEND_FROM_EMAIL) {
@@ -191,6 +190,13 @@ export default defineEventHandler(async (event) => {
     bodyHtml: `${fieldsTableHtml}<p style="margin:16px 0 0 0;">We’ll get back to you as soon as possible.</p>`,
   });
 
+  console.info('[send.ts] Sending emails', {
+    formType,
+    from: RESEND_FROM_EMAIL,
+    adminTo: config.adminEmail,
+    senderTo: emailAddress,
+  });
+
   const adminResponse = await resend.emails.send({
     from: RESEND_FROM_EMAIL,
     to: [config.adminEmail],
@@ -200,26 +206,49 @@ export default defineEventHandler(async (event) => {
   });
 
   if (adminResponse.error) {
+    console.error('[send.ts] Admin email failed', {
+      formType,
+      to: config.adminEmail,
+      error: adminResponse.error,
+    });
     throw createError({
       statusCode: 500,
       message: adminResponse.error.message || 'Error sending admin email',
     });
   }
 
-  const senderTo = RESEND_ALLOW_EXTERNAL_RECIPIENTS ? emailAddress : 'delivered@resend.dev';
+  console.info('[send.ts] Admin email sent', {
+    formType,
+    to: config.adminEmail,
+    id: adminResponse.data?.id || null,
+  });
+
   const senderResponse = await resend.emails.send({
     from: RESEND_FROM_EMAIL,
-    to: [senderTo],
+    to: [emailAddress],
     replyTo: emailAddress,
     subject: config.senderTitle,
     html: senderHtml,
     text: fieldsText,
   });
 
+  if (senderResponse.error) {
+    console.error('[send.ts] Sender email failed', {
+      formType,
+      to: emailAddress,
+      error: senderResponse.error,
+    });
+  } else {
+    console.info('[send.ts] Sender email sent', {
+      formType,
+      to: emailAddress,
+      id: senderResponse.data?.id || null,
+    });
+  }
+
   return {
     admin: adminResponse.data,
     sender: senderResponse.data,
-    sandboxedSender: !RESEND_ALLOW_EXTERNAL_RECIPIENTS,
     senderError: senderResponse.error ? { message: senderResponse.error.message, name: senderResponse.error.name } : null,
   };
 });
