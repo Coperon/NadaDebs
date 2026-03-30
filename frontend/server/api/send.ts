@@ -5,6 +5,7 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const RESEND_FORMS_ADMIN_EMAIL = process.env.RESEND_FORMS_ADMIN_EMAIL;
 const TRADE_ADMIN_EMAIL = process.env.RESEND_TRADE_ADMIN_EMAIL;
 const CONTACT_ADMIN_EMAIL = process.env.RESEND_CONTACT_ADMIN_EMAIL;
+const CONTACT_INQUIRY_ADMIN_EMAIL = process.env.RESEND_CONTACT_INQUIRY_ADMIN_EMAIL;
 const APPLY_ADMIN_EMAIL = process.env.RESEND_APPLY_ADMIN_EMAIL;
 const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL;
 const PUBLIC_SITE_URL = 'https://nadadebs.netlify.app';
@@ -118,13 +119,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (!config.adminEmail) {
-    throw createError({
-      statusCode: 500,
-      message: `Missing admin email config for form type "${formType}"`,
-    });
-  }
-
   const missingFields = config.requiredFields.filter((field) => !readBodyValue(body, field));
   if (missingFields.length > 0) {
     throw createError({
@@ -139,11 +133,23 @@ export default defineEventHandler(async (event) => {
   const inquiryTitle = readBodyValue(body, 'inquiry-title');
   const inquiryLink = toAbsoluteUrl(readBodyValue(body, 'inquiry-link'));
   const inquiryProductId = readBodyValue(body, 'inquiry-product-id');
+  const isContactInquiry = formType === 'contact' && Boolean(inquiryTitle && inquiryLink);
   const positionTitle = readBodyValue(body, 'position');
   const positionLink = toAbsoluteUrl(readBodyValue(body, 'position-link'));
+  const adminRecipient =
+    isContactInquiry
+      ? CONTACT_INQUIRY_ADMIN_EMAIL || config.adminEmail
+      : config.adminEmail;
+
+  if (!adminRecipient) {
+    throw createError({
+      statusCode: 500,
+      message: `Missing admin email config for form type "${formType}"`,
+    });
+  }
   const fields: EmailFieldRow[] = [];
 
-  if (formType === 'contact' && inquiryTitle && inquiryLink) {
+  if (isContactInquiry) {
     const productText = inquiryTitle;
     fields.push({
       label: 'Inquired Product',
@@ -192,14 +198,15 @@ export default defineEventHandler(async (event) => {
 
   console.info('[send.ts] Sending emails', {
     formType,
+    isContactInquiry,
     from: RESEND_FROM_EMAIL,
-    adminTo: config.adminEmail,
+    adminTo: adminRecipient,
     senderTo: emailAddress,
   });
 
   const adminResponse = await resend.emails.send({
     from: RESEND_FROM_EMAIL,
-    to: [config.adminEmail],
+    to: [adminRecipient],
     subject: `${config.adminTitle} from ${firstName} ${lastName}`,
     html: adminHtml,
     text: fieldsText,
@@ -208,7 +215,7 @@ export default defineEventHandler(async (event) => {
   if (adminResponse.error) {
     console.error('[send.ts] Admin email failed', {
       formType,
-      to: config.adminEmail,
+      to: adminRecipient,
       error: adminResponse.error,
     });
     throw createError({
@@ -219,7 +226,7 @@ export default defineEventHandler(async (event) => {
 
   console.info('[send.ts] Admin email sent', {
     formType,
-    to: config.adminEmail,
+    to: adminRecipient,
     id: adminResponse.data?.id || null,
   });
 
