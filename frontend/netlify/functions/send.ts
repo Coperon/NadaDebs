@@ -1,8 +1,11 @@
 import { Resend } from 'resend';
-import { escapeHtml, renderEmailLayout, renderFieldsTable, type EmailFieldRow } from '../../server/utils/emailTemplate';
+
+// ── Branding & email config ──────────────────────────────────────────────────
 
 const FROM_EMAIL = 'Nada Debs <info@nadadebs.com>';
 const PUBLIC_SITE_URL = 'https://nadadebs.com';
+const EMAIL_BRAND_NAME = 'Nada Debs';
+const EMAIL_LOGO_URL = 'https://www.nadadebs.com/corporate3/images/1214/logo-black.png?width=300';
 
 const ADMIN_EMAILS = {
   trade: 'info@nadadebs.com',
@@ -11,22 +14,81 @@ const ADMIN_EMAILS = {
   apply: 'careers@nadadebs.com',
 };
 
+// ── Email template helpers ───────────────────────────────────────────────────
+
+const FONT_STACK = 'sans-serif';
+const TEXT_COLOR = '#151515';
+const BORDER_COLOR = '#151515';
+const BACKGROUND_COLOR = '#E0DCD6';
+
+const TITLE_STYLE = `margin:0 0 48px 0;font-size:22px;line-height:1;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;text-align:center;`;
+const TABLE_LABEL_STYLE = `padding:12px 0;border-bottom:1px solid ${BORDER_COLOR};width:180px;font-size:12px;line-height:14px;font-weight:700;letter-spacing:0.12px;text-transform:uppercase;color:${TEXT_COLOR};`;
+const TABLE_VALUE_STYLE = `padding:12px 0;border-bottom:1px solid ${BORDER_COLOR};white-space:pre-wrap;font-size:14px;line-height:19px;font-weight:300;letter-spacing:0.14px;color:${TEXT_COLOR} !important;`;
+const FOOTER_STYLE = `padding:0 24px;text-align:center;font-size:12px;line-height:1;font-weight:500;letter-spacing:0.6px;`;
+
+type EmailFieldRow = {
+  label: string;
+  textValue: string;
+  htmlValue?: string;
+};
+
+function escapeHtml(value: unknown) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function renderFieldsTable(fields: EmailFieldRow[]) {
+  const rows = fields
+    .map(
+      ({ label, textValue, htmlValue }) => `
+        <tr>
+          <td style="${TABLE_LABEL_STYLE}"><strong>${escapeHtml(label)}</strong></td>
+          <td style="${TABLE_VALUE_STYLE}">${htmlValue || escapeHtml(textValue)}</td>
+        </tr>`.trim()
+    )
+    .join('');
+
+  return `
+    <div style="margin:36px 0;">
+      <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">
+        ${rows}
+      </table>
+    </div>`.trim();
+}
+
+function renderEmailLayout({ title, introHtml, bodyHtml }: { title: string; introHtml?: string; bodyHtml: string }) {
+  return `
+    <div style="margin:0;padding:32px 16px;background:${BACKGROUND_COLOR};color:${TEXT_COLOR};font-family:${FONT_STACK};font-size:14px;line-height:19px;font-weight:300;letter-spacing:0.14px;">
+      <div style="max-width:720px;margin:0 auto;">
+        <div style="text-align:center;">
+          <img src="${escapeHtml(EMAIL_LOGO_URL)}" alt="${escapeHtml(EMAIL_BRAND_NAME)}" style="height:20px;width:auto;display:inline-block;" />
+        </div>
+
+        <div style="padding:96px 24px 48px 24px;">
+          <h2 style="${TITLE_STYLE}">${escapeHtml(title)}</h2>
+          ${introHtml || ''}
+          ${bodyHtml}
+        </div>
+
+        <div style="${FOOTER_STYLE}">
+          <a href="https://nadadebs.com" style="color:${TEXT_COLOR} !important;text-decoration:none !important;"><span style="color:${TEXT_COLOR} !important;text-decoration:none !important;"><font color="${TEXT_COLOR}">nadadebs.com</font></span></a>
+        </div>
+      </div>
+    </div>`.trim();
+}
+
+// ── Form configs ─────────────────────────────────────────────────────────────
+
 const FORM_CONFIGS = {
   trade: {
     adminEmail: ADMIN_EMAILS.trade,
     adminTitle: 'New trade form submission',
     senderTitle: 'We received your trade enquiry',
-    requiredFields: [
-      'company-name',
-      'company-website',
-      'type-of-business',
-      'first-name',
-      'last-name',
-      'mobile-number',
-      'email-address',
-      'country',
-      'message',
-    ],
+    requiredFields: ['company-name', 'company-website', 'type-of-business', 'first-name', 'last-name', 'mobile-number', 'email-address', 'country', 'message'],
     fieldLabels: {
       'company-name': 'Company Name',
       'company-website': 'Company Website',
@@ -43,15 +105,7 @@ const FORM_CONFIGS = {
     adminEmail: ADMIN_EMAILS.contact,
     adminTitle: 'New contact form submission',
     senderTitle: 'We received your message',
-    requiredFields: [
-      'first-name',
-      'last-name',
-      'mobile-number',
-      'email-address',
-      'country',
-      'profession',
-      'message',
-    ],
+    requiredFields: ['first-name', 'last-name', 'mobile-number', 'email-address', 'country', 'profession', 'message'],
     fieldLabels: {
       'first-name': 'First Name',
       'last-name': 'Last Name',
@@ -66,15 +120,7 @@ const FORM_CONFIGS = {
     adminEmail: ADMIN_EMAILS.apply,
     adminTitle: 'New job application',
     senderTitle: 'We received your application',
-    requiredFields: [
-      'first-name',
-      'last-name',
-      'mobile-number',
-      'email-address',
-      'country',
-      'cv-url',
-      'motivation',
-    ],
+    requiredFields: ['first-name', 'last-name', 'mobile-number', 'email-address', 'country', 'cv-url', 'motivation'],
     fieldLabels: {
       'first-name': 'First Name',
       'last-name': 'Last Name',
@@ -88,6 +134,8 @@ const FORM_CONFIGS = {
 } as const;
 
 type FormType = keyof typeof FORM_CONFIGS;
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 function readBodyValue(body: Record<string, unknown>, key: string) {
   const value = body[key];
@@ -109,6 +157,8 @@ function jsonResponse(statusCode: number, body: unknown) {
     body: JSON.stringify(body),
   };
 }
+
+// ── Handler ──────────────────────────────────────────────────────────────────
 
 export const handler = async (event: { httpMethod: string; body: string | null }) => {
   if (event.httpMethod !== 'POST') {
