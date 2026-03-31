@@ -108,6 +108,9 @@ export const structure = (S, context) =>
                             S.listItem().title('Projects').id('interiors').icon(FolderIcon).child(
                                 S.documentTypeList('interior')
                             ),
+                            S.listItem().title('Categories').id('interiorCategory').icon(TagIcon).child(
+                                S.documentTypeList('interiorCategory')
+                            ),
                         ]),
                     ),
                     S.listItem().title('Bespoke').id('bespoke').icon(DocumentIcon).child(
