@@ -34,6 +34,8 @@ type EmailFieldRow = {
   label: string;
   textValue: string;
   htmlValue?: string;
+  labelStyle?: string;
+  valueStyle?: string;
 };
 
 function escapeHtml(value: unknown) {
@@ -48,10 +50,10 @@ function escapeHtml(value: unknown) {
 function renderFieldsTable(fields: EmailFieldRow[]) {
   const rows = fields
     .map(
-      ({ label, textValue, htmlValue }) => `
+      ({ label, textValue, htmlValue, labelStyle, valueStyle }) => `
         <tr>
-          <td style="${TABLE_LABEL_STYLE}"><strong>${escapeHtml(label)}</strong></td>
-          <td style="${TABLE_VALUE_STYLE}">${htmlValue || escapeHtml(textValue)}</td>
+          <td style="${TABLE_LABEL_STYLE}${labelStyle || ''}"><strong>${escapeHtml(label)}</strong></td>
+          <td style="${TABLE_VALUE_STYLE}${valueStyle || ''}">${htmlValue || escapeHtml(textValue)}</td>
         </tr>`.trim()
     )
     .join('');
@@ -197,6 +199,7 @@ export const handler = async (event: { httpMethod: string; body: string | null }
   const lastName = readBodyValue(body, 'last-name');
   const emailAddress = readBodyValue(body, 'email-address');
   const inquiryTitle = readBodyValue(body, 'inquiry-title');
+  const inquiryImage = toAbsoluteUrl(readBodyValue(body, 'inquiry-image'));
   const inquiryLink = toAbsoluteUrl(readBodyValue(body, 'inquiry-link'));
   const inquiryProductId = readBodyValue(body, 'inquiry-product-id');
   const isContactInquiry = formType === 'contact' && Boolean(inquiryTitle && inquiryLink);
@@ -212,6 +215,16 @@ export const handler = async (event: { httpMethod: string; body: string | null }
       textValue: `${inquiryTitle} (${inquiryLink})`,
       htmlValue: `<a href="${escapeHtml(inquiryLink)}" target="_blank" rel="noopener noreferrer" style="color:#151515 !important;text-decoration:underline !important;"><span style="color:#151515 !important;text-decoration:underline !important;"><font color="#151515">${escapeHtml(inquiryTitle)}</font></span></a>`,
     });
+
+    if (inquiryImage) {
+      fields.push({
+        label: 'Product Image',
+        textValue: inquiryImage,
+        labelStyle: 'vertical-align:top;padding-top:16px;',
+        valueStyle: 'padding:16px 0;',
+        htmlValue: `<div style="background:#F1EAE4;padding:16px;"><img src="${escapeHtml(inquiryImage)}" alt="${escapeHtml(inquiryTitle)}" style="display:block;width:100%;height:auto;" /></div>`,
+      });
+    }
   }
 
   if (formType === 'contact' && inquiryProductId) {

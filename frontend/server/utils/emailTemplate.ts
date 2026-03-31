@@ -15,6 +15,8 @@ export type EmailFieldRow = {
   label: string;
   textValue: string;
   htmlValue?: string;
+  labelStyle?: string;
+  valueStyle?: string;
 };
 
 export function escapeHtml(value: unknown) {
@@ -29,10 +31,10 @@ export function escapeHtml(value: unknown) {
 export function renderFieldsHtmlRows(fields: EmailFieldRow[]) {
   return fields
     .map(
-      ({ label, textValue, htmlValue }) => `
+      ({ label, textValue, htmlValue, labelStyle, valueStyle }) => `
         <tr>
-          <td style="${TABLE_LABEL_STYLE}"><strong>${escapeHtml(label)}</strong></td>
-          <td style="${TABLE_VALUE_STYLE}">${htmlValue || escapeHtml(textValue)}</td>
+          <td style="${TABLE_LABEL_STYLE}${labelStyle || ''}"><strong>${escapeHtml(label)}</strong></td>
+          <td style="${TABLE_VALUE_STYLE}${valueStyle || ''}">${htmlValue || escapeHtml(textValue)}</td>
         </tr>
       `.trim()
     )

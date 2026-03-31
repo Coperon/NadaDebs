@@ -138,6 +138,7 @@ export default defineEventHandler(async (event) => {
   const lastName = readBodyValue(body, 'last-name');
   const emailAddress = readBodyValue(body, 'email-address');
   const inquiryTitle = readBodyValue(body, 'inquiry-title');
+  const inquiryImage = toAbsoluteUrl(readBodyValue(body, 'inquiry-image'));
   const inquiryLink = toAbsoluteUrl(readBodyValue(body, 'inquiry-link'));
   const inquiryProductId = readBodyValue(body, 'inquiry-product-id');
   const isContactInquiry = formType === 'contact' && Boolean(inquiryTitle && inquiryLink);
@@ -160,6 +161,16 @@ export default defineEventHandler(async (event) => {
       textValue: `${productText} (${inquiryLink})`,
       htmlValue: `<a href="${escapeHtml(inquiryLink)}" target="_blank" rel="noopener noreferrer" style="color:#151515 !important;text-decoration:underline !important;"><span style="color:#151515 !important;text-decoration:underline !important;"><font color="#151515">${escapeHtml(productText)}</font></span></a>`,
     });
+
+    if (inquiryImage) {
+      fields.push({
+        label: 'Product Image',
+        textValue: inquiryImage,
+        labelStyle: 'vertical-align:top;padding-top:16px;',
+        valueStyle: 'padding:16px 0;',
+        htmlValue: `<div style="background:#F1EAE4;padding:16px;"><img src="${escapeHtml(inquiryImage)}" alt="${escapeHtml(productText)}" style="display:block;width:100%;height:auto;" /></div>`,
+      });
+    }
   }
 
   if (formType === 'contact' && inquiryProductId) {
