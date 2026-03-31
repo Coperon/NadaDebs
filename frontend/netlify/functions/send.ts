@@ -1,3 +1,7 @@
+// NOTE: This file handles /api/send in production (Netlify Functions).
+// A mirrored version exists at server/api/send.ts for local dev.
+// If you edit this, remember to update the other send.ts as well.
+
 import { Resend } from 'resend';
 
 // ── Branding & email config ──────────────────────────────────────────────────

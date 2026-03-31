@@ -1,3 +1,7 @@
+// NOTE: This file handles /api/send locally (npm run dev).
+// A mirrored version exists at netlify/functions/send.ts for production.
+// If you edit this, remember to update the other send.ts as well.
+
 import { Resend } from 'resend';
 import { escapeHtml, renderEmailLayout, renderFieldsTable, type EmailFieldRow } from '../utils/emailTemplate';
 
@@ -11,10 +15,10 @@ const FROM_EMAIL = 'Nada Debs <info@nadadebs.com>';
 const PUBLIC_SITE_URL = 'https://nadadebs.com';
 
 const ADMIN_EMAILS = {
-  trade: 'info@nadadebs.com',
-  contact: 'info@nadadebs.com',
-  contactInquiry: 'sales@nadadebs.com',
-  apply: 'careers@nadadebs.com',
+  trade: 'delivered@resend.dev',
+  contact: 'delivered@resend.dev',
+  contactInquiry: 'delivered@resend.dev',
+  apply: 'delivered@resend.dev',
 };
 
 const resend = new Resend(RESEND_API_KEY);
