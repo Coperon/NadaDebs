@@ -16,7 +16,7 @@
             <CommonFormInput type="text" name="last-name" placeholder="Last Name *" required />
             <CommonFormInput type="tel" name="mobile-number" placeholder="Mobile Number *" required />
             <CommonFormInput type="email" name="email-address" placeholder="Email Address *" required />
-            <CommonFormInput type="text" name="country" placeholder="Country *" required />
+            <CommonFormSelect name="country" placeholder="Country *" :options="COUNTRIES" required />
             <CommonFormInput type="url" name="cv-url" placeholder="CV / Portfolio URL *" required />
             <CommonFormTextarea name="motivation" placeholder="Motivation *" required />
         </CommonForm>
@@ -26,6 +26,7 @@
 <script setup>
 import { useSeoObject } from '@/composables/seo'
 import { getApply } from '@/data/apply'
+import { COUNTRIES } from '@/utils/countries'
 
 const route = useRoute()
 const position = String(route.query.position || '')

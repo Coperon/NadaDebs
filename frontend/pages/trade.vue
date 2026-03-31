@@ -8,7 +8,7 @@
             <CommonFormInput type="text" name="last-name" placeholder="Last Name *" required />
             <CommonFormInput type="tel" name="mobile-number" placeholder="Mobile Number *" required />
             <CommonFormInput type="email" name="email-address" placeholder="Email Address *" required />
-            <CommonFormInput type="text" name="country" placeholder="Country *" required />
+            <CommonFormSelect name="country" placeholder="Country *" :options="COUNTRIES" required />
             <CommonFormTextarea name="message" placeholder="Message *" required />
         </CommonForm>
     </CommonContactLayout>
@@ -17,6 +17,7 @@
 <script setup>
 import { useSeoObject } from '@/composables/seo'
 import { getTrade } from '@/data/trade'
+import { COUNTRIES } from '@/utils/countries'
 
 const tradeData = await getTrade()
 
