@@ -20,7 +20,7 @@
             <CommonFormInput type="tel" name="mobile-number" placeholder="Mobile Number *" required />
             <CommonFormInput type="email" name="email-address" placeholder="Email Address *" required />
             <CommonFormSelect name="country" placeholder="Country *" :options="COUNTRIES" required />
-            <CommonFormInput type="text" name="profession" placeholder="Profession *" required />
+            <CommonFormSelect name="profession" placeholder="Profession *" :options="PROFESSIONS" required />
             <CommonFormTextarea name="message" placeholder="Message *" required />
         </CommonForm>
     </CommonContactLayout>
@@ -30,6 +30,7 @@
 import { useSeoObject } from '@/composables/seo'
 import { getContact } from '@/data/contact'
 import { COUNTRIES } from '@/utils/countries'
+import { PROFESSIONS } from '@/utils/professions'
 
 const route = useRoute()
 const inquiry = String(route.query.inquiry || '')
