@@ -1,15 +1,3 @@
-[build]
-  base    = "frontend"
-  command = "npm run generate"
-  publish = "dist"
-
-[build.environment]
-  NODE_VERSION = "20"
-
-[functions]
-  directory     = "frontend/netlify/functions"
-  node_bundler  = "esbuild"
-
 [[redirects]]
   from   = "/api/send"
   to     = "/.netlify/functions/send"
