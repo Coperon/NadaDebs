@@ -2,23 +2,26 @@ import { Resend } from 'resend';
 import { escapeHtml, renderEmailLayout, renderFieldsTable, type EmailFieldRow } from '../utils/emailTemplate';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const RESEND_FORMS_ADMIN_EMAIL = process.env.RESEND_FORMS_ADMIN_EMAIL;
-const TRADE_ADMIN_EMAIL = process.env.RESEND_TRADE_ADMIN_EMAIL;
-const CONTACT_ADMIN_EMAIL = process.env.RESEND_CONTACT_ADMIN_EMAIL;
-const CONTACT_INQUIRY_ADMIN_EMAIL = process.env.RESEND_CONTACT_INQUIRY_ADMIN_EMAIL;
-const APPLY_ADMIN_EMAIL = process.env.RESEND_APPLY_ADMIN_EMAIL;
-const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL;
-const PUBLIC_SITE_URL = 'https://nadadebs.netlify.app';
 
-if (!RESEND_API_KEY || !RESEND_FROM_EMAIL) {
-  throw new Error('Missing required env vars: RESEND_API_KEY, RESEND_FROM_EMAIL');
+if (!RESEND_API_KEY) {
+  throw new Error('Missing required env var: RESEND_API_KEY');
 }
+
+const FROM_EMAIL = 'Nada Debs <info@nadadebs.com>';
+const PUBLIC_SITE_URL = 'https://nadadebs.com';
+
+const ADMIN_EMAILS = {
+  trade: 'info@nadadebs.com',
+  contact: 'info@nadadebs.com',
+  contactInquiry: 'sales@nadadebs.com',
+  apply: 'careers@nadadebs.com',
+};
 
 const resend = new Resend(RESEND_API_KEY);
 
 const FORM_CONFIGS = {
   trade: {
-    adminEmail: TRADE_ADMIN_EMAIL || RESEND_FORMS_ADMIN_EMAIL,
+    adminEmail: ADMIN_EMAILS.trade,
     adminTitle: 'New trade form submission',
     senderTitle: 'We received your trade enquiry',
     requiredFields: [
@@ -45,7 +48,7 @@ const FORM_CONFIGS = {
     },
   },
   contact: {
-    adminEmail: CONTACT_ADMIN_EMAIL || RESEND_FORMS_ADMIN_EMAIL,
+    adminEmail: ADMIN_EMAILS.contact,
     adminTitle: 'New contact form submission',
     senderTitle: 'We received your message',
     requiredFields: [
@@ -68,7 +71,7 @@ const FORM_CONFIGS = {
     },
   },
   apply: {
-    adminEmail: APPLY_ADMIN_EMAIL || RESEND_FORMS_ADMIN_EMAIL,
+    adminEmail: ADMIN_EMAILS.apply,
     adminTitle: 'New job application',
     senderTitle: 'We received your application',
     requiredFields: [
@@ -136,10 +139,7 @@ export default defineEventHandler(async (event) => {
   const isContactInquiry = formType === 'contact' && Boolean(inquiryTitle && inquiryLink);
   const positionTitle = readBodyValue(body, 'position');
   const positionLink = toAbsoluteUrl(readBodyValue(body, 'position-link'));
-  const adminRecipient =
-    isContactInquiry
-      ? CONTACT_INQUIRY_ADMIN_EMAIL || config.adminEmail
-      : config.adminEmail;
+  const adminRecipient = isContactInquiry ? ADMIN_EMAILS.contactInquiry : config.adminEmail;
 
   if (!adminRecipient) {
     throw createError({
@@ -199,13 +199,13 @@ export default defineEventHandler(async (event) => {
   console.info('[send.ts] Sending emails', {
     formType,
     isContactInquiry,
-    from: RESEND_FROM_EMAIL,
+    from: FROM_EMAIL,
     adminTo: adminRecipient,
     senderTo: emailAddress,
   });
 
   const adminResponse = await resend.emails.send({
-    from: RESEND_FROM_EMAIL,
+    from: FROM_EMAIL,
     to: [adminRecipient],
     subject: `${config.adminTitle} from ${firstName} ${lastName}`,
     html: adminHtml,
@@ -231,7 +231,7 @@ export default defineEventHandler(async (event) => {
   });
 
   const senderResponse = await resend.emails.send({
-    from: RESEND_FROM_EMAIL,
+    from: FROM_EMAIL,
     to: [emailAddress],
     replyTo: emailAddress,
     subject: config.senderTitle,

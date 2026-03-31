@@ -1,6 +1,5 @@
-const PUBLIC_SITE_URL = 'https://nadadebs.netlify.app';
-const EMAIL_BRAND_NAME = process.env.RESEND_EMAIL_BRAND_NAME || 'Nada Debs';
-const EMAIL_LOGO_URL = process.env.RESEND_EMAIL_LOGO_URL || `${PUBLIC_SITE_URL}/nd-logo.png`;
+const EMAIL_BRAND_NAME = 'Nada Debs';
+const EMAIL_LOGO_URL = 'https://www.nadadebs.com/corporate3/images/1214/logo-black.png?width=300';
 
 const FONT_STACK = "sans-serif";
 const TEXT_COLOR = '#151515';
