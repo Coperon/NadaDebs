@@ -61,7 +61,7 @@ export default {
             of: [
                 {
                     type: 'object',
-                    name: 'media',
+                    name: 'collaborationMedia',
                     title: 'Media',
                     fields: [
                         {

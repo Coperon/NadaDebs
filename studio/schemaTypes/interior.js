@@ -74,7 +74,7 @@ export default {
             of: [
                 {
                     type: 'object',
-                    name: 'media',
+                    name: 'interiorMedia',
                     title: 'Media',
                     fields: [
                         {
