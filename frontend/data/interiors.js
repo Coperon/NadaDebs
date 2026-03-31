@@ -2,9 +2,10 @@ import groq from 'groq'
 import { imageQuery } from "./fragments"
 export const getInteriors = async () => {
     const { $sanity } = useNuxtApp()
-    const query = groq`*[_type == "interior" && !(_id in path("drafts.**"))]|order(year desc, _createdAt desc){
+    const query = groq`*[_type == "interior" && !(_id in path("drafts.**"))]|order(orderRank asc){
       _id,
       title,
+      orderRank,
       slug,
       category->{
         _id,

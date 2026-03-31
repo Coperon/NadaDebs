@@ -1,10 +1,12 @@
 import { RiProfileLine } from 'react-icons/ri'
 import { IoMdAnalytics } from 'react-icons/io'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 
 export default {
     name: 'interior',
     title: 'Interior Project',
     type: 'document',
+    orderings: [orderRankOrdering],
     groups: [
         {
             name: 'content',
@@ -19,6 +21,7 @@ export default {
         },
     ],
     fields: [
+        orderRankField({type: 'interior', newItemPosition: 'before', hidden: true}),
         {
             name: 'title',
             title: 'Title',

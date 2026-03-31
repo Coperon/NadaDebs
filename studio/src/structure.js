@@ -8,6 +8,7 @@ import { CogIcon } from '@sanity/icons'
 import { EarthAmericasIcon } from '@sanity/icons'
 import { SparklesIcon } from '@sanity/icons'
 import { BasketIcon } from '@sanity/icons'
+import {HiOutlineArrowsUpDown} from 'react-icons/hi2'
 
 export const structure = (S, context) =>
     S.list()
@@ -98,6 +99,14 @@ export const structure = (S, context) =>
                             S.listItem().title('Projects').id('collaborations').icon(FolderIcon).child(
                                 S.documentTypeList('collaboration')
                             ),
+                            orderableDocumentListDeskItem({
+                                type: 'collaboration',
+                                title: 'Order',
+                                createIntent: false,
+                                S,
+                                context,
+                                icon: HiOutlineArrowsUpDown
+                            }),
                         ]),
                     ),
                     S.listItem().title('Interiors').icon(FolderIcon).child(
@@ -108,6 +117,14 @@ export const structure = (S, context) =>
                             S.listItem().title('Projects').id('interiors').icon(FolderIcon).child(
                                 S.documentTypeList('interior')
                             ),
+                            orderableDocumentListDeskItem({
+                                type: 'interior',
+                                title: 'Order',
+                                createIntent: false,
+                                S,
+                                context,
+                                icon: HiOutlineArrowsUpDown
+                            }),
                             S.listItem().title('Categories').id('interiorCategory').icon(TagIcon).child(
                                 S.documentTypeList('interiorCategory')
                             ),
@@ -167,21 +184,6 @@ export const structure = (S, context) =>
             S.listItem().title('Trade').id('trade').icon(DocumentIcon).child(
                 S.document().schemaType('trade').documentId('trade'),
             ),
-            // S.divider(),
-            // S.listItem()
-            //   .title('Shop Page')
-            //   .id('shopArchive')
-            //   .icon(BasketIcon)
-            //   .child(S.document().schemaType('shopArchive').documentId('shopArchive')),
-            //   S.listItem().title(`Products`).child(S.documentTypeList('product')),
-            //   // /* TODO: default order should be first? */
-            //   orderableDocumentListDeskItem({
-            //     type: 'product',
-            //     title: 'Reorder',
-            //     createIntent: false,
-            //     S,
-            //     context,
-            //   }),
             S.divider(),
             S.listItem().title('Global').id('siteConfig').icon(CogIcon).child(
                 S.document().schemaType('siteConfig').documentId('siteConfig')
