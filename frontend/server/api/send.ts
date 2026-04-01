@@ -84,7 +84,6 @@ const FORM_CONFIGS = {
       'mobile-number',
       'email-address',
       'country',
-      'cv-url',
       'motivation',
     ],
     fieldLabels: {
@@ -134,9 +133,23 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  if (formType === 'apply') {
+    const hasCvUrl = Boolean(readBodyValue(body, 'cv-url'));
+    const hasCvFile = Boolean(readBodyValue(body, 'cv-file'));
+    if (!hasCvUrl && !hasCvFile) {
+      throw createError({
+        statusCode: 400,
+        message: 'Please provide a CV / Portfolio URL or upload a file.',
+      });
+    }
+  }
+
   const firstName = readBodyValue(body, 'first-name');
   const lastName = readBodyValue(body, 'last-name');
   const emailAddress = readBodyValue(body, 'email-address');
+  const cvFileBase64 = readBodyValue(body, 'cv-file');
+  const cvFileFilename = readBodyValue(body, 'cv-file-filename');
+  const cvFileType = readBodyValue(body, 'cv-file-type');
   const inquiryTitle = readBodyValue(body, 'inquiry-title');
   const inquiryImage = toAbsoluteUrl(readBodyValue(body, 'inquiry-image'));
   const inquiryLink = toAbsoluteUrl(readBodyValue(body, 'inquiry-link'));
@@ -193,6 +206,10 @@ export default defineEventHandler(async (event) => {
     if (value) fields.push({ label: fieldLabel, textValue: value });
   }
 
+  if (formType === 'apply' && cvFileFilename) {
+    fields.push({ label: 'CV / Portfolio File', textValue: cvFileFilename });
+  }
+
   const fieldsText = fields.map(({ label, textValue }) => `${label}: ${textValue}`).join('\n');
   const fieldsTableHtml = renderFieldsTable(fields);
 
@@ -219,12 +236,18 @@ export default defineEventHandler(async (event) => {
     senderTo: emailAddress,
   });
 
+  const cvAttachments =
+    formType === 'apply' && cvFileBase64 && cvFileFilename
+      ? [{ content: Buffer.from(cvFileBase64, 'base64'), filename: cvFileFilename, contentType: cvFileType || undefined }]
+      : undefined;
+
   const adminResponse = await resend.emails.send({
     from: FROM_EMAIL,
     to: [adminRecipient],
     subject: `${config.adminTitle} from ${firstName} ${lastName}`,
     html: adminHtml,
     text: fieldsText,
+    attachments: cvAttachments,
   });
 
   if (adminResponse.error) {

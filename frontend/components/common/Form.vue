@@ -42,6 +42,15 @@ const props = defineProps({
 
 const siteSettingsData = inject('siteSettingsData')
 
+function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result.split(',')[1])
+        reader.onerror = reject
+        reader.readAsDataURL(file)
+    })
+}
+
 const isSubmitting = ref(false)
 const submitState = ref('idle') // 'idle' | 'success' | 'error'
 const submitError = ref('')
@@ -59,7 +68,18 @@ async function onSubmit(e) {
     try {
         const form = e.target
         const formData = new FormData(form)
-        const payload = Object.fromEntries(formData.entries())
+        const payload = {}
+        for (const [key, value] of formData.entries()) {
+            if (value instanceof File) {
+                if (value.size > 0) {
+                    payload[key] = await readFileAsBase64(value)
+                    payload[`${key}-filename`] = value.name
+                    payload[`${key}-type`] = value.type || 'application/octet-stream'
+                }
+            } else {
+                payload[key] = value
+            }
+        }
         payload.formType = props.formType || props.formName
 
         await $fetch(props.endpoint, {

@@ -17,7 +17,8 @@
             <CommonFormInput type="tel" name="mobile-number" placeholder="Mobile Number *" required />
             <CommonFormInput type="email" name="email-address" placeholder="Email Address *" required />
             <CommonFormSelect name="country" placeholder="Country *" :options="COUNTRIES" required />
-            <CommonFormInput type="url" name="cv-url" placeholder="CV / Portfolio URL *" required />
+            <CommonFormInput type="url" name="cv-url" placeholder="CV / Portfolio URL" />
+            <CommonFormFile name="cv-file" placeholder="CV / Portfolio Document (PDF, DOC, DOCX)" accept=".pdf,.doc,.docx" />
             <CommonFormTextarea name="motivation" placeholder="Motivation *" required />
         </CommonForm>
     </CommonContactLayout>
