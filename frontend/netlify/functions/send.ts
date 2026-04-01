@@ -12,7 +12,7 @@ const EMAIL_BRAND_NAME = 'Nada Debs';
 const EMAIL_LOGO_URL = 'https://www.nadadebs.com/corporate3/images/1214/logo-black.png?width=300';
 
 const ADMIN_EMAILS = {
-  trade: 'info@nadadebs.com',
+  trade: 'sales@nadadebs.com',
   contact: 'info@nadadebs.com',
   contactInquiry: 'sales@nadadebs.com',
   apply: 'careers@nadadebs.com',
