@@ -9,6 +9,11 @@
             <label for="terms" class="text-a2">I have read and agreed to Nada Debs <NuxtLink :to="`/info/${siteSettingsData?.termsAndConditions?.slug?.current}`" target="_blank" class="underline underline-offset-2">Terms & Conditions</NuxtLink> and <NuxtLink :to="`/info/${siteSettingsData?.privacyPolicy?.slug?.current}`" target="_blank" class="underline underline-offset-2">Privacy Policy</NuxtLink></label>
         </div>
 
+        <div class="mt-3 flex items-center gap-2">
+            <input type="checkbox" name="klaviyo-subscribe" id="klaviyo-subscribe" class="appearance-none border border-black/20 rounded-none bg-transparent w-3.5 h-3.5 shrink-0 relative checked:after:content-[''] checked:after:absolute checked:after:top-1/2 checked:after:left-1/2 checked:after:w-1.5 checked:after:h-1.5 checked:after:bg-black checked:after:rounded-full checked:after:translate-x-[-50%] checked:after:translate-y-[-50%]" />
+            <label for="klaviyo-subscribe" class="text-a2">Subscribe to our newsletter</label>
+        </div>
+
         <div class="mt-10 flex justify-center">
             <button type="submit" class="appearance-none">
                 <CommonButton>{{ isSubmitting ? 'Sending…' : 'Send' }}</CommonButton>

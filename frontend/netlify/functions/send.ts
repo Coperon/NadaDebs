@@ -172,6 +172,9 @@ export const handler = async (event: { httpMethod: string; body: string | null }
   }
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  const KLAVIYO_API_KEY = process.env.KLAVIYO_API_KEY;
+  const KLAVIYO_LIST_ID = process.env.KLAVIYO_LIST_ID;
+
   if (!RESEND_API_KEY) {
     return jsonResponse(500, { message: 'Missing RESEND_API_KEY env var' });
   }
@@ -310,6 +313,64 @@ export const handler = async (event: { httpMethod: string; body: string | null }
 
   if (senderResponse.error) {
     console.error('[send] Sender email failed', senderResponse.error);
+  }
+
+  const subscribeToKlaviyo = readBodyValue(body, 'klaviyo-subscribe') === 'on';
+  if (subscribeToKlaviyo && KLAVIYO_API_KEY && KLAVIYO_LIST_ID) {
+    try {
+      const klaviyoHeaders = {
+        Authorization: `Klaviyo-API-Key ${KLAVIYO_API_KEY}`,
+        revision: '2024-10-15',
+        'Content-Type': 'application/json',
+      };
+
+      // Step 1: create profile (or get existing ID on 409)
+      const profileRes = await fetch('https://a.klaviyo.com/api/profiles/', {
+        method: 'POST',
+        headers: klaviyoHeaders,
+        body: JSON.stringify({
+          data: {
+            type: 'profile',
+            attributes: { email: emailAddress, first_name: firstName, last_name: lastName },
+          },
+        }),
+      });
+      const profileJson = await profileRes.json();
+      let profileId: string;
+      if (profileRes.status === 409) {
+        profileId = profileJson.errors?.[0]?.meta?.duplicate_profile_id;
+        if (!profileId) throw new Error('Klaviyo duplicate profile but no ID returned');
+      } else {
+        profileId = profileJson.data.id;
+      }
+
+      // Step 2: patch profile with location (works for both new and existing profiles)
+      await fetch(`https://a.klaviyo.com/api/profiles/${profileId}/`, {
+        method: 'PATCH',
+        headers: klaviyoHeaders,
+        body: JSON.stringify({
+          data: {
+            type: 'profile',
+            id: profileId,
+            attributes: { location: { country: readBodyValue(body, 'country') } },
+          },
+        }),
+      });
+
+      // Step 3: add profile to list
+      await fetch(`https://a.klaviyo.com/api/lists/${KLAVIYO_LIST_ID}/relationships/profiles/`, {
+        method: 'POST',
+        headers: klaviyoHeaders,
+        body: JSON.stringify({ data: [{ type: 'profile', id: profileId }] }),
+      });
+
+      console.info('[send] Klaviyo profile added to list', { email: emailAddress, profileId });
+    } catch (err: any) {
+      console.error('[send] Klaviyo subscription failed', {
+        status: err?.status,
+        message: err?.message,
+      });
+    }
   }
 
   return jsonResponse(200, {
