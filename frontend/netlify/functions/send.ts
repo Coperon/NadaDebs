@@ -11,11 +11,13 @@ const PUBLIC_SITE_URL = 'https://nadadebs.com';
 const EMAIL_BRAND_NAME = 'Nada Debs';
 const EMAIL_LOGO_URL = 'https://www.nadadebs.com/corporate3/images/1214/logo-black.png?width=300';
 
+const IS_PRODUCTION = process.env.APP_ENV === 'production';
+
 const ADMIN_EMAILS = {
-  trade: 'sales@nadadebs.com',
-  contact: 'info@nadadebs.com',
-  contactInquiry: 'sales@nadadebs.com',
-  apply: 'careers@nadadebs.com',
+  trade: IS_PRODUCTION ? 'sales@nadadebs.com' : 'delivered@resend.dev',
+  contact: IS_PRODUCTION ? 'info@nadadebs.com' : 'delivered@resend.dev',
+  contactInquiry: IS_PRODUCTION ? 'sales@nadadebs.com' : 'delivered@resend.dev',
+  apply: IS_PRODUCTION ? 'careers@nadadebs.com' : 'delivered@resend.dev',
 };
 
 // ── Email template helpers ───────────────────────────────────────────────────
