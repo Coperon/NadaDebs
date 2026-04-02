@@ -155,6 +155,7 @@ export default defineEventHandler(async (event) => {
   const inquiryLink = toAbsoluteUrl(readBodyValue(body, 'inquiry-link'));
   const inquiryProductId = readBodyValue(body, 'inquiry-product-id');
   const isContactInquiry = formType === 'contact' && Boolean(inquiryTitle && inquiryLink);
+  const adminTitle = isContactInquiry ? 'New product inquiry' : config.adminTitle;
   const positionTitle = readBodyValue(body, 'position');
   const positionLink = toAbsoluteUrl(readBodyValue(body, 'position-link'));
   const adminRecipient = isContactInquiry ? ADMIN_EMAILS.contactInquiry : config.adminEmail;
@@ -214,7 +215,7 @@ export default defineEventHandler(async (event) => {
   const fieldsTableHtml = renderFieldsTable(fields);
 
   const adminHtml = renderEmailLayout({
-    title: config.adminTitle,
+    title: adminTitle,
     introHtml: `<p style="margin:0 0 16px 0;">From <strong>${escapeHtml(firstName)} ${escapeHtml(lastName)}</strong> (${escapeHtml(emailAddress)})</p>`,
     bodyHtml: fieldsTableHtml,
   });
@@ -244,7 +245,7 @@ export default defineEventHandler(async (event) => {
   const adminResponse = await resend.emails.send({
     from: FROM_EMAIL,
     to: [adminRecipient],
-    subject: `${config.adminTitle} from ${firstName} ${lastName}`,
+    subject: `${adminTitle} from ${firstName} ${lastName}`,
     html: adminHtml,
     text: fieldsText,
     attachments: cvAttachments,
