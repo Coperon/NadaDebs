@@ -31,32 +31,29 @@
     </div>
 </template>
 <script setup>
-const SUBSCRIBE_API = '/.netlify/functions/subscribe?email='
 const emailInput = ref(null)
 const submitButton = ref(null)
 const resultStatusMessage = ref(null)
 
-const submitForm = (e) => {
+const submitForm = async (e) => {
     e.preventDefault()
     const email = emailInput.value.value
     if (!email) return
     submitButton.value.disabled = true
-    resultStatusMessage.value.innerHTML = 'Subscribing you...'
-    fetch(SUBSCRIBE_API + email)
-        .then(res => {
-            return res.json()
+    resultStatusMessage.value.textContent = 'Subscribing you...'
+    try {
+        const res = await $fetch('/.netlify/functions/subscribe', {
+            method: 'POST',
+            body: { email },
         })
-        .then(res => {
-            console.log('status', res.status)
-            if (res.status === 'subscribed') {
-                resultStatusMessage.value.innerHTML = 'Thanks, you have been subscribed!'
-            } else if (res.status === 400) {
-                resultStatusMessage.value.innerHTML = `Sorry, there was an error: ${res.detail}`
-            }
-            submitButton.value.disabled = false
-        })
-        .catch(e => {
-            console.log('error result', e)
-        })
+        if (res.status === 'subscribed') {
+            resultStatusMessage.value.textContent = 'Thanks, you have been subscribed!'
+            emailInput.value.value = ''
+        }
+    } catch (err) {
+        resultStatusMessage.value.textContent = err?.data?.message || 'Sorry, there was an error. Please try again.'
+    } finally {
+        submitButton.value.disabled = false
+    }
 }
 </script>

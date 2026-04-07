@@ -1,7 +1,7 @@
 <template>
     <footer class="px-4 py-8 sm:px-6 lg:px-8 lg:py-12 xl:px-12 xl:py-16">
         <div class="flex justify-center">
-            <CommonFooterMailchimpSubscription />
+            <CommonFooterNewsletterSubscription />
         </div>
 
         <div class="mt-16 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-12 gap-x-8 sm:text-center">
