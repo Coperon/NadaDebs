@@ -198,7 +198,7 @@ export const initShopify = async () => {
     
     shopiClient = createStorefrontApiClient({
         storeDomain,
-        apiVersion: '2025-04',
+        apiVersion: '2026-04',
         publicAccessToken: storePublicAccessToken
     });
 
