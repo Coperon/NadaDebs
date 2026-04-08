@@ -326,23 +326,43 @@ export default defineEventHandler(async (event) => {
         }
       }
 
-      // Step 2: patch profile with location (works for both new and existing profiles)
+      // Step 2: patch profile with location and custom properties
+      const profession = readBodyValue(body, 'profession');
+      const patchAttributes: Record<string, unknown> = { location: { country: readBodyValue(body, 'country') } };
+      if (profession) patchAttributes.properties = { CATEGORY: profession };
       await $fetch(`https://a.klaviyo.com/api/profiles/${profileId}/`, {
         method: 'PATCH',
         headers: klaviyoHeaders,
-        body: {
-          data: {
-            type: 'profile',
-            id: profileId,
-            attributes: { location: { country: readBodyValue(body, 'country') } },
-          },
-        },
+        body: { data: { type: 'profile', id: profileId, attributes: patchAttributes } },
       });
-      // Step 3: add profile to list
+      // Step 3a: add profile to list directly
       await $fetch(`https://a.klaviyo.com/api/lists/${KLAVIYO_LIST_ID}/relationships/profiles/`, {
         method: 'POST',
         headers: klaviyoHeaders,
         body: { data: [{ type: 'profile', id: profileId }] },
+      });
+
+      // Step 3b: set email marketing consent
+      await $fetch('https://a.klaviyo.com/api/profile-subscription-bulk-create-jobs/', {
+        method: 'POST',
+        headers: klaviyoHeaders,
+        body: {
+          data: {
+            type: 'profile-subscription-bulk-create-job',
+            attributes: {
+              profiles: {
+                data: [{
+                  type: 'profile',
+                  attributes: {
+                    email: emailAddress,
+                    subscriptions: { email: { marketing: { consent: 'SUBSCRIBED' } } },
+                  },
+                }],
+              },
+            },
+            relationships: { list: { data: { type: 'list', id: KLAVIYO_LIST_ID } } },
+          },
+        },
       });
 
       console.info('[send.ts] Klaviyo profile added to list', { email: emailAddress, profileId });

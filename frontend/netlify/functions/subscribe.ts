@@ -54,11 +54,27 @@ export const handler = async (event: { httpMethod: string; body: string | null }
       profileId = profileJson.data.id;
     }
 
-    // Step 2: add profile to list
-    await fetch(`https://a.klaviyo.com/api/lists/${KLAVIYO_LIST_ID}/relationships/profiles/`, {
+    // Step 2: subscribe to list with email marketing consent
+    await fetch('https://a.klaviyo.com/api/profile-subscription-bulk-create-jobs/', {
       method: 'POST',
       headers: klaviyoHeaders,
-      body: JSON.stringify({ data: [{ type: 'profile', id: profileId }] }),
+      body: JSON.stringify({
+        data: {
+          type: 'profile-subscription-bulk-create-job',
+          attributes: {
+            profiles: {
+              data: [{
+                type: 'profile',
+                attributes: {
+                  email,
+                  subscriptions: { email: { marketing: { consent: 'SUBSCRIBED' } } },
+                },
+              }],
+            },
+          },
+          relationships: { list: { data: { type: 'list', id: KLAVIYO_LIST_ID } } },
+        },
+      }),
     });
 
     return jsonResponse(200, { status: 'subscribed' });
