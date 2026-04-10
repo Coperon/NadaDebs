@@ -375,6 +375,42 @@ export const fetchVariantAvailability = async (variantGid, productGid, country) 
   return variant?.node?.availableForSale;
 };
 
+export const fetchProductsAvailability = async (productGids, country) => {
+  if (!productGids?.length) return {}
+
+  const BATCH_SIZE = 250
+  const result = {}
+
+  for (let i = 0; i < productGids.length; i += BATCH_SIZE) {
+    const batch = productGids.slice(i, i + BATCH_SIZE)
+    const query = `
+      query getProductsAvailability($ids: [ID!]!, $country: CountryCode) @inContext(country: $country) {
+        nodes(ids: $ids) {
+          ... on Product {
+            id
+            variants(first: ${VARIANTS_LIMIT}) {
+              edges {
+                node {
+                  availableForSale
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+    const data = await makeGraphQLRequest(query, { ids: batch, country })
+    const nodes = data?.nodes || []
+    for (const product of nodes) {
+      if (product?.id) {
+        result[product.id] = product.variants?.edges?.some(e => e.node?.availableForSale) ?? false
+      }
+    }
+  }
+
+  return result
+};
+
 export const updateCartBuyerIdentity = async (cartId, countryCode) => {
   const mutation = `
     mutation cartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentityInput!) {

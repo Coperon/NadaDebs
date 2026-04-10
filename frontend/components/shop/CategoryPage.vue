@@ -6,7 +6,14 @@
         />
 
         <!-- Filters -->
-        <div class="px-4 sm:px-6 lg:px-8 xl:px-12 flex justify-end mb-4 md:mb-6 xl:mb-8">
+        <div class="px-4 sm:px-6 lg:px-8 xl:px-12 flex justify-between items-center gap-6 mb-4 md:mb-6 xl:mb-8">
+            <div>
+                <label class="inline-flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" v-model="showInStockOnly" class="sr-only peer">
+                    <div class="relative w-9 h-5 bg-black/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-black/50"></div>
+                    <span class="text-a2 font-medium lowercase">In Stock</span>
+                </label>
+            </div>
             <button @click="isFilterOpen = !isFilterOpen" class="text-a2 font-medium lowercase">
                 Filter ({{ filterText }}) +
             </button>
@@ -124,14 +131,6 @@
                             </li>
                         </ul>
                     </div>
-
-                    <div>
-                        <label class="inline-flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" v-model="showInStockOnly" class="sr-only peer">
-                            <span class="text-a2 lowercase">In Stock</span>
-                            <div class="relative w-9 h-5 bg-black/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-black/50"></div>
-                        </label>
-                    </div>
                 </div>
 
                 <div class="sticky bottom-0 bg-white px-4 sm:px-6 lg:px-8 xl:px-12 pt-4 pb-12">
@@ -140,18 +139,32 @@
                             <CommonButton isSecondary>Show Results</CommonButton>
                         </button>
 
-                        <button @click="selectedCategory = null; showInStockOnly = false; selectedSort = 'custom'" class="text-a2 lowercase text-grey hover:text-black transition-colors">Reset Filters</button>
+                        <button @click="selectedCategory = null; selectedSort = 'custom'" class="text-a2 lowercase text-grey hover:text-black transition-colors">Reset Filters</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <Transition name="fade" mode="out-in">
-            <div 
-                v-if="displayedItems.length > 0" 
+            <div
+                v-if="displayedItems.length > 0"
                 :key="`grid-${selectedCategory}-${showInStockOnly}-${selectedSort}`"
             >
                 <ShopProductsGrid :products="displayedItems" />
+            </div>
+            <div
+                v-else-if="showInStockOnly && productAvailability === null"
+                key="loading"
+                class="px-4 sm:px-6 lg:px-8 xl:px-12 py-16 text-center text-a2 text-grey lowercase"
+            >
+                loading...
+            </div>
+            <div
+                v-else
+                key="empty"
+                class="px-4 sm:px-6 lg:px-8 xl:px-12 py-16 text-center text-a2 text-grey lowercase"
+            >
+                no products currently in stock
             </div>
         </Transition>
 
@@ -209,6 +222,7 @@
 <script setup>
 import { isTouchDevice } from '@/utils'
 import { getShopPageData } from '@/data/shopPage'
+import { fetchProductsAvailability } from '@/composables/shopify'
 const shopData = await getShopPageData()
 
 const props = defineProps({
@@ -232,6 +246,8 @@ const props = defineProps({
 
 const route = useRoute()
 const router = useRouter()
+const countryStore = useCountryStore()
+const productAvailability = ref(null) // null = not yet fetched; { [gid]: boolean } once loaded
 
 const selectedCategory = ref(route.query.type || null)
 const selectedSort = ref(route.query.sort || 'custom')
@@ -290,9 +306,14 @@ const filteredProducts = computed(() => {
 
     // Apply stock filter if enabled
     if (showInStockOnly.value) {
-        products = products.filter(product => 
-            product.store?.variants?.some(variant => variant.store?.inventory?.isAvailable)
-        )
+        products = products.filter(product => {
+            const gid = product.store?.gid
+            if (productAvailability.value !== null && gid) {
+                return productAvailability.value[gid] === true
+            }
+            // Fall back to static Sanity data while availability hasn't loaded yet
+            return product.store?.variants?.some(variant => variant.store?.inventory?.isAvailable)
+        })
     }
 
     // Apply sorting
@@ -373,8 +394,17 @@ watch([selectedCategory, selectedSort, showInStockOnly], ([newCategory, newSort,
     router.replace({ query })
 }, { deep: true })
 
+const refreshProductAvailability = async () => {
+    const gids = (props.allProducts?.items || []).map(p => p.store?.gid).filter(Boolean)
+    if (!gids.length || !countryStore.country) return
+    productAvailability.value = await fetchProductsAvailability(gids, countryStore.country)
+}
+
+watch(() => countryStore.country, refreshProductAvailability)
+
 onMounted(() => {
     isMounted.value = true
+    refreshProductAvailability()
 })
 </script>
 

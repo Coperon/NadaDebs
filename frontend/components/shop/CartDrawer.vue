@@ -67,16 +67,18 @@
                     }}</div>
                 </div>
 
-                <div class="mt-4" v-if="cart?.checkoutUrl">
-                    <NuxtLink :to="cart?.checkoutUrl">
-                        <CommonButton isSecondary>
-                            <div class="flex items-center gap-1.5">
-                                <span>Checkout</span>
-                                <IconsArrow class="w-3 h-auto" />
-                            </div>
-                        </CommonButton>
-                    </NuxtLink>
-                </div>
+                <ClientOnly>
+                    <div class="mt-4" v-if="cart?.checkoutUrl">
+                        <NuxtLink :to="cart?.checkoutUrl">
+                            <CommonButton isSecondary>
+                                <div class="flex items-center gap-1.5">
+                                    <span>Checkout</span>
+                                    <IconsArrow class="w-3 h-auto" />
+                                </div>
+                            </CommonButton>
+                        </NuxtLink>
+                    </div>
+                </ClientOnly>
             </div>
         </div>
     </div>
