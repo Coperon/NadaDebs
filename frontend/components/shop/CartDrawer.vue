@@ -28,12 +28,12 @@
                             <NuxtLink 
                                 :to="`/shop/${item?.variant?.product?.handle}`"
                                 @click="cartStore.setCartOpen(false)"
-                                class="block aspect-[4/5] relative overflow-hidden hover:opacity-50 transition-opacity duration-300"
+                                class="block bg-beige/30 hover:opacity-50 transition-opacity duration-300"
                             >
-                                <img 
-                                    :src="item?.variant?.image?.src" 
-                                    :alt="item?.variant?.product?.title" 
-                                    class="w-full h-full object-cover"
+                                <img
+                                    :src="item?.variant?.image?.src"
+                                    :alt="item?.variant?.product?.title"
+                                    class="w-full h-auto"
                                 />
                             </NuxtLink>
                             <button 
