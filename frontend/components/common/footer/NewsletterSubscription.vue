@@ -27,7 +27,7 @@
                 </button>
             </div>
         </form>
-        <div ref="resultStatusMessage" class="mt-2 text-blue"></div>
+        <div ref="resultStatusMessage" class="mt-2"></div>
     </div>
 </template>
 <script setup>

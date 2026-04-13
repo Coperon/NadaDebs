@@ -20,6 +20,9 @@
 
         <!-- Shop Cart Drawer -->
         <ShopCartDrawer :cart="cartStore.cart" @close="cartStore.setCartOpen(false)" />
+
+        <!-- Search Drawer -->
+        <CommonSearchDrawer @close="searchStore.setSearchOpen(false)" />
         
         <!-- Cookie Banner -->
         <ClientOnly>
@@ -34,6 +37,7 @@
 
 <script setup>
 import { useCartStore } from '@/stores/cart'
+import { useSearchStore } from '@/stores/search'
 import { getInfoPages } from '@/data/infoPages'
 
 const infoPages = await getInfoPages()
@@ -41,6 +45,7 @@ const loaded = ref(false)
 const route = useRoute()
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
+const searchStore = useSearchStore()
 
 onMounted(() => {
     loaded.value = true

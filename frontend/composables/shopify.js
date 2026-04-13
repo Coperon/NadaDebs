@@ -411,6 +411,34 @@ export const fetchProductsAvailability = async (productGids, country) => {
   return result
 };
 
+export const searchProducts = async (queryString, country) => {
+    const query = `
+        query searchProducts($query: String!, $first: Int!, $country: CountryCode) @inContext(country: $country) {
+            products(query: $query, first: $first) {
+                edges {
+                    node {
+                        id
+                        title
+                        handle
+                        featuredImage {
+                            url
+                            altText
+                        }
+                        priceRange {
+                            minVariantPrice {
+                                amount
+                                currencyCode
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    `;
+    const data = await makeGraphQLRequest(query, { query: queryString, first: 8, country });
+    return data?.products?.edges?.map(edge => edge.node) || [];
+};
+
 export const updateCartBuyerIdentity = async (cartId, countryCode) => {
   const mutation = `
     mutation cartBuyerIdentityUpdate($cartId: ID!, $buyerIdentity: CartBuyerIdentityInput!) {

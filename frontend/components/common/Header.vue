@@ -184,8 +184,7 @@
             :class="{ 'text-white': isTopNavTransparent && route.name !== 'our-world-crafts-id' }"
         >
             <div class="hidden md:flex flex-1 items-center justify-end gap-6">
-                <!-- <span class="lowercase text-a2 font-medium">Search</span>
-                <span class="lowercase text-a2 font-medium">Favorites (0)</span> -->
+                <button @click="searchStore.setSearchOpen(true)" class="lowercase text-a2 font-medium">Search</button>
                 <ClientOnly><ShopCountrySelector /></ClientOnly>
                 <ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount />
             </div>
@@ -315,6 +314,7 @@
 <script setup>
 import { useCartStore } from '@/stores/cart'
 import { useCurrentProductStore } from '@/stores/currentProduct'
+import { useSearchStore } from '@/stores/search'
 
 const props = defineProps({
     infoPages: {
@@ -326,6 +326,7 @@ const props = defineProps({
 const menuState = useMenuStore()
 const cartStore = useCartStore()
 const currentProductStore = useCurrentProductStore()
+const searchStore = useSearchStore()
 const route = useRoute()
 
 const parentRouteSlug = computed(() => {
