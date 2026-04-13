@@ -144,6 +144,11 @@
                     </NuxtLink>
                 </div>
 
+                <div v-if="productData?.onlyUAE" class="mt-3 text-p2">
+                    Available for delivery within the UAE only.<br />
+                    For international orders, please contact our team.
+                </div>
+
                 <div v-if="siteSettingsData?.shippingPolicy" class="mt-10">
                     <NuxtLink 
                         :to="`/info/${siteSettingsData?.shippingPolicy?.slug.current}`"

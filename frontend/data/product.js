@@ -21,6 +21,7 @@ export const getProductBySlug = async productSlug => {
         metaFields,
         buyOptions,
         isPersonalizable,
+        onlyUAE,
         crafts[]->{
             ...,
         },

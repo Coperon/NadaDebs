@@ -244,6 +244,13 @@ export default {
             group: 'editorial',
         },
         {
+            name: 'onlyUAE',
+            title: 'Only in UAE',
+            description: 'If true, the following message will be shown on the product page: "Available for delivery within the UAE only. For international orders, please contact our team."',
+            type: 'boolean',
+            group: 'editorial',
+        },
+        {
             name: 'isFeatured',
             title: 'Is Featured',
             description: 'If true, the product will be displayed larger on the index page',
