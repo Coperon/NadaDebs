@@ -44,9 +44,9 @@ export default {
         },
         {
             name: 'productOrder',
-            title: 'Product order',
+            title: 'Products',
             type: 'array',
-            description: 'Add and reorder products to display on this page. Only products in this list will be shown. Drag to using the handler to reorder. If you can\'t find a product, it might be already in the list.',
+            description: 'Add and reorder products to display on this page. Only products in this list will be shown. Drag using the handler to reorder. If you can\'t find a product, it might be already in the list.',
             group: 'page',
             of: [
                 {

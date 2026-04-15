@@ -5,8 +5,8 @@
             :description="collectionsPageData?.description" 
         />
 
-        <div v-if="collectionsData && collectionsData.length > 0">
-            <ShopCollectionsGrid :collections="collectionsData" />
+        <div v-if="collectionsPageData?.collectionOrder && collectionsPageData.collectionOrder.length > 0">
+            <ShopCollectionsGrid :collections="collectionsPageData?.collectionOrder" />
         </div>
     </div>
 </template>
@@ -14,10 +14,8 @@
 <script setup>
 import { useSeoObject } from '@/composables/seo'
 import { getCollectionsPage } from '@/data/collectionsPage'
-import { getCollections } from '@/data/collections'
 
 const collectionsPageData = await getCollectionsPage()
-const collectionsData = await getCollections()
 
 useSeoObject(collectionsPageData?.seo, collectionsPageData?.title)
 </script>

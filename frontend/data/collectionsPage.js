@@ -1,5 +1,5 @@
 import groq from 'groq'
-import { seoQuery } from "./fragments"
+import { seoQuery, imageQuery } from "./fragments"
 
 export const getCollectionsPage = async () => {
     const { $sanity } = useNuxtApp()
@@ -7,6 +7,18 @@ export const getCollectionsPage = async () => {
         _id,
         title,
         description,
+        collectionOrder[]->{
+            _id,
+            title,
+            slug,
+            year,
+            cover {
+                ${imageQuery}
+            },
+            thumbnail {
+                ${imageQuery}
+            },
+        },
         seo {
             ${seoQuery}
         },

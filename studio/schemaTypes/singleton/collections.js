@@ -43,6 +43,30 @@ export default {
             validation: (Rule) => Rule.required(),
         },
         {
+            name: 'collectionOrder',
+            title: 'Collections',
+            type: 'array',
+            description: 'Add and reorder collections to display on this page. Only collections in this list will be shown. Drag using the handler to reorder. If you can\'t find a collection, it might be already in the list.',
+            group: 'page',
+            of: [
+                {
+                    type: 'reference',
+                    to: [{ type: 'collection' }],
+                    options: {
+                        filter: ({ parent }) => {
+                            const selectedIds = parent
+                                .filter((item) => item?._ref)
+                                .map((item) => item._ref)
+                            return {
+                                filter: '!(_id in $selectedIds)',
+                                params: { selectedIds },
+                            }
+                        },
+                    },
+                },
+            ],
+        },
+        {
             name: 'seo',
             title: 'SEO',
             type: 'seo',
