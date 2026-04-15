@@ -246,7 +246,7 @@ export default {
         {
             name: 'onlyUAE',
             title: 'Only in UAE',
-            description: 'If true, the following message will be shown on the product page: "Available for delivery within the UAE only. For international orders, please contact our team."',
+            description: 'If true, a message will be shown on the product page. You can edit the message in the "Strings" group in the site configuration.',
             type: 'boolean',
             group: 'editorial',
         },

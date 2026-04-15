@@ -18,6 +18,7 @@ export const siteSettings = async () => {
         seo {
             ${seoQuery}
         },
+        onlyUAE,
         socialLinks[] {
             title,
             url,

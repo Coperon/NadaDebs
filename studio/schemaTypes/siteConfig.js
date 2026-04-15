@@ -6,6 +6,7 @@ import {MdOutlinePrivacyTip} from 'react-icons/md'
 import {FaCreativeCommons} from 'react-icons/fa'
 import {IoMdAnalytics} from 'react-icons/io'
 import {DEFAULT_CURRENCY_CODE} from '../constants'
+import { LuText } from "react-icons/lu";
 
 export default {
   name: 'siteConfig',
@@ -17,6 +18,11 @@ export default {
       title: 'Site',
       default: true,
       icon: CiGlobe,
+    },
+    {
+      name: 'strings',
+      title: 'Strings',
+      icon: LuText,
     },
     {
       name: 'social',
@@ -99,6 +105,14 @@ export default {
         return parent?.gtmID == undefined
       },
       group: 'site',
+    },
+    {
+      name: 'onlyUAE',
+      title: 'Only in UAE',
+      type: 'text',
+      rows: 3,
+      description: 'Displayed in the product page when the product is only available in the UAE',
+      group: 'strings',
     },
     {
       title: 'Social links',
