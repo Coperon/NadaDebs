@@ -15,7 +15,7 @@
                 @click="toggleMenuState"
             ></div>
             <div class="bg-white absolute h-svh left-0 w-full sm:max-w-[24rem] pt-[3.25rem] sm:pt-[4.25rem] flex flex-col">
-                <div class="px-4">
+                <div class="px-4 sm:px-6 lg:hidden">
                     <div class="shrink-0 border-t border-b border-current py-1.5 flex items-center text-a2 font-medium lowercase">
                         <button @click="openSearch" class="pr-2.5 py-1 shrink-0 flex-1 text-left lowercase">Search</button>
                         <div class="pl-2.5 py-1 border-l border-current flex-1 flex justify-end">
