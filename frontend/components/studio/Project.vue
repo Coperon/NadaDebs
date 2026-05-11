@@ -27,7 +27,7 @@
             <div 
                 ref="imagesContainer"
                 v-if="images && images?.length > 0" 
-                class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-2.5 xl:flex-1 xl:min-h-0 xl:relative xl:bg-beige"
+                class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-2.5 xl:flex-1 xl:min-h-0 xl:pl-[50vw] xl:relative xl:bg-beige"
             >
                 <div v-for="image in images" :key="image._key" class="relative xl:shrink-0 xl:h-full">
                     <CommonMediaImage
@@ -48,8 +48,8 @@
                     />
                 </div>
 
-                <div class="hidden xl:block absolute -left-10 bottom-10 text-black">
-                    <IconsDots class="w-20 h-auto" />
+                <div class="hidden xl:block absolute left-1/2 -translate-x-1/2 bottom-7 2xl:bottom-9 text-black">
+                    <IconsDots class="w-14 2xl:w-[4.5rem] h-auto" />
                 </div>
             </div>
         </div>
