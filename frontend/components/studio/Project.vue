@@ -1,35 +1,35 @@
 <template>
     <article class="pb-20 sm:pb-24 lg:pb-30">
-        <div ref="scrollContainer" class="xl:h-screen xl:pt-[4.25rem] xl:overflow-hidden xl:flex xl:relative">
-            <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pt-16 xl:py-8 flex flex-col gap-6 xl:w-[40vw] xl:shrink-0 xl:sticky xl:left-0">
-                <h1 class="text-h2 uppercase flex flex-col">
-                    <span v-if="isCollaboration" class="font-light">Nada Debs x</span>
-                    <span>{{ title }}</span>
-                </h1>
+        <div ref="scrollContainer" class="xl:h-screen xl:pt-[4.25rem] xl:overflow-hidden xl:flex xl:flex-col xl:relative">
+            <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pt-16 xl:py-8 flex flex-col gap-6 lg:w-[60vw] xl:w-[40vw] xl:shrink-0 xl:sticky xl:left-0">
+                <div class="flex items-end justify-between">
+                    <h1 class="text-h2 uppercase flex flex-col">
+                        <span v-if="isCollaboration" class="font-light">Nada Debs x</span>
+                        <span>{{ title }}</span>
+                    </h1>
+                    <div v-if="year" class="text-h2 flex flex-col items-end">
+                        <div v-if="location" class="font-light">{{ location }}</div>
+                        <div>{{ year }}</div>
+                    </div>
+                </div>
 
-                <div v-if="description" class="max-w-[62ch] text-balance whitespace-pre-line">
+                <div v-if="description" class="text-pretty xl:line-clamp-6">
                     {{ description }}
                 </div>
 
-                <div v-if="year" class="flex items-start gap-12 text-a2-bold xl:text-h2 xl:mt-auto max-w-[62ch] xl:max-w-none">
-                    <div v-if="location" class="w-1/2 flex flex-col gap-1.5">
-                        <span class="uppercase">Location</span>
-                        <span class="font-light">{{ location }}</span>
-                    </div>
-
-                    <div class="w-1/2 flex flex-col gap-1.5">
-                        <span class="uppercase">Year</span>
-                        <span class="font-light">{{ year }}</span>
-                    </div>
+                <div class="flex justify-center">
+                    <NuxtLink to="/connect/contact-us">
+                        <CommonButton>Inquire</CommonButton>
+                    </NuxtLink>
                 </div>
             </div>
 
             <div 
                 ref="imagesContainer"
                 v-if="images && images?.length > 0" 
-                class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-2.5 xl:shrink-0 xl:relative xl:bg-beige"
+                class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-2.5 xl:flex-1 xl:min-h-0 xl:relative xl:bg-beige"
             >
-                <div v-for="image in images" :key="image._key" class="relative">
+                <div v-for="image in images" :key="image._key" class="relative xl:shrink-0 xl:h-full">
                     <CommonMediaImage
                         :image="image.image"
                         :alt="image.image.alt"
@@ -51,12 +51,6 @@
                 <div class="hidden xl:block absolute -left-10 bottom-10 text-black">
                     <IconsDots class="w-20 h-auto" />
                 </div>
-            </div>
-
-            <div class="hidden xl:block absolute right-12 bottom-8">
-                <NuxtLink to="/connect/contact-us">
-                    <CommonButton>Inquire</CommonButton>
-                </NuxtLink>
             </div>
         </div>
     </article>
@@ -107,7 +101,7 @@ const initGSAP = () => {
             scrollTrigger: {
                 trigger: scrollContainer.value,
                 start: 'top top',
-                end: () => `+=${imagesContainer.value.scrollWidth - window.innerWidth * 0.6}`,
+                end: () => `+=${imagesContainer.value.scrollWidth - window.innerWidth}`,
                 scrub: 1,
                 pin: true,
                 anticipatePin: 1,
@@ -116,7 +110,7 @@ const initGSAP = () => {
         })
 
         tl.to(imagesContainer.value, {
-            x: () => -(imagesContainer.value.scrollWidth - window.innerWidth * 0.6),
+            x: () => -(imagesContainer.value.scrollWidth - window.innerWidth),
             ease: 'none'
         })
     }
