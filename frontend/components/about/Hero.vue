@@ -30,7 +30,7 @@
                         class="relative"
                     />
 
-                    <div v-if="hero?.video" class="-mt-12 sm:-mt-[4.25rem] lg:-mt-[5.5rem] relative flex justify-center">
+                    <div v-if="hero?.video" class="relative flex justify-center">
                         <button 
                             @click="handlePlayVideo"
                             class="flex items-center gap-3 text-a2-bold uppercase" 
