@@ -251,7 +251,11 @@ const productAvailability = ref(null) // null = not yet fetched; { [gid]: boolea
 
 const selectedCategory = ref(route.query.type || null)
 const selectedSort = ref(route.query.sort || 'custom')
-const showInStockOnly = ref(route.query.stock === 'true')
+const showInStockOnly = ref(
+    route.query.stock !== undefined
+        ? route.query.stock === 'true'
+        : props.categoryKey === 'objects'
+)
 const itemsPerPage = 48
 const currentPage = ref(1)
 const isFilterOpen = ref(false)
