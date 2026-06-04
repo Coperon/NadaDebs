@@ -9,15 +9,15 @@
                 <CommonMediaImage
                     v-if="featuredImage"
                     :image="featuredImage"
-                    width="1536"
-                    mobileWidth="768"
+                    width="1920"
+                    mobileWidth="1024"
                     class="absolute inset-0 w-full h-full object-contain"
                 />
                 <img
                     v-else-if="previewImage && previewImage.trim()"
                     :src="previewImage"
-                    :srcset="`${previewImage}?width=768 768w, ${previewImage}?width=1536 1536w`"
-                    sizes="(min-width: 640px) 1536px, 768px"
+                    :srcset="`${previewImage}?width=1024 1024w, ${previewImage}?width=1920 1920w`"
+                    sizes="(min-width: 640px) 1920px, 1024px"
                     :alt="title"
                     class="absolute inset-0 w-full h-full object-cover"
                 />
@@ -26,8 +26,8 @@
             <div v-if="secondaryImage" class="swiper-slide relative overflow-hidden">
                 <CommonMediaImage
                     :image="secondaryImage"
-                    width="768"
-                    mobileWidth="768"
+                    width="1920"
+                    mobileWidth="1024"
                     class="absolute inset-0 w-full h-full object-cover"
                 />
             </div>
@@ -36,8 +36,8 @@
                 <div v-for="image in moreImages" class="swiper-slide relative overflow-hidden">
                     <CommonMediaImage
                         :image="image"
-                        width="768"
-                        mobileWidth="768"
+                        width="1920"
+                        mobileWidth="1024"
                         class="absolute inset-0 w-full h-full object-cover"
                     />
                 </div>
@@ -47,8 +47,8 @@
                 <div v-for="image in modelImages" class="swiper-slide relative overflow-hidden">
                     <CommonMediaImage
                         :image="image"
-                        width="768"
-                        mobileWidth="768"
+                        width="1920"
+                        mobileWidth="1024"
                         class="absolute inset-0 w-full h-full object-cover"
                     />
                 </div>
