@@ -22,15 +22,6 @@
                     class="absolute inset-0 w-full h-full object-cover"
                 />
             </div>
-
-            <div v-if="secondaryImage" class="swiper-slide relative overflow-hidden">
-                <CommonMediaImage
-                    :image="secondaryImage"
-                    width="1920"
-                    mobileWidth="1024"
-                    class="absolute inset-0 w-full h-full object-cover"
-                />
-            </div>
             
             <template v-if="moreImages && moreImages.length > 0">
                 <div v-for="image in moreImages" class="swiper-slide relative overflow-hidden">
@@ -53,6 +44,15 @@
                     />
                 </div>
             </template>
+
+            <div v-if="secondaryImage" class="swiper-slide relative overflow-hidden">
+                <CommonMediaImage
+                    :image="secondaryImage"
+                    width="1920"
+                    mobileWidth="1024"
+                    class="absolute inset-0 w-full h-full object-cover"
+                />
+            </div>
         </div>
 
         <div class="swiper-pagination"></div>
