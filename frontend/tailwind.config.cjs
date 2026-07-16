@@ -71,11 +71,11 @@ module.exports = {
                     fontWeight: '300',
                 }],
                 'p1': ['0.875rem', {
-                    lineHeight: '1.35714286',
+                    lineHeight: '1.28571429',
                     // letterSpacing: '0.01em',
                 }],
                 'p2': ['0.75rem', {
-                    lineHeight: '1.41666667',
+                    lineHeight: '1.33333333',
                     // letterSpacing: '0.01em',
                 }],
                 'p2-upper': ['0.75rem', {
