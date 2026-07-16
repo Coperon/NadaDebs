@@ -3,9 +3,9 @@
         <div ref="scrollContainer" class="xl:h-screen xl:pt-[4.25rem] xl:overflow-hidden xl:flex xl:flex-col xl:relative">
             <div class="px-4 sm:px-6 lg:px-8 xl:px-12 pt-16 xl:py-8 flex flex-col gap-6 lg:w-[60vw] xl:w-[40vw] xl:shrink-0 xl:sticky xl:left-0">
                 <div class="flex items-end justify-between">
-                    <h1 class="text-h2 uppercase flex flex-col">
-                        <span v-if="isCollaboration" class="font-light">Nada Debs x</span>
-                        <span>{{ title }}</span>
+                    <h1 class="flex flex-col">
+                        <span v-if="isCollaboration" class="text-h2 uppercase font-light">Nada Debs x</span>
+                        <span class="text-a1-bold uppercase">{{ title }}</span>
                     </h1>
                     <div v-if="year" class="text-h2 flex flex-col items-end">
                         <div v-if="location" class="font-light">{{ location }}</div>

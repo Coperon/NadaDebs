@@ -43,9 +43,9 @@
                         </div>
 
                         <CommonGridCaption>
-                            <h2 class="text-h2 uppercase flex flex-col">
-                                <span v-if="isCollaboration" class="font-light">Nada Debs x</span>
-                                <span>{{ item.title }}</span>
+                            <h2 class="flex flex-col">
+                                <span v-if="isCollaboration" class="text-a2 uppercase font-light">Nada Debs x</span>
+                                <span class="text-a1-bold uppercase">{{ item.title }}</span>
                             </h2>
 
                             <div v-if="!isCollaboration && item?.year" class="text-p2">
