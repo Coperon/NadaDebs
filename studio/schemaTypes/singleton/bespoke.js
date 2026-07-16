@@ -81,7 +81,39 @@ export default {
                         name: 'images',
                         title: 'Images',
                         type: 'array',
-                        of: [{type: 'image'}],
+                        of: [
+                            {
+                                type: 'object',
+                                name: 'bespokeMedia',
+                                title: 'Media',
+                                fields: [
+                                    {
+                                        name: 'image',
+                                        title: 'Image',
+                                        type: 'image',
+                                        validation: (Rule) => Rule.required(),
+                                    },
+                                    {
+                                        name: 'video',
+                                        title: 'Video',
+                                        type: 'url',
+                                        description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
+                                    },
+                                ],
+                                preview: {
+                                    select: {
+                                        media: 'image',
+                                    },
+                                    prepare(selection) {
+                                        const {media} = selection
+                                        return {
+                                            title: 'Media',
+                                            media: media,
+                                        }
+                                    }
+                                }
+                            }
+                        ],
                         options: {
                             layout: 'grid',
                         },
@@ -95,7 +127,7 @@ export default {
                     prepare({title, images}) {
                         return {
                             title,
-                            media: images && images[0] && images[0].asset ? images[0] : undefined,
+                            media: images && images[0] && images[0].image ? images[0].image : undefined,
                         }
                     }
                 },

@@ -14,7 +14,10 @@ export const getBespokePage = async () => {
             title,
             highlightedText,
             images[] {
-                ${imageQuery}
+                image {
+                    ${imageQuery}
+                },
+                video,
             },
         },
         relatedProducts[]->{
