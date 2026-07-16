@@ -70,7 +70,7 @@
             <ul class="flex items-center">
                 <li class="flex-1 flex justify-center">
                     <div @mouseenter="toggleMenu('shop'); isBgWhite = true; hoveredMenu = 'shop'" @mouseleave="toggleMenu('ourWorld'); isBgWhite = false; hoveredMenu = null" class="relative">
-                        <NuxtLink to="/shop" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'shop' }">Shop</NuxtLink>
+                        <NuxtLink to="/shop/objects" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'shop' }">Shop</NuxtLink>
                         <Transition name="fade">
                             <ul v-if="activeMenu === 'shop'" class="absolute top-full left-0 pt-2 flex flex-col items-start text-a2">
                                 <li><NuxtLink @mouseenter="hoveredSubmenu = 'objects'" @mouseleave="hoveredSubmenu = null" to="/shop/objects" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'objects' }">Objects</NuxtLink></li>
@@ -93,7 +93,7 @@
                 </li>
                 <li class="flex-1 flex justify-center">
                     <div @mouseenter="toggleMenu('studio'); isBgWhite = true; hoveredMenu = 'studio'" @mouseleave="toggleMenu('ourWorld'); isBgWhite = false; hoveredMenu = null" class="relative">
-                        <NuxtLink to="/studio" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'studio' }">Studio</NuxtLink>
+                        <NuxtLink to="/studio/collaborations" class="text-a1-bold uppercase transition-opacity duration-300" :class="{ 'opacity-30 text-a1-light': hoveredMenu && hoveredMenu !== 'studio' }">Studio</NuxtLink>
                         <Transition name="fade">
                             <ul v-if="activeMenu === 'studio'" class="absolute top-full right-0 pt-2 flex flex-col items-end text-right text-a2">
                                 <li><NuxtLink @mouseenter="hoveredSubmenu = 'collaborations'" @mouseleave="hoveredSubmenu = null" to="/studio/collaborations" class="lowercase whitespace-nowrap transition-opacity duration-300 py-0.5 flex" :class="{ 'opacity-30': hoveredSubmenu && hoveredSubmenu !== 'collaborations' }">Collaborations</NuxtLink></li>
