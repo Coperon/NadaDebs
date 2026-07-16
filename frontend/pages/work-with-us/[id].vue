@@ -17,8 +17,8 @@
                 <div class="lg:w-3/5 xl:w-2/3">
                     <div class="px-4 sm:px-6 lg:pr-8 lg:pl-0 xl:pr-12">
                         <div class="max-w-[75ch] mx-auto lg:mx-0">
-                            <h2 class="text-h1-mobile sm:text-h1 uppercase text-center lg:text-left">About the position</h2>
-                            <div class="mt-12">
+                            <h2 class="text-a1-bold uppercase text-center lg:text-left">About the position</h2>
+                            <div class="mt-10">
                                 <CommonRichText :blocks="positionData?.aboutThePosition" />
                             </div>
                             <div class="mt-12 flex justify-center lg:justify-start">

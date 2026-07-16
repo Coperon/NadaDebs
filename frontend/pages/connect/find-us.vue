@@ -7,7 +7,7 @@
 
         <div class="px-4 sm:px-6 lg:px-8 xl:px-12 max-w-4xl mx-auto">
             <div v-if="findUsData?.offices && findUsData?.offices?.length > 0">
-                <h2 class="text-h1-mobile sm:text-h1 uppercase text-center">Offices</h2>
+                <h2 class="text-a1-bold uppercase text-center">Offices</h2>
 
                 <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 sm:gap-16">
                     <template v-for="officesList in findUsData?.offices" :key="officesList._key">
@@ -35,9 +35,9 @@
             <div class="h-px bg-black/20 my-12 sm:my-16"></div>
 
             <div v-if="findUsData?.whereToFindUs && findUsData?.whereToFindUs?.length > 0">
-                <h2 class="text-h1-mobile sm:text-h1 uppercase text-center">Where to find us</h2>
+                <h2 class="text-a1-bold uppercase text-center">Where to find us</h2>
 
-                <div class="mt-12 columns-1 sm:columns-2 sm:gap-16 lg:columns-3">
+                <div class="mt-10 columns-1 sm:columns-2 sm:gap-16 lg:columns-3">
                     <div v-for="list in findUsData?.whereToFindUs" :key="list._key" class="mb-6 break-inside-avoid">
                         <h3 class="font-bold uppercase">{{ list.country }}</h3>
 

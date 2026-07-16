@@ -19,7 +19,7 @@
             <div v-if="awardsData?.awards && awardsData?.awards.length > 0" class="px-4 sm:px-6 lg:px-8 xl:px-12 md:w-1/2 max-w-[75ch]">
                 <template v-for="(award, index) in awardsData.awards" :key="award._key">
                     <template v-if="index === 0 || award.year !== awardsData.awards[index - 1].year">
-                        <h2 class="text-h1-mobile sm:text-h1 mt-10 first:mt-0">{{ award.year }}</h2>
+                        <h2 class="text-a1-bold uppercase mt-10 first:mt-0">{{ award.year }}</h2>
                         <ul class="mt-2">
                             <li class="mt-2">
                                 <div class="text-p1 font-medium">{{ award.title }}</div>

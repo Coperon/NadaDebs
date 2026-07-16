@@ -193,7 +193,7 @@
                         class="absolute inset-0 w-full h-full object-cover"
                         :class="isMounted && isTouchDevice() ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 transition-opacity duration-300'"
                     />
-                    <div class="text-h1-mobile sm:text-h1 uppercase relative">
+                    <div class="text-a1-bold uppercase relative">
                         {{ route.name === 'shop-objects' ? 'Furniture' : 'Objects' }}
                     </div>
                 </NuxtLink>
@@ -210,7 +210,7 @@
                         class="absolute inset-0 w-full h-full object-cover"
                         :class="isMounted && isTouchDevice() ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 transition-opacity duration-300'"
                     />
-                    <div class="text-h1-mobile sm:text-h1 uppercase relative">
+                    <div class="text-a1-bold uppercase relative">
                         Collections
                     </div>
                 </NuxtLink>

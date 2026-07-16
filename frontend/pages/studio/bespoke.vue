@@ -22,7 +22,7 @@
         <div v-if="bespokeData?.sections && bespokeData?.sections.length > 0" class="py-20 sm:py-24 lg:py-30 flex flex-col gap-16 sm:gap-21 xl:gap-30">
             <div v-for="section in bespokeData?.sections" :key="section._key">
                 <div class="px-4 sm:px-6 lg:px-8 xl:px-12 text-center">
-                    <h2 class="text-h1-mobile sm:text-h1 uppercase">{{ section.title }}</h2>
+                    <h2 class="text-a1-bold uppercase">{{ section.title }}</h2>
 
                     <div v-if="section.highlightedText" class="mt-8">
                         <CommonQuote :text="section.highlightedText" />

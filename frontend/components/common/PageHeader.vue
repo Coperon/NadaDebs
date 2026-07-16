@@ -1,6 +1,6 @@
 <template>
-    <header class="py-16 sm:py-20 2xl:py-24 px-4 flex flex-col items-center justify-center text-center gap-6">
-        <h1 class="text-h1-mobile sm:text-h1 uppercase">{{ title }}</h1>
+    <header class="py-16 sm:py-20 2xl:py-24 px-4 flex flex-col items-center justify-center text-center gap-5">
+        <h1 class="text-a1-bold uppercase">{{ title }}</h1>
         <div class="max-w-[62ch] mx-auto whitespace-pre-line">
             {{ description }}
         </div>
