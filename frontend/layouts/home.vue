@@ -9,7 +9,7 @@
         </main>
 
         <footer class="fixed inset-x-0 bottom-0 z-10 flex justify-center items-center py-5 lg:py-6">
-            <IconsHandmadeHeartmade class="h-[1.625rem] lg:h-8 w-auto" />
+            <IconsHandmadeHeartmadeLarge class="h-[1.625rem] lg:h-8 w-auto" />
         </footer>
 
         <ClientOnly>
