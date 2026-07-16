@@ -18,7 +18,15 @@
                 </div>
 
                 <div class="flex justify-center">
-                    <NuxtLink to="/connect/contact-us">
+                    <a
+                        v-if="inquireUrl"
+                        :href="inquireUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <CommonButton>Inquire</CommonButton>
+                    </a>
+                    <NuxtLink v-else to="/connect/contact-us">
                         <CommonButton>Inquire</CommonButton>
                     </NuxtLink>
                 </div>
@@ -87,6 +95,10 @@ defineProps({
         type: Boolean,
         required: false,
         default: false,
+    },
+    inquireUrl: {
+        type: String,
+        required: false,
     },
 })
 

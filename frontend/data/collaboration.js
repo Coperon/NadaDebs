@@ -12,6 +12,7 @@ export const getCollaborationBySlug = async collaborationSlug => {
         slug,
         description,
         year,
+        inquireUrl,
         images[] {
             image {
                 ${imageQuery}

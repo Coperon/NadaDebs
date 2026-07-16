@@ -124,6 +124,18 @@ export default {
             group: 'content',
         },
         {
+            name: 'inquireUrl',
+            title: 'Inquire URL',
+            description:
+                'Optional external URL for the Inquire button. If left empty, the button links to the Contact Us page.',
+            type: 'url',
+            validation: (Rule) =>
+                Rule.uri({
+                    scheme: ['http', 'https'],
+                }),
+            group: 'content',
+        },
+        {
             title: 'SEO',
             name: 'seo',
             type: 'seo',

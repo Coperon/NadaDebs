@@ -5,6 +5,7 @@
             :description="collaborationData?.description"
             :year="collaborationData?.year"
             :images="collaborationData?.images"
+            :inquireUrl="collaborationData?.inquireUrl"
             :isCollaboration="true"
         />
 
