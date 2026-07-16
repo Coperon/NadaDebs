@@ -20,7 +20,7 @@
             <div v-if="workWithUsData?.team && workWithUsData?.team.length > 0" class="mt-20 sm:mt-24 lg:mt-30">
                 <CommonAsideHeading title="Our Team" />
 
-                <div class="mt-10 grid grid-cols-12 gap-x-2.5 gap-y-8 xl:gap-y-12">
+                <div class="mt-10 grid grid-cols-12 gap-x-3.5 gap-y-8 xl:gap-y-12">
                     <div 
                         v-for="(person, index) in workWithUsData?.team" 
                         :key="person._key" 

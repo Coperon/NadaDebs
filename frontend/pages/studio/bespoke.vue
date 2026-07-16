@@ -29,7 +29,7 @@
                     </div>
                 </div>
 
-                <div v-if="section.images && section.images.length > 0" class="mt-12 xl:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                <div v-if="section.images && section.images.length > 0" class="mt-12 xl:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
                     <div 
                         v-for="image in section.images" :key="image._key" 
                         class="h-[100vw] sm:h-[calc(50vw-0.3125rem)] lg:h-[calc(33.333333333333336vw-0.625rem)] relative overflow-hidden"

@@ -29,7 +29,7 @@
                 <Transition name="fade">
                     <div 
                         v-if="isOpen[index]" 
-                        class="absolute z-50 -top-52 p-4 bg-white w-80 h-44 overflow-hidden flex gap-2.5"
+                        class="absolute z-50 -top-52 p-4 bg-white w-80 h-44 overflow-hidden flex gap-3.5"
                         :class="marker.coordinates.x > 50 ? 'right-0' : 'left-0'"
                     >
                         <div class="w-2/5 bg-beige relative overflow-hidden">

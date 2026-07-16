@@ -9,7 +9,7 @@
         <CommonPageHeader :title="'About the Collection'" :description="collectionData?.aboutTheCollection" />
 
         <div class="flex flex-col gap-20 sm:gap-24 lg:gap-30">
-            <div v-if="collectionData?.lifestyleImages && collectionData?.lifestyleImages.length > 0" class="flex flex-col gap-6 sm:flex-row sm:gap-x-2.5 sm:gap-y-6">
+            <div v-if="collectionData?.lifestyleImages && collectionData?.lifestyleImages.length > 0" class="flex flex-col gap-6 sm:flex-row sm:gap-x-3.5 sm:gap-y-6">
                 <div v-for="image in collectionData?.lifestyleImages" :key="image._key" class="sm:w-1/3">
                     <div class="relative overflow-hidden aspect-[4/5]">
                         <CommonMediaImage

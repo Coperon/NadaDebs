@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-2.5">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-3.5">
         <div v-for="collection in collections" :key="collection._id">
             <NuxtLink :to="`/shop/collections/${collection.slug.current}`" class="group">
                 <div class="relative overflow-hidden aspect-video group-hover:opacity-50 transition-opacity duration-300">

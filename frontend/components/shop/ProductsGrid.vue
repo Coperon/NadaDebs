@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-2.5 gap-y-8 md:gap-y-12 xl:gap-y-16">
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-3.5 gap-y-8 md:gap-y-12 xl:gap-y-16">
         <div v-for="product in products" :key="product._id" :class="product.isFeatured ? 'col-span-2' : ''">
             <NuxtLink :to="`/shop/${product.store.slug.current}`" class="group">
                 <div
@@ -37,7 +37,7 @@
                                 class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                             />
                         </template>
-                        <div v-if="product.isFeatured" class="flex gap-x-2.5 w-full pointer-events-none">
+                        <div v-if="product.isFeatured" class="flex gap-x-3.5 w-full pointer-events-none">
                             <div class="aspect-[4/5] flex-1"></div>
                             <div class="aspect-[4/5] flex-1"></div>
                         </div>

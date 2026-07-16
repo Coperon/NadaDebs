@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-y-12 xl:gap-y-16 gap-x-2.5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 md:gap-y-12 xl:gap-y-16 gap-x-3.5">
         <div v-for="post in posts" :key="post._id">
             <NuxtLink :to="`/news/latest/${post.slug.current}`" class="group">
                 <div class="relative overflow-hidden aspect-[3/2] group-hover:opacity-50 transition-opacity duration-300">
