@@ -8,7 +8,7 @@
             <slot />
         </main>
 
-        <footer class="fixed inset-x-0 bottom-0 z-10 flex justify-center items-center py-5 lg:py-6">
+        <footer class="fixed inset-x-0 bottom-0 z-10 flex justify-center items-center py-5 lg:py-6 pointer-events-none">
             <IconsHandmadeHeartmadeLarge class="h-[1.625rem] lg:h-8 w-auto" />
         </footer>
 

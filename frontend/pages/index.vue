@@ -2,24 +2,30 @@
     <div class="fixed inset-0 transition-colors duration-500" :class="isBgWhite ? 'bg-white' : 'bg-beige'">
         <div class="fixed inset-0 lg:top-1/2 lg:-translate-y-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:w-[52vw] lg:h-[72vh]">
             <HomeMedia
+                ref="ourWorldMediaRef"
                 :image="homeData?.ourWorld?.image"
                 :videoUrl="homeData?.ourWorld?.video"
                 :mobileImage="homeData?.ourWorld?.mobileImage"
                 :mobileVideoUrl="homeData?.ourWorld?.mobileVideo"
+                :muted="isMuted"
                 :class="{ 'opacity-100 z-20': activeImage === 'ourWorld', 'opacity-0 z-10': previousImage === 'ourWorld', 'opacity-0 z-0': activeImage !== 'ourWorld' && previousImage !== 'ourWorld' }"
             />
             <HomeMedia
+                ref="shopMediaRef"
                 :image="homeData?.shop?.image"
                 :videoUrl="homeData?.shop?.video"
                 :mobileImage="homeData?.shop?.mobileImage"
                 :mobileVideoUrl="homeData?.shop?.mobileVideo"
+                :muted="isMuted"
                 :class="{ 'opacity-100 z-20': activeImage === 'shop', 'opacity-0 z-10': previousImage === 'shop', 'opacity-0 z-0': activeImage !== 'shop' && previousImage !== 'shop' }"
             />
             <HomeMedia
+                ref="studioMediaRef"
                 :image="homeData?.studio?.image"
                 :videoUrl="homeData?.studio?.video"
                 :mobileImage="homeData?.studio?.mobileImage"
                 :mobileVideoUrl="homeData?.studio?.mobileVideo"
+                :muted="isMuted"
                 :class="{ 'opacity-100 z-20': activeImage === 'studio', 'opacity-0 z-10': previousImage === 'studio', 'opacity-0 z-0': activeImage !== 'studio' && previousImage !== 'studio' }"
             />
         </div>
@@ -99,13 +105,26 @@
                 </li>
             </ul>
         </nav>
+
+        <div v-if="hasVideos" class="absolute bottom-20 left-1/2 -translate-x-1/2 lg:bottom-[1.875rem] lg:right-[1.875rem] lg:left-auto lg:translate-x-0">
+            <button
+                type="button"
+                class="cursor-pointer"
+                :aria-label="isMuted ? 'Unmute videos' : 'Mute videos'"
+                @click="toggleMute"
+            >
+                <SpeakerXMarkIcon v-if="isMuted" class="w-5 h-5" />
+                <SpeakerWaveIcon v-else class="w-5 h-5" />
+            </button>
+        </div>
     </div>
 </template>
 
 <script setup>
+import { SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/vue/24/solid'
 import { useSeoObject } from '@/composables/seo'
 import { getHomepageData } from '@/data/homepage'
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 const homeData = await getHomepageData()
 const activeMenu = ref(null)
@@ -120,6 +139,28 @@ const showOurWorldMenu = ref(false)
 const isBgWhite = ref(false)
 const hoveredMenu = ref(null)
 const hoveredSubmenu = ref(null)
+const isMuted = ref(true)
+const ourWorldMediaRef = ref(null)
+const shopMediaRef = ref(null)
+const studioMediaRef = ref(null)
+
+const hasVideos = computed(() => {
+    const data = homeData?.value
+    if (!data) return false
+
+    return ['ourWorld', 'shop', 'studio'].some((key) => {
+        const section = data[key]
+        return section?.video || section?.mobileVideo
+    })
+})
+
+const toggleMute = () => {
+    isMuted.value = !isMuted.value
+
+    ;[ourWorldMediaRef, shopMediaRef, studioMediaRef].forEach((mediaRef) => {
+        mediaRef.value?.setMuted?.(isMuted.value)
+    })
+}
 
 const calculateMenuHeights = () => {
     const menus = document.querySelectorAll('.submenu')

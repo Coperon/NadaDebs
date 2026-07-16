@@ -9,7 +9,7 @@
         <video
             v-if="activeVideoUrl && activeImage"
             ref="videoRef"
-            muted
+            :muted="muted"
             loop
             autoplay
             playsinline
@@ -26,6 +26,10 @@ const props = defineProps({
     image: Object,
     mobileImage: Object,
     mobileVideoUrl: String,
+    muted: {
+        type: Boolean,
+        default: true,
+    },
 })
 
 const isPortrait = ref(false)
@@ -51,4 +55,17 @@ const activeVideoUrl = computed(() => (isPortrait.value && props.mobileVideoUrl 
 
 const videoRef = ref(null)
 const { canAutoplay } = useVideoAutoplay(videoRef)
+
+const setMuted = (muted) => {
+    const video = videoRef.value
+    if (!video) return
+
+    video.muted = muted
+
+    if (!muted) {
+        video.play().catch(() => {})
+    }
+}
+
+defineExpose({ setMuted })
 </script>
