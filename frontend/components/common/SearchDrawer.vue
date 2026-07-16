@@ -23,7 +23,7 @@
 
             <div class="px-4 sm:px-6 pb-12">
                 <div class="max-w-xs">
-                    <h2 class="text-a2 font-medium uppercase">Search products</h2>
+                    <h2 class="text-a2 font-medium uppercase">Search</h2>
 
                     <div class="mt-5 flex items-center border-b border-black/20">
                         <input
@@ -39,26 +39,56 @@
                     <div class="mt-6">
                         <div v-if="isSearching" class="text-a2 text-black/40">Searching...</div>
 
-                        <div v-else-if="searchQuery.length >= 3 && searchResults.length === 0" class="text-a2 text-black/40">No products found</div>
+                        <div v-else-if="hasNoResults" class="text-a2 text-black/40">No results found</div>
 
-                        <div v-else-if="searchResults.length > 0" class="flex flex-col gap-8">
-                            <div v-for="product in searchResults" :key="product.id" class="flex gap-4">
-                                <div class="w-1/2">
-                                    <NuxtLink
-                                        :to="`/shop/${product.handle}`"
-                                        @click="close"
-                                        class="block bg-beige/30 hover:opacity-50 transition-opacity duration-300"
-                                    >
-                                        <img
-                                            :src="product.featuredImage?.url"
-                                            :alt="product.title"
-                                            class="w-full h-auto"
-                                        />
-                                    </NuxtLink>
+                        <div v-else class="flex flex-col gap-10">
+                            <div v-if="productResults.length > 0" class="flex flex-col gap-8">
+                                <h3 class="text-a2 font-medium uppercase">Products</h3>
+
+                                <div v-for="product in productResults" :key="product.id" class="flex gap-4">
+                                    <div class="w-1/2">
+                                        <NuxtLink
+                                            :to="`/shop/${product.handle}`"
+                                            @click="close"
+                                            class="block bg-beige/30 hover:opacity-50 transition-opacity duration-300"
+                                        >
+                                            <img
+                                                :src="product.featuredImage?.url"
+                                                :alt="product.title"
+                                                class="w-full h-auto"
+                                            />
+                                        </NuxtLink>
+                                    </div>
+                                    <div class="w-1/2">
+                                        <h3 class="text-h2">{{ product.title }}</h3>
+                                        <div class="mt-3">{{ formatPrice(product.priceRange.minVariantPrice.amount) }}</div>
+                                    </div>
                                 </div>
-                                <div class="w-1/2">
-                                    <h3 class="text-h2">{{ product.title }}</h3>
-                                    <div class="mt-3">{{ formatPrice(product.priceRange.minVariantPrice.amount) }}</div>
+                            </div>
+
+                            <div v-for="section in sanitySections" :key="section.label" class="flex flex-col gap-8">
+                                <h3 class="text-a2 font-medium uppercase">{{ section.label }}</h3>
+
+                                <div v-for="item in section.items" :key="item._id" class="flex gap-4">
+                                    <div class="w-1/2">
+                                        <NuxtLink
+                                            :to="item.url"
+                                            @click="close"
+                                            class="block bg-beige/30 hover:opacity-50 transition-opacity duration-300"
+                                        >
+                                            <CommonMediaImage
+                                                :image="item.image"
+                                                :alt="item.title"
+                                                width="384"
+                                                mobileWidth="384"
+                                                class="w-full h-auto"
+                                            />
+                                        </NuxtLink>
+                                    </div>
+                                    <div class="w-1/2">
+                                        <h3 class="text-h2">{{ item.title }}</h3>
+                                        <p class="mt-3 text-a2 text-black/60 line-clamp-3">{{ item.excerpt }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -73,6 +103,7 @@
 import { useSearchStore } from '@/stores/search'
 import { useCountryStore } from '@/stores/country'
 import { searchProducts } from '@/composables/shopify'
+import { searchSanityContent } from '@/data/search'
 
 const searchStore = useSearchStore()
 const countryStore = useCountryStore()
@@ -80,30 +111,61 @@ const route = useRoute()
 
 const searchInput = ref(null)
 const searchQuery = ref('')
-const searchResults = ref([])
+const productResults = ref([])
+const sanityResults = ref([])
 const isSearching = ref(false)
 let debounceTimer = null
+let requestToken = 0
+
+const SANITY_SECTIONS = [
+    { type: 'craft', label: 'Crafts' },
+    { type: 'collaboration', label: 'Collaborations' },
+    { type: 'interior', label: 'Interiors' },
+    { type: 'post', label: 'News' },
+    { type: 'collection', label: 'Collections' },
+]
+
+const sanitySections = computed(() =>
+    SANITY_SECTIONS
+        .map(({ type, label }) => ({ label, items: sanityResults.value.filter((item) => item._type === type) }))
+        .filter((section) => section.items.length > 0)
+)
+
+const hasNoResults = computed(() =>
+    searchQuery.value.length >= 3 && productResults.value.length === 0 && sanityResults.value.length === 0
+)
 
 const emit = defineEmits(['close'])
+
+const resetResults = () => {
+    productResults.value = []
+    sanityResults.value = []
+    isSearching.value = false
+    clearTimeout(debounceTimer)
+}
 
 const close = () => {
     emit('close')
     searchQuery.value = ''
-    searchResults.value = []
-    isSearching.value = false
-    clearTimeout(debounceTimer)
+    resetResults()
 }
 
 watch(searchQuery, (val) => {
     clearTimeout(debounceTimer)
     if (val.length < 3) {
-        searchResults.value = []
-        isSearching.value = false
+        resetResults()
         return
     }
     isSearching.value = true
     debounceTimer = setTimeout(async () => {
-        searchResults.value = await searchProducts(val, countryStore.country)
+        const token = ++requestToken
+        const [products, sanityContent] = await Promise.all([
+            searchProducts(val, countryStore.country),
+            searchSanityContent(val),
+        ])
+        if (token !== requestToken) return
+        productResults.value = products
+        sanityResults.value = sanityContent
         isSearching.value = false
     }, 300)
 })
@@ -113,9 +175,7 @@ watch(() => searchStore.isSearchOpen, (isOpen) => {
         nextTick(() => searchInput.value?.focus())
     } else {
         searchQuery.value = ''
-        searchResults.value = []
-        isSearching.value = false
-        clearTimeout(debounceTimer)
+        resetResults()
     }
 })
 </script>
