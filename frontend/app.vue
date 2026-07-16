@@ -136,7 +136,7 @@ useHead({
 .page-leave-active,
 .layout-enter-active,
 .layout-leave-active {
-    @apply transition-all duration-200;
+    @apply transition-all duration-500;
 }
 
 .page-enter-from,

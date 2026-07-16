@@ -18,6 +18,10 @@ export default defineNuxtConfig({
             name: 'page',
             mode: 'out-in',
         },
+        layoutTransition: {
+            name: 'layout',
+            mode: 'out-in',
+        },
         head: {
             htmlAttrs: {
                 lang: 'en',
