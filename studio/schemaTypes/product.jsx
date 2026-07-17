@@ -111,7 +111,39 @@ export default {
             title: 'More Images',
             description: 'Additional images to display on the product page.',
             type: 'array',
-            of: [{ type: 'image' }],
+            of: [
+                {
+                    type: 'object',
+                    name: 'productMedia',
+                    title: 'Media',
+                    fields: [
+                        {
+                            name: 'image',
+                            title: 'Image',
+                            type: 'image',
+                            validation: (Rule) => Rule.required(),
+                        },
+                        {
+                            name: 'video',
+                            title: 'Video',
+                            type: 'url',
+                            description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
+                        },
+                    ],
+                    preview: {
+                        select: {
+                            media: 'image',
+                        },
+                        prepare(selection) {
+                            const {media} = selection
+                            return {
+                                title: 'Media',
+                                media: media,
+                            }
+                        },
+                    },
+                },
+            ],
             options: {
                 layout: 'grid',
             },

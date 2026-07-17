@@ -15,7 +15,10 @@ export const getProductBySlug = async productSlug => {
             ${imageQuery}
         },
         moreImages[] {
-            ${imageQuery}
+            image {
+                ${imageQuery}
+            },
+            video,
         },
         description,
         metaFields,
@@ -104,7 +107,10 @@ export const getProductBySlug = async productSlug => {
                 }
             },
             images[]{
-                ${imageQuery}
+                image {
+                    ${imageQuery}
+                },
+                video,
             },
             description,
             metaFields,

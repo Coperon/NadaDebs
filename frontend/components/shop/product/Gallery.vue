@@ -24,22 +24,40 @@
             </div>
             
             <template v-if="moreImages && moreImages.length > 0">
-                <div v-for="image in moreImages" class="swiper-slide relative overflow-hidden">
+                <div v-for="item in moreImages" class="swiper-slide relative overflow-hidden">
                     <CommonMediaImage
-                        :image="image"
+                        :image="item.image || item"
                         width="1920"
                         mobileWidth="1024"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <video
+                        v-if="item.video"
+                        muted
+                        loop
+                        autoplay
+                        playsinline
+                        :src="item.video"
                         class="absolute inset-0 w-full h-full object-cover"
                     />
                 </div>
             </template>
 
             <template v-if="modelImages && modelImages.length > 0">
-                <div v-for="image in modelImages" class="swiper-slide relative overflow-hidden">
+                <div v-for="item in modelImages" class="swiper-slide relative overflow-hidden">
                     <CommonMediaImage
-                        :image="image"
+                        :image="item.image || item"
                         width="1920"
                         mobileWidth="1024"
+                        class="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <video
+                        v-if="item.video"
+                        muted
+                        loop
+                        autoplay
+                        playsinline
+                        :src="item.video"
                         class="absolute inset-0 w-full h-full object-cover"
                     />
                 </div>
