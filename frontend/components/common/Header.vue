@@ -27,16 +27,16 @@
                 <nav class="flex-grow flex flex-col justify-between gap-12 px-4 py-8 sm:px-6 lg:px-8 lg:py-12 xl:px-12 xl:py-16 overflow-y-auto">
                     <ul class="flex flex-col gap-2">
                         <li>
-                            <button @click="isShopMenuOpen = !isShopMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
+                            <button @click="toggleSubmenu('shop')" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
                                 <span>Shop</span>
-                                <div class="transition-transform object-center duration-300" :class="isShopMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                <div class="transition-transform object-center duration-300" :class="activeSubmenu === 'shop' ? 'rotate-45' : 'rotate-0'">
                                     <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                                         <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                     </svg>
                                 </div>
                             </button>
                             <Transition name="fade">
-                                <div v-if="isShopMenuOpen" class="overflow-hidden max-h-48">
+                                <div v-if="activeSubmenu === 'shop'" class="overflow-hidden max-h-48">
                                     <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/shop/objects" class="lowercase">Objects</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="/shop/furniture" class="lowercase">Furniture</NuxtLink></li>
@@ -46,16 +46,16 @@
                             </Transition>
                         </li>
                         <li>
-                            <button @click="isStudioMenuOpen = !isStudioMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
+                            <button @click="toggleSubmenu('studio')" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
                                 <span>Studio</span>
-                                <div class="transition-transform object-center duration-300" :class="isStudioMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                <div class="transition-transform object-center duration-300" :class="activeSubmenu === 'studio' ? 'rotate-45' : 'rotate-0'">
                                     <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                                         <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                     </svg>
                                 </div>
                             </button>
                             <Transition name="fade">
-                                <div v-if="isStudioMenuOpen" class="overflow-hidden max-h-48">
+                                <div v-if="activeSubmenu === 'studio'" class="overflow-hidden max-h-48">
                                     <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/studio/collaborations" class="lowercase">Collaborations</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="/studio/interiors" class="lowercase">Interiors</NuxtLink></li>
@@ -65,16 +65,16 @@
                             </Transition>
                         </li>
                         <li>
-                            <button @click="isOurWorldMenuOpen = !isOurWorldMenuOpen" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
+                            <button @click="toggleSubmenu('our-world')" class="text-a1-bold uppercase text-left flex items-center gap-0.5">
                                 <span>Our World</span>
-                                <div class="transition-transform object-center duration-300" :class="isOurWorldMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                <div class="transition-transform object-center duration-300" :class="activeSubmenu === 'our-world' ? 'rotate-45' : 'rotate-0'">
                                     <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                                         <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                     </svg>
                                 </div>
                             </button>
                             <Transition name="fade">
-                                <div v-if="isOurWorldMenuOpen" class="overflow-hidden max-h-48">
+                                <div v-if="activeSubmenu === 'our-world'" class="overflow-hidden max-h-48">
                                     <ul class="pt-2.5 pb-4 flex flex-col gap-2.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/our-world/about-nada-debs" class="lowercase">About Nada Debs</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="/our-world/crafts" class="lowercase">Contemporary Crafts</NuxtLink></li>
@@ -86,16 +86,16 @@
 
                     <ul class="flex flex-col gap-2">
                         <li>
-                            <button @click="isNewsMenuOpen = !isNewsMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                            <button @click="toggleSubmenu('news')" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
                                 <span>News</span>
-                                <div class="transition-transform object-center duration-300" :class="isNewsMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                <div class="transition-transform object-center duration-300" :class="activeSubmenu === 'news' ? 'rotate-45' : 'rotate-0'">
                                     <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                                         <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                     </svg>
                                 </div>
                             </button>
                             <Transition name="fade">
-                                <div v-if="isNewsMenuOpen" class="overflow-hidden max-h-48">
+                                <div v-if="activeSubmenu === 'news'" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/news/latest" class="lowercase">Latest</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="/news/press" class="lowercase">Press</NuxtLink></li>
@@ -105,16 +105,16 @@
                             </Transition>
                         </li>
                         <li>
-                            <button @click="isConnectMenuOpen = !isConnectMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                            <button @click="toggleSubmenu('connect')" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
                                 <span>Connect</span>
-                                <div class="transition-transform object-center duration-300" :class="isConnectMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                <div class="transition-transform object-center duration-300" :class="activeSubmenu === 'connect' ? 'rotate-45' : 'rotate-0'">
                                     <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                                         <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                     </svg>
                                 </div>
                             </button>
                             <Transition name="fade">
-                                <div v-if="isConnectMenuOpen" class="overflow-hidden max-h-48">
+                                <div v-if="activeSubmenu === 'connect'" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/connect/find-us" class="lowercase">Find us</NuxtLink></li>
                                         <li><NuxtLink @click="toggleMenuState" to="/connect/contact-us" class="lowercase">Contact us</NuxtLink></li>
@@ -123,16 +123,16 @@
                             </Transition>
                         </li>
                         <li>
-                            <button @click="isTradeMenuOpen = !isTradeMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                            <button @click="toggleSubmenu('trade')" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
                                 <span>Trade</span>
-                                <div class="transition-transform object-center duration-300" :class="isTradeMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                <div class="transition-transform object-center duration-300" :class="activeSubmenu === 'trade' ? 'rotate-45' : 'rotate-0'">
                                     <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                                         <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                     </svg>
                                 </div>
                             </button>
                             <Transition name="fade">
-                                <div v-if="isTradeMenuOpen" class="overflow-hidden max-h-48">
+                                <div v-if="activeSubmenu === 'trade'" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/trade" class="lowercase">Make a request</NuxtLink></li>
                                     </ul>
@@ -140,16 +140,16 @@
                             </Transition>
                         </li>
                         <li>
-                            <button @click="isWorkWithUsMenuOpen = !isWorkWithUsMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                            <button @click="toggleSubmenu('work-with-us')" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
                                 <span>Work with us</span>
-                                <div class="transition-transform object-center duration-300" :class="isWorkWithUsMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                <div class="transition-transform object-center duration-300" :class="activeSubmenu === 'work-with-us' ? 'rotate-45' : 'rotate-0'">
                                     <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                                         <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                     </svg>
                                 </div>
                             </button>
                             <Transition name="fade">
-                                <div v-if="isWorkWithUsMenuOpen" class="overflow-hidden max-h-48">
+                                <div v-if="activeSubmenu === 'work-with-us'" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
                                         <li><NuxtLink @click="toggleMenuState" to="/work-with-us" class="lowercase">Open positions</NuxtLink></li>
                                     </ul>
@@ -157,16 +157,16 @@
                             </Transition>
                         </li>
                         <li v-if="infoPages?.length > 0">
-                            <button @click="isInfoMenuOpen = !isInfoMenuOpen" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
+                            <button @click="toggleSubmenu('info')" class="text-a2 font-medium uppercase text-left flex items-center gap-0.5">
                                 <span>Info</span>
-                                <div class="transition-transform object-center duration-300" :class="isInfoMenuOpen ? 'rotate-45' : 'rotate-0'">
+                                <div class="transition-transform object-center duration-300" :class="activeSubmenu === 'info' ? 'rotate-45' : 'rotate-0'">
                                     <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
                                         <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                     </svg>
                                 </div>
                             </button>
                             <Transition name="fade">
-                                <div v-if="isInfoMenuOpen" class="overflow-hidden max-h-48">
+                                <div v-if="activeSubmenu === 'info'" class="overflow-hidden max-h-48">
                                     <ul class="pt-3 pb-4 flex flex-col gap-1.5">
                                         <li v-for="infoPage in infoPages" :key="infoPage._id">
                                             <NuxtLink @click="toggleMenuState" :to="`/info/${infoPage?.slug?.current}`" class="lowercase">{{ infoPage?.title }}</NuxtLink>
@@ -375,14 +375,11 @@ const isFurnitureActive = computed(() => {
 const topNav = ref(null)
 const isTopNavTransparent = ref(false)
 
-const isShopMenuOpen = ref(false)
-const isStudioMenuOpen = ref(false)
-const isOurWorldMenuOpen = ref(false)
-const isNewsMenuOpen = ref(false)
-const isConnectMenuOpen = ref(false)
-const isWorkWithUsMenuOpen = ref(false)
-const isTradeMenuOpen = ref(false)
-const isInfoMenuOpen = ref(false)
+const activeSubmenu = ref(null)
+
+const toggleSubmenu = (submenu) => {
+    activeSubmenu.value = activeSubmenu.value === submenu ? null : submenu
+}
 
 const headerBgClass = computed(() => {
     if (
@@ -460,7 +457,7 @@ onUnmounted(() => {
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.3s ease, max-height 0.3s ease;
+    transition: opacity 0.6s ease, max-height 0.6s ease;
 }
 
 .fade-enter-from,
