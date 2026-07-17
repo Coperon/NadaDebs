@@ -1,6 +1,8 @@
 // Utils are typically simple, pure functions that take some input and return some output without causing any side effects.
 // They are used for common tasks that are used throughout the application
 
+import { DISPLAY_CURRENCY_SYMBOL } from '@/composables/countryCookie'
+
 // check if the device supports touch
 export function isTouchDevice() {
     if (typeof window === 'undefined') return false
@@ -64,16 +66,14 @@ export function formatDate(dateStr) {
 }
 
 export const formatPrice = (price) => {
-    const countryStore = useCountryStore()
+    // Prices always display in AED to match checkout (payment provider limitation)
     if (price && typeof price === 'object' && 'amount' in price) {
         price = price.amount
     }
     let numberPrice = parseFloat(price)
     if (isNaN(numberPrice)) return ''
-    let priceToPrint = numberPrice.toString()
-    // Prefer API symbol if provided
-    if (countryStore.currencyCode === 'USD' || countryStore.currencyCode === 'GBP') {
-        return `${countryStore.currencySymbol}${priceToPrint}`
-    }
-    return `${priceToPrint}${countryStore.currencySymbol}`
+    const countryStore = useCountryStore()
+    const symbol = countryStore.currencySymbol || DISPLAY_CURRENCY_SYMBOL
+    // AED: amount then symbol with a space (e.g. "1500 د.إ") — matches ar-AE / common UAE retail
+    return `${numberPrice.toString()} ${symbol}`
 }

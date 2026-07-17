@@ -1,22 +1,23 @@
 <template>
     <div class="price min-h-[1lh]">
-        <div v-if="!loading && countryStore.country && selectedVariant && selectedVariantPrice" class="flex gap-1">
-            {{ formatPrice(selectedVariantPrice, siteSettingsData?.currencyCode) }}
+        <div v-if="!loading && selectedVariant && selectedVariantPrice" class="flex gap-1">
+            {{ formatPrice(selectedVariantPrice) }}
         </div>
-        <div v-else-if="!loading && countryStore.country && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount != livePrice.maxVariantPrice?.amount" class="flex gap-1">
-            <span>{{ formatPrice(livePrice.minVariantPrice, siteSettingsData?.currencyCode) }}</span>
+        <div v-else-if="!loading && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount != livePrice.maxVariantPrice?.amount" class="flex gap-1">
+            <span>{{ formatPrice(livePrice.minVariantPrice) }}</span>
             <span>-</span>
-            <span>{{ formatPrice(livePrice.maxVariantPrice, siteSettingsData?.currencyCode) }}</span>
+            <span>{{ formatPrice(livePrice.maxVariantPrice) }}</span>
         </div>
         <div
-            v-else-if="!loading && countryStore.country && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount == livePrice.maxVariantPrice?.amount"
+            v-else-if="!loading && livePrice && livePrice.minVariantPrice && livePrice.maxVariantPrice && livePrice.minVariantPrice?.amount == livePrice.maxVariantPrice?.amount"
         >
-            {{ formatPrice(livePrice.minVariantPrice.amount, siteSettingsData?.currencyCode)}}
+            {{ formatPrice(livePrice.minVariantPrice.amount) }}
         </div>
     </div>
 </template>
 <script setup>
 import { fetchShopifyProductPrice, fetchVariantPrice } from '@/composables/shopify'
+import { PRICE_COUNTRY_CODE } from '@/composables/countryCookie'
 
 const props = defineProps({
     price: {
@@ -36,21 +37,19 @@ const props = defineProps({
     },
 })
 
-const siteSettingsData = inject('siteSettingsData')
-const countryStore = useCountryStore()
 const livePrice = ref(props.price)
 const selectedVariantPrice = ref(null)
 const loading = ref(true)
 
 async function updatePrice() {
-    if (props.productGid && countryStore.country) {
+    if (props.productGid) {
         loading.value = true
         
         if (props.selectedVariant?.store?.gid) {
-            const variantPrice = await fetchVariantPrice(props.selectedVariant.store.gid, props.productGid, countryStore.country)
+            const variantPrice = await fetchVariantPrice(props.selectedVariant.store.gid, props.productGid, PRICE_COUNTRY_CODE)
             selectedVariantPrice.value = variantPrice
         } else {
-            const newPrice = await fetchShopifyProductPrice(props.productGid, countryStore.country)
+            const newPrice = await fetchShopifyProductPrice(props.productGid, PRICE_COUNTRY_CODE)
             livePrice.value = newPrice || props.price
         }
         
@@ -62,6 +61,6 @@ async function updatePrice() {
     }
 }
 
-watch(() => countryStore.country, updatePrice, { immediate: true })
+watch(() => props.productGid, updatePrice, { immediate: true })
 watch(() => props.selectedVariant, updatePrice, { immediate: true })
 </script>

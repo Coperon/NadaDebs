@@ -1,17 +1,34 @@
-import { getCountryCookie, setCountryCookie } from '@/composables/countryCookie'
+import {
+  getCountryCookie,
+  setCountryCookie,
+  DISPLAY_CURRENCY_CODE,
+  DISPLAY_CURRENCY_SYMBOL,
+} from '@/composables/countryCookie'
 
 export const useCountryStore = defineStore('country', () => {
-  const { country, currencySymbol, currencyCode } = getCountryCookie()
+  const { country, currencySymbol } = getCountryCookie()
 
   const countryRef = ref(country)
   const currencySymbolRef = ref(currencySymbol)
-  const currencyCodeRef = ref(currencyCode)
+  const currencyCodeRef = ref(DISPLAY_CURRENCY_CODE)
 
-  function setCountry(newCountry, symbol = '$', code = 'USD') {
+  function setCountry(newCountry, symbol = currencySymbolRef.value || DISPLAY_CURRENCY_SYMBOL) {
     countryRef.value = newCountry
     currencySymbolRef.value = symbol
-    currencyCodeRef.value = code
-    setCountryCookie(newCountry, symbol, code)
+    currencyCodeRef.value = DISPLAY_CURRENCY_CODE
+    setCountryCookie(newCountry, symbol)
   }
-  return { country: countryRef, setCountry, currencySymbol: currencySymbolRef, currencyCode: currencyCodeRef }
+
+  function setCurrencySymbol(symbol) {
+    currencySymbolRef.value = symbol
+    setCountryCookie(countryRef.value, symbol)
+  }
+
+  return {
+    country: countryRef,
+    setCountry,
+    setCurrencySymbol,
+    currencySymbol: currencySymbolRef,
+    currencyCode: currencyCodeRef,
+  }
 })

@@ -60,11 +60,7 @@
             <div v-if="cart?.lineItems?.length" class="sticky bottom-0 bg-white pt-4 pb-12 px-4 sm:px-6">
                 <div class="flex w-full justify-between">
                     <div class="text-p2 uppercase">Subtotal</div>
-                    <div class="text-h2">{{ 
-                        formatPrice(cart?.totalPriceV2?.amount,
-                        cart?.totalPriceV2?.currencyCode, 
-                        cart?.totalPriceV2?.symbol) 
-                    }}</div>
+                    <div class="text-h2">{{ formatPrice(cart?.totalPriceV2?.amount) }}</div>
                 </div>
 
                 <ClientOnly>

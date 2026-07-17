@@ -101,12 +101,11 @@
 
 <script setup>
 import { useSearchStore } from '@/stores/search'
-import { useCountryStore } from '@/stores/country'
 import { searchProducts } from '@/composables/shopify'
+import { PRICE_COUNTRY_CODE } from '@/composables/countryCookie'
 import { searchSanityContent } from '@/data/search'
 
 const searchStore = useSearchStore()
-const countryStore = useCountryStore()
 const route = useRoute()
 
 const searchInput = ref(null)
@@ -160,7 +159,7 @@ watch(searchQuery, (val) => {
     debounceTimer = setTimeout(async () => {
         const token = ++requestToken
         const [products, sanityContent] = await Promise.all([
-            searchProducts(val, countryStore.country),
+            searchProducts(val, PRICE_COUNTRY_CODE),
             searchSanityContent(val),
         ])
         if (token !== requestToken) return

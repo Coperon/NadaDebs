@@ -3,9 +3,10 @@ import { getCountryCookie } from '@/composables/countryCookie'
 
 export default defineNuxtPlugin(() => {
   const countryStore = useCountryStore()
-  const { country, currencySymbol, currencyCode } = getCountryCookie()
+  const { country, currencySymbol } = getCountryCookie()
 
-  if (country && country !== countryStore.country) {
-    countryStore.setCountry(country, currencySymbol, currencyCode)
+  // Sync country from cookie; keep AED currency symbol (clears legacy $)
+  if (country) {
+    countryStore.setCountry(country, currencySymbol)
   }
 })

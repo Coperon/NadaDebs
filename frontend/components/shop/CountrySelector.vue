@@ -16,7 +16,7 @@
             class="lowercase text-a2 font-medium bg-transparent cursor-pointer"
         >
             <option v-for="country in countries" :key="country.isoCode" :value="country.isoCode">
-                {{ country.name }} ({{ country.currency.symbol }})
+                {{ country.name }}
             </option>
         </select>
     </div>
@@ -35,7 +35,7 @@ const selectWidth = ref(100)
 
 const selectedCountryText = computed(() => {
     const selected = countries.value.find(c => c.isoCode === countryStore.country)
-    return selected ? `${selected.name} (${selected.currency.symbol})` : ''
+    return selected ? selected.name : ''
 })
 
 const updateSelectWidth = () => {
@@ -50,9 +50,15 @@ const fetchCountries = async () => {
     const available = localization?.availableCountries || []
     const collator = new Intl.Collator(undefined, { usage: 'sort', sensitivity: 'base' })
     countries.value = [...available].sort((a, b) => collator.compare(a?.name || '', b?.name || ''))
+
+    // Keep display currency as AED symbol from Shopify (not the selected country's currency)
+    const aedCountry = countries.value.find(c => c.isoCode === 'AE')
+    if (aedCountry?.currency?.symbol) {
+        countryStore.setCurrencySymbol(aedCountry.currency.symbol)
+    }
+
     if (!countries.value.find(c => c.isoCode === countryStore.country) && countries.value.length > 0) {
-        const first = countries.value[0]
-        countryStore.setCountry(first.isoCode, first.currency.symbol, first.currency.isoCode)
+        countryStore.setCountry(countries.value[0].isoCode)
     }
     nextTick(() => {
         updateSelectWidth()
@@ -62,7 +68,7 @@ const fetchCountries = async () => {
 const onChange = async () => {
     const selected = countries.value.find(c => c.isoCode === countryStore.country)
     if (selected) {
-        countryStore.setCountry(selected.isoCode, selected.currency.symbol, selected.currency.isoCode)
+        countryStore.setCountry(selected.isoCode)
         nextTick(() => {
             updateSelectWidth()
         })
