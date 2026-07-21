@@ -247,6 +247,7 @@ const props = defineProps({
 const route = useRoute()
 const router = useRouter()
 const countryStore = useCountryStore()
+const stockFilterStore = useStockFilterStore()
 const productAvailability = ref(null) // null = not yet fetched; { [gid]: boolean } once loaded
 
 const parseTypesFromQuery = (type) => {
@@ -255,12 +256,13 @@ const parseTypesFromQuery = (type) => {
     return String(type).split(',').map(t => t.trim()).filter(Boolean)
 }
 
+const defaultInStock = props.categoryKey === 'objects'
 const selectedCategories = ref(parseTypesFromQuery(route.query.type))
 const selectedSort = ref(route.query.sort || 'custom')
 const showInStockOnly = ref(
     route.query.stock !== undefined
         ? route.query.stock === 'true'
-        : props.categoryKey === 'objects'
+        : stockFilterStore.getPreference(props.categoryKey, defaultInStock)
 )
 const itemsPerPage = 48
 const currentPage = ref(1)
@@ -384,13 +386,18 @@ watch(selectedCategories, () => {
     currentPage.value = 1
 }, { deep: true })
 
+// Persist stock preference across navigations (URL query is dropped by nav links)
+watch(showInStockOnly, (value) => {
+    stockFilterStore.setPreference(props.categoryKey, value)
+})
+
 // Watch for filter changes and update URL
 watch([selectedCategories, selectedSort, showInStockOnly], ([newCategories, newSort, newInStock]) => {
     const query = {}
     
     if (newCategories.length) query.type = newCategories.join(',')
     if (newSort !== 'custom') query.sort = newSort
-    if (newInStock) query.stock = 'true'
+    if (newInStock !== defaultInStock) query.stock = String(newInStock)
     
     router.replace({ query })
 }, { deep: true })
