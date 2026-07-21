@@ -52,8 +52,17 @@
                                             @click="close"
                                             class="block bg-beige/30 hover:opacity-50 transition-opacity duration-300"
                                         >
+                                            <CommonMediaImage
+                                                v-if="product.sanityFeaturedImage?.asset"
+                                                :image="product.sanityFeaturedImage"
+                                                :alt="product.title"
+                                                width="384"
+                                                mobileWidth="384"
+                                                class="w-full h-auto"
+                                            />
                                             <img
-                                                :src="product.featuredImage?.url"
+                                                v-else-if="product.previewImageUrl"
+                                                :src="product.previewImageUrl"
                                                 :alt="product.title"
                                                 class="w-full h-auto"
                                             />
@@ -103,7 +112,7 @@
 import { useSearchStore } from '@/stores/search'
 import { searchProducts } from '@/composables/shopify'
 import { PRICE_COUNTRY_CODE } from '@/composables/countryCookie'
-import { searchSanityContent } from '@/data/search'
+import { searchSanityContent, getProductImagesByHandles } from '@/data/search'
 
 const searchStore = useSearchStore()
 const route = useRoute()
@@ -136,6 +145,20 @@ const hasNoResults = computed(() =>
 
 const emit = defineEmits(['close'])
 
+const enrichProductsWithSanityImages = async (products) => {
+    const handles = products.map((product) => product.handle).filter(Boolean)
+    const imagesByHandle = await getProductImagesByHandles(handles)
+
+    return products.map((product) => {
+        const sanityImages = imagesByHandle[product.handle]
+        return {
+            ...product,
+            sanityFeaturedImage: sanityImages?.featuredImage || null,
+            previewImageUrl: sanityImages?.previewImageUrl || null,
+        }
+    })
+}
+
 const resetResults = () => {
     productResults.value = []
     sanityResults.value = []
@@ -163,7 +186,11 @@ watch(searchQuery, (val) => {
             searchSanityContent(val),
         ])
         if (token !== requestToken) return
-        productResults.value = products
+
+        const enrichedProducts = await enrichProductsWithSanityImages(products)
+        if (token !== requestToken) return
+
+        productResults.value = enrichedProducts
         sanityResults.value = sanityContent
         isSearching.value = false
     }, 300)

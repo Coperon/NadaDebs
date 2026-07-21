@@ -57,3 +57,34 @@ export const searchSanityContent = async (queryString) => {
         return []
     }
 }
+
+const productImagesQuery = groq`*[
+  _type == "product" &&
+  !(_id in path("drafts.**")) &&
+  store.slug.current in $handles
+]{
+  "handle": store.slug.current,
+  featuredImage {${imageQuery}},
+  "previewImageUrl": store.previewImageUrl,
+}`
+
+export const getProductImagesByHandles = async (handles) => {
+    if (!handles?.length) return {}
+
+    const { $sanity } = useNuxtApp()
+    try {
+        const results = await $sanity.fetch(productImagesQuery, { handles })
+        return (results || []).reduce((map, product) => {
+            if (product.handle) {
+                map[product.handle] = {
+                    featuredImage: product.featuredImage,
+                    previewImageUrl: product.previewImageUrl,
+                }
+            }
+            return map
+        }, {})
+    } catch (error) {
+        console.error('getProductImagesByHandles: fetch failed', error)
+        return {}
+    }
+}
