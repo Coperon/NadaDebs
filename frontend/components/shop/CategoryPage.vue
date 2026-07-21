@@ -47,7 +47,7 @@
                                             @click="toggleCategory(type._id)"
                                             class="lowercase text-left"
                                             :class="{
-                                                'font-medium': isMounted && (selectedCategory === type.slug.current || isAnySubcategorySelected(type))
+                                                'font-medium': isMounted && (isCategorySelected(type.slug.current) || isAnySubcategorySelected(type))
                                             }"
                                         >
                                             {{ type.title }}
@@ -63,17 +63,17 @@
                                                 v-for="sub in type.subTypes" 
                                                 :key="sub._id"
                                                 class="mb-1.5 flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
-                                                :class="selectedCategory === sub.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                                :class="isCategorySelected(sub.slug.current) ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
                                             >
-                                                <button @click="selectedCategory = selectedCategory === sub.slug.current ? null : sub.slug.current" class="lowercase text-left">
+                                                <button @click="toggleSelectedCategory(sub.slug.current)" class="lowercase text-left">
                                                     {{ sub.title }}
                                                 </button>
                                             </li>
                                             <li 
                                                 class="flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
-                                                :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                                :class="isCategorySelected(type.slug.current) ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
                                             >
-                                                <button @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current" class="lowercase">All</button>
+                                                <button @click="toggleSelectedCategory(type.slug.current)" class="lowercase">All</button>
                                             </li>
                                         </ul>
                                     </ClientOnly>
@@ -81,10 +81,10 @@
                                 <template v-else>
                                     <div
                                         class="flex items-center gap-3 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:transition-colors"
-                                        :class="selectedCategory === type.slug.current ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
+                                        :class="isCategorySelected(type.slug.current) ? 'font-medium before:bg-black' : 'font-light before:bg-transparent'"
                                     >
                                         <button 
-                                            @click="selectedCategory = selectedCategory === type.slug.current ? null : type.slug.current"
+                                            @click="toggleSelectedCategory(type.slug.current)"
                                             class="lowercase"
                                         >{{ type.title }}</button>
                                     </div>
@@ -139,7 +139,7 @@
                             <CommonButton isSecondary>Show Results</CommonButton>
                         </button>
 
-                        <button @click="selectedCategory = null; selectedSort = 'custom'" class="text-a2 lowercase text-grey hover:text-black transition-colors">Reset Filters</button>
+                        <button @click="selectedCategories = []; selectedSort = 'custom'" class="text-a2 lowercase text-grey hover:text-black transition-colors">Reset Filters</button>
                     </div>
                 </div>
             </div>
@@ -148,7 +148,7 @@
         <Transition name="fade" mode="out-in">
             <div
                 v-if="displayedItems.length > 0"
-                :key="`grid-${selectedCategory}-${showInStockOnly}-${selectedSort}`"
+                :key="`grid-${selectedCategories.join(',')}-${showInStockOnly}-${selectedSort}`"
             >
                 <ShopProductsGrid :products="displayedItems" />
             </div>
@@ -249,7 +249,13 @@ const router = useRouter()
 const countryStore = useCountryStore()
 const productAvailability = ref(null) // null = not yet fetched; { [gid]: boolean } once loaded
 
-const selectedCategory = ref(route.query.type || null)
+const parseTypesFromQuery = (type) => {
+    if (!type) return []
+    if (Array.isArray(type)) return type.filter(Boolean)
+    return String(type).split(',').map(t => t.trim()).filter(Boolean)
+}
+
+const selectedCategories = ref(parseTypesFromQuery(route.query.type))
 const selectedSort = ref(route.query.sort || 'custom')
 const showInStockOnly = ref(
     route.query.stock !== undefined
@@ -264,30 +270,7 @@ const isSortingOpen = ref(true)
 const isMounted = ref(false)
 const expandedCategories = ref([])
 
-const filterText = computed(() => {
-    if (!selectedCategory.value) return '0'
-
-    const selectedCategoryData = categoriesWithProducts.value.find(cat => 
-        cat.slug.current === selectedCategory.value
-    )
-
-    if (selectedCategoryData) {
-        return selectedCategoryData.title.toLowerCase()
-    }
-
-    for (const mainCategory of categoriesWithProducts.value) {
-        if (mainCategory.subTypes) {
-            const subCategory = mainCategory.subTypes.find(sub => 
-                sub.slug.current === selectedCategory.value
-            )
-            if (subCategory) {
-                return `${mainCategory.title.toLowerCase()}, ${subCategory.title.toLowerCase()}`
-            }
-        }
-    }
-
-    return '0'
-})
+const filterText = computed(() => String(selectedCategories.value.length))
 
 watch(isFilterOpen, (newValue) => {
     if (process.client) {
@@ -298,13 +281,14 @@ watch(isFilterOpen, (newValue) => {
 const filteredProducts = computed(() => {
     let products = props.allProducts?.items || []
     
-    // Apply category filter if selected
-    if (selectedCategory.value) {
+    // Apply category filters if selected (OR — show products matching any selected type)
+    if (selectedCategories.value.length) {
         products = products.filter(product => {
-            const mainCategoryMatch = product[`${props.categoryKey}Category`]?.slug?.current === selectedCategory.value
-            const subCategoryMatch = product[`${props.categoryKey}Subtype`]?.slug?.current === selectedCategory.value
-            
-            return mainCategoryMatch || subCategoryMatch
+            return selectedCategories.value.some(slug => {
+                const mainCategoryMatch = product[`${props.categoryKey}Category`]?.slug?.current === slug
+                const subCategoryMatch = product[`${props.categoryKey}Subtype`]?.slug?.current === slug
+                return mainCategoryMatch || subCategoryMatch
+            })
         })
     }
 
@@ -376,22 +360,35 @@ const toggleCategory = (categoryId) => {
     }
 }
 
+const isCategorySelected = (slug) => {
+    return selectedCategories.value.includes(slug)
+}
+
+const toggleSelectedCategory = (slug) => {
+    const index = selectedCategories.value.indexOf(slug)
+    if (index > -1) {
+        selectedCategories.value.splice(index, 1)
+    } else {
+        selectedCategories.value.push(slug)
+    }
+}
+
 const isAnySubcategorySelected = (category) => {
     if (!isMounted.value) return false
     if (!category?.subTypes?.length) return false
-    if (!selectedCategory.value) return false
-    return category.subTypes.some(sub => selectedCategory.value === sub.slug.current)
+    if (!selectedCategories.value.length) return false
+    return category.subTypes.some(sub => selectedCategories.value.includes(sub.slug.current))
 }
 
-watch(selectedCategory, () => {
+watch(selectedCategories, () => {
     currentPage.value = 1
-})
+}, { deep: true })
 
 // Watch for filter changes and update URL
-watch([selectedCategory, selectedSort, showInStockOnly], ([newCategory, newSort, newInStock]) => {
+watch([selectedCategories, selectedSort, showInStockOnly], ([newCategories, newSort, newInStock]) => {
     const query = {}
     
-    if (newCategory) query.type = newCategory
+    if (newCategories.length) query.type = newCategories.join(',')
     if (newSort !== 'custom') query.sort = newSort
     if (newInStock) query.stock = 'true'
     
