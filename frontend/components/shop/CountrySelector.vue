@@ -1,5 +1,5 @@
 <template>
-    <div class="relative">
+    <div class="relative inline-flex items-center">
         <span 
             ref="measureSpan" 
             class="lowercase text-a2 font-medium absolute invisible whitespace-nowrap"
@@ -13,12 +13,23 @@
             v-model="countryStore.country" 
             @change="onChange"
             :style="{ width: selectWidth + 'px' }"
-            class="lowercase text-a2 font-medium bg-transparent cursor-pointer"
+            class="lowercase text-a2 font-medium bg-transparent cursor-pointer appearance-none p-0 pr-2.5 outline-none focus:outline-none focus:ring-0"
         >
             <option v-for="country in countries" :key="country.isoCode" :value="country.isoCode">
                 {{ country.name }}
             </option>
         </select>
+        <svg
+            width="8"
+            height="5"
+            viewBox="0 0 10 6"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
+            aria-hidden="true"
+        >
+            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
     </div>
 </template>
 
@@ -41,7 +52,7 @@ const selectedCountryText = computed(() => {
 const updateSelectWidth = () => {
     if (measureSpan.value) {
         const textWidth = measureSpan.value.offsetWidth
-        selectWidth.value = textWidth + 20
+        selectWidth.value = textWidth + 14
     }
 }
 
