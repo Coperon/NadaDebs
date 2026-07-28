@@ -183,7 +183,7 @@
         <div 
             ref="topNav"
             class="absolute inset-x-0 top-0 pointer-events-auto p-4 sm:p-6 lg:px-8 xl:px-12 flex md:flex-row-reverse items-center justify-between md:gap-12 shrink-0 transition-colors duration-300"
-            :class="{ 'text-white': isTopNavTransparent && route.name !== 'our-world-crafts-id' }"
+            :class="{ 'text-white': headerStore.isTopNavTransparent && route.name !== 'our-world-crafts-id' }"
         >
             <div class="hidden md:flex flex-1 items-center justify-end gap-6">
                 <button @click="searchStore.setSearchOpen(true)" class="lowercase text-a2 font-medium">Search</button>
@@ -326,6 +326,7 @@ const props = defineProps({
 })
 
 const menuState = useMenuStore()
+const headerStore = useHeaderStore()
 const cartStore = useCartStore()
 const currentProductStore = useCurrentProductStore()
 const searchStore = useSearchStore()
@@ -373,7 +374,6 @@ const isFurnitureActive = computed(() => {
 })
 
 const topNav = ref(null)
-const isTopNavTransparent = ref(false)
 
 const activeSubmenu = ref(null)
 
@@ -383,7 +383,7 @@ const toggleSubmenu = (submenu) => {
 
 const headerBgClass = computed(() => {
     if (
-        isTopNavTransparent.value 
+        headerStore.isTopNavTransparent 
         || route.name === 'studio'
         || route.name === 'shop'
     ) {
@@ -409,9 +409,9 @@ const updateTopNavBg = () => {
         const windowHeight = window.innerHeight
         const topNavHeight = topNav.value.offsetHeight
         const scrollY = window.scrollY
-        isTopNavTransparent.value = scrollY >= 0 && scrollY <= windowHeight - (topNavHeight / 2)
+        headerStore.isTopNavTransparent = scrollY >= 0 && scrollY <= windowHeight - (topNavHeight / 2)
     } else {
-        isTopNavTransparent.value = false
+        headerStore.isTopNavTransparent = false
     }
 }
 
@@ -438,7 +438,7 @@ watch(() => route.name, () => {
 
 onMounted(() => {
     window.addEventListener('scroll', updateTopNavBg)
-    isTopNavTransparent.value = (
+    headerStore.isTopNavTransparent = (
         route.name === 'our-world-about-nada-debs' 
         || route.name === 'our-world-crafts-id' 
         || route.name === 'news-latest-id'

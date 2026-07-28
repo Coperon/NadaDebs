@@ -1,5 +1,10 @@
 <template>
     <div class="pb-20 sm:pb-24 lg:pb-30">
+
+        <!-- Back button -->
+        <CommonBackButton defaultBackRoute="/shop/collections" />
+
+        <!-- Collection content -->
         <CommonHero :cover="collectionData?.cover" :subtitle="'Craft Stories'" :title="collectionData?.title" />
 
         <div v-if="collectionData?.tags" class="my-6 px-4 sm:px-6 lg:px-8 xl:px-12 flex flex-wrap gap-x-6 gap-y-3 md:gap-x-8 md:gap-y-4 xl:gap-x-12 xl:gap-y-6">

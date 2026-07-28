@@ -1,5 +1,10 @@
 <template>
     <div class="pt-[3.25rem] sm:pt-[4.25rem] xl:pt-0 flex flex-col gap-20 sm:gap-24 lg:gap-30">
+
+        <!-- Back button -->
+        <CommonBackButton defaultBackRoute="/studio/interiors" />
+
+        <!-- Interior content -->
         <StudioProject
             :title="interiorData?.title"
             :description="interiorData?.description"

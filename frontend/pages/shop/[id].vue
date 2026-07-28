@@ -1,5 +1,9 @@
 <template>
     <div class="pt-[3.25rem] sm:pt-[4.25rem] pb-20 md:pb-24 lg:pb-30">
+        <!-- Back button -->
+        <CommonBackButton :defaultBackRoute="defaultBackRoute" />
+
+        <!-- Product content -->
         <div class="flex flex-col sm:flex-row sm:items-start">
             <div class="h-[calc(100svh-3.25rem)] sm:h-[calc(100svh-4.25rem)] sm:sticky sm:top-[4.25rem] sm:w-1/2 xl:w-2/3">
                 <ShopProductGallery 
@@ -187,6 +191,10 @@ import { getProductBySlug } from '@/data/product'
 const route = useRoute()
 const productData = await getProductBySlug(route.params.id)
 const siteUrl = 'https://nadadebs.netlify.app'
+
+const defaultBackRoute = computed(() =>
+    productData.value?.category === 'furniture' ? '/shop/furniture' : '/shop/objects'
+)
 
 const siteSettingsData = inject('siteSettingsData')
 const cartStore = useCartStore()
