@@ -35,6 +35,7 @@
 
 <script setup>
 import { getAvailableCountries, updateCartBuyerIdentity } from '@/composables/shopify'
+import { DISPLAY_CURRENCY_SYMBOL } from '@/composables/countryCookie'
 import { useCountryStore } from '@/stores/country'
 
 const countryStore = useCountryStore()
@@ -62,11 +63,8 @@ const fetchCountries = async () => {
     const collator = new Intl.Collator(undefined, { usage: 'sort', sensitivity: 'base' })
     countries.value = [...available].sort((a, b) => collator.compare(a?.name || '', b?.name || ''))
 
-    // Keep display currency as AED symbol from Shopify (not the selected country's currency)
-    const aedCountry = countries.value.find(c => c.isoCode === 'AE')
-    if (aedCountry?.currency?.symbol) {
-        countryStore.setCurrencySymbol(aedCountry.currency.symbol)
-    }
+    // Prices always show as "AED …" (English), not the localized Shopify symbol
+    countryStore.setCurrencySymbol(DISPLAY_CURRENCY_SYMBOL)
 
     if (!countries.value.find(c => c.isoCode === countryStore.country) && countries.value.length > 0) {
         countryStore.setCountry(countries.value[0].isoCode)

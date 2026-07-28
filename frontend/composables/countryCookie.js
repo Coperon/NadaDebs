@@ -2,8 +2,8 @@ import { useCookie } from '#app'
 
 /** Checkout currency is always AED (payment provider limitation). */
 export const DISPLAY_CURRENCY_CODE = 'AED'
-/** Fallback AED symbol; overwritten from Shopify localization when available. */
-export const DISPLAY_CURRENCY_SYMBOL = 'د.إ'
+/** Display label for prices (English format: "AED 1860"). */
+export const DISPLAY_CURRENCY_SYMBOL = 'AED'
 /** Country context used for Shopify price queries so amounts match checkout. */
 export const PRICE_COUNTRY_CODE = 'AE'
 
@@ -13,7 +13,9 @@ export function getCountryCookie() {
   // Prefer Shopify-synced AED symbol; ignore legacy $ from before this change
   const storedSymbol = currencySymbolCookie.value
   const currencySymbol =
-    storedSymbol && storedSymbol !== '$' ? storedSymbol : DISPLAY_CURRENCY_SYMBOL
+    storedSymbol && storedSymbol !== '$' && storedSymbol !== 'د.إ'
+      ? storedSymbol
+      : DISPLAY_CURRENCY_SYMBOL
   return {
     country: countryCookie.value || 'US',
     currencySymbol,
