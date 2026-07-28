@@ -195,7 +195,7 @@
 
             <div class="flex-1 flex items-center justify-end md:justify-start md:gap-12">
                 <div class="flex md:flex-row-reverse items-center gap-2.5 md:relative" :class="{ 'text-black sm:text-inherit md:text-black': menuState.isOpened }">
-                    <div class="md:hidden"><ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount /></div>
+                    <div class="contents md:hidden"><ShopBag @toggleCartDrawer="toggleCartDrawer" :cartItemCount /></div>
                     <div class="hidden md:block text-a2 font-medium lowercase">{{ parentRouteSlug }}</div>
                     <IconsDots class="w-2 h-auto" />
                     <button @click="toggleMenuState" class="lowercase text-a2 font-medium relative" aria-label="Toggle Menu">
