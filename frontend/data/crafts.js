@@ -6,7 +6,6 @@ export const getCrafts = async () => {
       _id,
       title,
       slug,
-      briefDescription,
       thumbnail {
         image {
             ${imageQuery}

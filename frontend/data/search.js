@@ -19,8 +19,8 @@ const query = groq`*[
   title,
   "slug": slug.current,
   _type == "craft" => {
-    "excerpt": briefDescription,
-    "image": coalesce(thumbnail.image, cover){${imageQuery}},
+    "excerpt": description,
+    "image": coalesce(thumbnail.image, images[0].image){${imageQuery}},
   },
   _type == "collaboration" => {
     "excerpt": description,

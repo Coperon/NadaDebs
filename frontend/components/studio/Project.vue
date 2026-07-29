@@ -17,7 +17,7 @@
                     {{ description }}
                 </div>
 
-                <div class="flex justify-center">
+                <div v-if="showInquire" class="flex justify-center">
                     <a
                         v-if="inquireUrl"
                         :href="inquireUrl"
@@ -35,7 +35,7 @@
             <div 
                 ref="imagesContainer"
                 v-if="images && images?.length > 0" 
-                class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-3.5 xl:flex-1 xl:min-h-0 xl:pl-[50vw] xl:relative xl:bg-beige"
+                class="mt-12 xl:mt-0 flex flex-col xl:flex-row gap-3.5 xl:flex-1 xl:min-h-0 xl:pl-[50vw] xl:relative"
             >
                 <div v-for="image in images" :key="image._key" class="relative xl:shrink-0 xl:h-full">
                     <CommonMediaImage
@@ -85,16 +85,22 @@ defineProps({
     },
     year: {
         type: Number,
-        required: true,
+        required: false,
     },
     images: {
         type: Array,
-        required: true,
+        required: false,
+        default: () => [],
     },
     isCollaboration: {
         type: Boolean,
         required: false,
         default: false,
+    },
+    showInquire: {
+        type: Boolean,
+        required: false,
+        default: true,
     },
     inquireUrl: {
         type: String,

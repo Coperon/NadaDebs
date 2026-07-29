@@ -63,8 +63,7 @@ console.log(`Found ${records.length} crafts to import\n`)
 async function importCrafts() {
   for (const record of records) {
     const craftName = record['Craft Name']
-    const briefDescription = record['Brief Description']
-    const description = record['Description']
+    const description = record['Description'] || record['Brief Description']
 
     if (!craftName) {
       console.log('Skipping record with no craft name')
@@ -80,7 +79,6 @@ async function importCrafts() {
         _type: 'slug',
         current: slug,
       },
-      briefDescription: briefDescription || '',
       description: description || '',
     }
 
@@ -100,9 +98,9 @@ async function importCrafts() {
           .patch(existing._id)
           .set({
             title: craftName,
-            briefDescription: briefDescription || '',
             description: description || '',
           })
+          .unset(['briefDescription'])
           .commit()
         console.log(`  ✓ Updated: ${updated._id}\n`)
       } else {

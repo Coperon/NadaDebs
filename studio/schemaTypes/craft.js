@@ -1,6 +1,5 @@
 import { RiProfileLine } from 'react-icons/ri'
 import { IoMdAnalytics } from 'react-icons/io'
-import contentGridField from './fields/contentGrid'
 
 export default {
     name: 'craft',
@@ -40,13 +39,6 @@ export default {
             group: 'content',
         },
         {
-            name: 'briefDescription',
-            title: 'Brief description (for thumbnail)',
-            type: 'string',
-            validation: (Rule) => Rule.required(),
-            group: 'content',
-        },
-        {
             name: 'description',
             title: 'Description',
             type: 'text',
@@ -56,8 +48,8 @@ export default {
             name: 'thumbnail',
             title: 'Thumbnail',
             type: 'object',
+            description: 'Used on the Contemporary Crafts listing page. Optional video plays on hover.',
             group: 'content',
-            // validation: (Rule) => Rule.required(),
             fields: [
                 {
                     title: 'Image',
@@ -69,23 +61,54 @@ export default {
                     title: 'Video URL',
                     name: 'video',
                     type: 'url',
-                    description: 'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
+                    description:
+                        'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
                 },
-            ]
+            ],
         },
         {
-            name: 'cover',
-            title: 'Cover',
-            type: 'image',
+            name: 'images',
+            title: 'Images',
+            description: 'Gallery for the craft detail page (horizontal scroll on large screens).',
+            type: 'array',
+            of: [
+                {
+                    type: 'object',
+                    name: 'craftMedia',
+                    title: 'Media',
+                    fields: [
+                        {
+                            name: 'image',
+                            title: 'Image',
+                            type: 'image',
+                            validation: (Rule) => Rule.required(),
+                        },
+                        {
+                            name: 'video',
+                            title: 'Video',
+                            type: 'url',
+                            description:
+                                'URL from a CDN (Google Cloud Storage, Vimeo Pro direct file link, etc.). The image will be used as poster, please ensure it has the same aspect ratio as the video for consistency.',
+                        },
+                    ],
+                    preview: {
+                        select: {
+                            media: 'image',
+                        },
+                        prepare(selection) {
+                            const { media } = selection
+                            return {
+                                title: 'Media',
+                                media,
+                            }
+                        },
+                    },
+                },
+            ],
+            options: {
+                layout: 'grid',
+            },
             group: 'content',
-            // validation: (Rule) => Rule.required(),
-        },
-        {
-            ...contentGridField,
-            name: 'content',
-            title: 'Content',
-            group: 'content',
-            // validation: (Rule) => Rule.required(),
         },
         {
             title: 'SEO',
@@ -101,6 +124,6 @@ export default {
         },
         prepare({ title, media }) {
             return { title, media }
-        }
-    }
+        },
+    },
 }

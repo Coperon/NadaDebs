@@ -10,7 +10,6 @@ export const getCraftBySlug = async craftSlug => {
             ${seoQuery}
         },
         slug,
-        briefDescription,
         description,
         thumbnail {
             image {
@@ -18,10 +17,13 @@ export const getCraftBySlug = async craftSlug => {
             },
             video,
         },
-        cover {
-            ${imageQuery}
+        images[] {
+            _key,
+            image {
+                ${imageQuery}
+            },
+            video,
         },
-        content,
         "relatedProducts": *[_type == "product" && references(^._id) && !(_id in path("drafts.**"))]|order(store.createdAt desc){
             ...,
         },

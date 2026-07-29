@@ -24,8 +24,7 @@ async function importCrafts() {
     const doc = {
       _type: 'craft',
       title: row['Craft Name'],
-      briefDescription: row['Brief Description'],
-      description: row['Description'],
+      description: row['Description'] || row['Brief Description'],
       // Add more fields if needed
     };
     try {
