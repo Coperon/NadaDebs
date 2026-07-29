@@ -2,7 +2,8 @@
     <!-- Mobile carousel -->
     <div
         ref="swiperContainer"
-        class="swiper w-full h-full relative bg-beige/30 sm:!hidden"
+        class="swiper w-full h-full relative sm:!hidden"
+        :style="productImageBackgroundStyle"
         id="product-gallery"
     >
         <div class="swiper-wrapper">
@@ -44,7 +45,7 @@
     </div>
 
     <!-- Desktop: stacked, scroll inside viewport container -->
-    <div class="hidden sm:block relative w-full h-full bg-beige/30">
+    <div class="hidden sm:block relative w-full h-full" :style="productImageBackgroundStyle">
         <div
             ref="stackRef"
             class="gallery-stack w-full h-full overflow-y-auto"
@@ -104,8 +105,14 @@ import Swiper from 'swiper'
 import { Pagination, Mousewheel } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
+import { getShopPageData } from '@/data/shopPage'
 
 const swiperContainer = ref(null)
+const shopData = await getShopPageData()
+
+const productImageBackgroundStyle = computed(() => ({
+    backgroundColor: shopData.value?.productImageBackgroundColor || 'rgba(241, 234, 228, 0.3)',
+}))
 
 const props = defineProps({
     previewImage: {

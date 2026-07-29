@@ -28,7 +28,8 @@
                             <NuxtLink 
                                 :to="`/shop/${item?.variant?.product?.handle}`"
                                 @click="cartStore.setCartOpen(false)"
-                                class="block bg-beige/30 hover:opacity-50 transition-opacity duration-300"
+                                class="block hover:opacity-50 transition-opacity duration-300"
+                                :style="productImageBackgroundStyle"
                             >
                                 <img
                                     :src="item?.variant?.image?.src"
@@ -83,6 +84,7 @@
 <script setup>
 import { useCartStore } from '@/stores/cart'
 import { removeFromCart as removeFromCartComposable } from '@/composables/shopify'
+import { getShopPageData } from '@/data/shopPage'
 
 const props = defineProps({
     cart: Object,
@@ -90,6 +92,11 @@ const props = defineProps({
 
 const cartStore = useCartStore()
 const route = useRoute()
+const shopData = await getShopPageData()
+
+const productImageBackgroundStyle = computed(() => ({
+    backgroundColor: shopData.value?.productImageBackgroundColor || 'rgba(241, 234, 228, 0.3)',
+}))
 
 const removeFromCart = async (lineItemId) => {
     const updatedCart = await removeFromCartComposable(lineItemId)

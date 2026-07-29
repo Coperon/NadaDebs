@@ -7,6 +7,7 @@ export const getShopPageData = async () => {
     const query = groq`*[_id == "shop"][0] {
         _id,
         title,
+        productImageBackgroundColor,
         seo {
             ${seoQuery}
         },

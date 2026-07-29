@@ -50,7 +50,8 @@
                                         <NuxtLink
                                             :to="`/shop/${product.handle}`"
                                             @click="close"
-                                            class="block bg-beige/30 hover:opacity-50 transition-opacity duration-300"
+                                            class="block hover:opacity-50 transition-opacity duration-300"
+                                            :style="productImageBackgroundStyle"
                                         >
                                             <CommonMediaImage
                                                 v-if="product.sanityFeaturedImage?.asset"
@@ -113,9 +114,15 @@ import { useSearchStore } from '@/stores/search'
 import { searchProducts } from '@/composables/shopify'
 import { PRICE_COUNTRY_CODE } from '@/composables/countryCookie'
 import { searchSanityContent, getProductImagesByHandles } from '@/data/search'
+import { getShopPageData } from '@/data/shopPage'
 
 const searchStore = useSearchStore()
 const route = useRoute()
+const shopData = await getShopPageData()
+
+const productImageBackgroundStyle = computed(() => ({
+    backgroundColor: shopData.value?.productImageBackgroundColor || 'rgba(241, 234, 228, 0.3)',
+}))
 
 const searchInput = ref(null)
 const searchQuery = ref('')

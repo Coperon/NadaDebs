@@ -120,6 +120,13 @@ export default {
             ]
         },
         {
+            title: 'Product image background color',
+            name: 'productImageBackgroundColor',
+            type: 'string',
+            group: 'page',
+            description: 'Hex color used behind product images (e.g. #F1EAE4 or #F1EAE44D for transparency).',
+        },
+        {
             name: 'seo',
             title: 'SEO',
             type: 'seo',

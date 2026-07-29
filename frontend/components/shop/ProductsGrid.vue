@@ -7,8 +7,9 @@
                     :class="product.isFeatured ? 'aspect-auto' : 'aspect-[4/5]'"
                 >
                     <div 
-                        class="w-full h-full bg-beige/30"
+                        class="w-full h-full"
                         :class="product.isFeatured ? 'aspect-auto' : 'aspect-[4/5]'"
+                        :style="productImageBackgroundStyle"
                     >
                         <template v-if="product?.featuredImage || product?.store?.previewImageUrl">
                             <CommonMediaImage
@@ -61,10 +62,18 @@
 </template>
 
 <script setup>
+import { getShopPageData } from '@/data/shopPage'
+
 defineProps({
     products: {
         type: Array,
         required: true,
     },
 })
+
+const shopData = await getShopPageData()
+
+const productImageBackgroundStyle = computed(() => ({
+    backgroundColor: shopData.value?.productImageBackgroundColor || 'rgba(241, 234, 228, 0.3)',
+}))
 </script>
