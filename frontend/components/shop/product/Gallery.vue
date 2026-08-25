@@ -144,21 +144,6 @@ const props = defineProps({
 const items = computed(() => {
     const result = []
 
-    if (props.featuredImage) {
-        result.push({
-            key: 'featured',
-            type: 'image',
-            image: props.featuredImage,
-            objectContain: true,
-        })
-    } else if (props.previewImage?.trim()) {
-        result.push({
-            key: 'preview',
-            type: 'preview',
-            src: props.previewImage,
-        })
-    }
-
     props.moreImages?.forEach((item, index) => {
         result.push({
             key: `more-${index}`,
@@ -183,6 +168,24 @@ const items = computed(() => {
             type: 'image',
             image: props.secondaryImage,
         })
+    }
+
+    // Only show featured/preview when there are no other gallery images
+    if (!result.length) {
+        if (props.featuredImage) {
+            result.push({
+                key: 'featured',
+                type: 'image',
+                image: props.featuredImage,
+                objectContain: true,
+            })
+        } else if (props.previewImage?.trim()) {
+            result.push({
+                key: 'preview',
+                type: 'preview',
+                src: props.previewImage,
+            })
+        }
     }
 
     return result
