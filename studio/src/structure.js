@@ -82,6 +82,14 @@ export const structure = (S, context) =>
                             S.listItem().title('Crafts').id('crafts').icon(FolderIcon).child(
                                 S.documentTypeList('craft')
                             ),
+                            orderableDocumentListDeskItem({
+                                type: 'craft',
+                                title: 'Order',
+                                createIntent: false,
+                                S,
+                                context,
+                                icon: HiOutlineArrowsUpDown
+                            }),
                         ]),
                     ),
                 ])

@@ -2,9 +2,10 @@ import groq from 'groq'
 import { imageQuery } from "./fragments"
 export const getCrafts = async () => {
     const { $sanity } = useNuxtApp()
-    const query = groq`*[_type == "craft" && !(_id in path("drafts.**"))]|order(title asc){
+    const query = groq`*[_type == "craft" && !(_id in path("drafts.**"))]|order(orderRank asc){
       _id,
       title,
+      orderRank,
       slug,
       thumbnail {
         image {
