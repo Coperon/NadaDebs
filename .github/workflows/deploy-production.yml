@@ -4,8 +4,23 @@ name: Deploy Netlify (DRAFT — production context)
 # context but never publishes over nadadebs.com. There is deliberately no
 # `--prod` anywhere in this workflow.
 #
-# This revision splits build and deploy apart so the generated artifact can be
-# inspected, because a previous draft deployed successfully but served 404 at /.
+# This revision makes the GitHub runner produce a NETLIFY-NATIVE Nitro build,
+# instead of copying .output/public into dist as a workaround.
+#
+# Background (proven by run 33059359770):
+#   * On the runner, Nitro auto-detected preset `static` and wrote to
+#     frontend/.output/public. Only 1 file was hashed from frontend/dist,
+#     so the draft served 404.
+#   * `netlify build` does NOT set NETLIFY=true itself — that is why the
+#     hosted build and the runner build diverged.
+#
+# Mechanism: nitropack 2.13.0 detects the Netlify provider via std-env 3.10.0,
+# which keys off the NETLIFY environment variable. Setting NETLIFY=true
+# reproduces Netlify's hosted build environment exactly and lets Nitro resolve
+# the same preset production resolves. NITRO_PRESET is also supported by this
+# version, but forcing `netlify` would override the static resolution that
+# `nuxt generate` produces on Netlify, making the build LESS faithful, so it is
+# deliberately not used. netlify-edge is explicitly rejected by the guard below.
 on:
   workflow_dispatch:
 
@@ -18,7 +33,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Build, inspect, then draft-deploy
+    name: Netlify-native build, verify, then draft-deploy
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -54,158 +69,186 @@ jobs:
         run: npm install --global netlify-cli@27.4.0
 
       # ---------------------------------------------------------------------
-      # BUILD ONLY. Separated from the deploy so the artifact can be inspected
-      # before anything is uploaded.
+      # BUILD ONLY, with NETLIFY=true so Nitro selects the Netlify provider
+      # exactly as it does in Netlify's hosted build.
       # ---------------------------------------------------------------------
-      - name: Netlify build (production context)
+      - name: Netlify build (production context, Netlify-native preset)
         shell: bash
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
           NETLIFY_CLI_TELEMETRY_DISABLED: '1'
+          # Reproduces Netlify's hosted build environment for Nitro's provider
+          # auto-detection (std-env). This is what makes the build produce the
+          # native `dist` artifact instead of `.output/public`.
+          NETLIFY: 'true'
         run: |
           netlify build --context production 2>&1 | tee "$RUNNER_TEMP/build.log"
 
       # ---------------------------------------------------------------------
-      # DIAGNOSTICS. No environment variable VALUES are printed here, only the
-      # non-secret build markers that determine which Nitro preset is selected.
+      # DIAGNOSTICS. No environment variable VALUES are printed.
       # ---------------------------------------------------------------------
       - name: Diagnose build output
         if: always()
         shell: bash
         run: |
+          LOG="$RUNNER_TEMP/build.log"
+
           echo "=============================================================="
-          echo "Netlify build resolution (non-sensitive lines from build log)"
+          echo "Resolved Nitro preset"
           echo "=============================================================="
-          grep -iE "(Base directory|Build command|Publish directory|Functions directory|Configuration file|Current directory|Config file|Context)" \
-            "$RUNNER_TEMP/build.log" || echo "(resolution lines not found; see full build log above)"
+          if [ -f "$LOG" ]; then
+            # Strip ANSI colour codes before matching.
+            sed 's/\x1b\[[0-9;]*m//g' "$LOG" | grep -iE "Nitro preset:" || echo "(no 'Nitro preset:' line found)"
+          else
+            echo "(build log missing)"
+          fi
 
           echo
-          echo "=== Environment markers that select the Nitro preset ==="
-          echo "NETLIFY = '${NETLIFY:-<unset>}'   (Netlify's own buildbot sets this to 'true')"
+          echo "=== Environment markers that drive Nitro provider detection ==="
+          echo "NETLIFY = '${NETLIFY:-<unset>}'"
           echo "CONTEXT = '${CONTEXT:-<unset>}'"
           echo "node    = $(node -v)"
 
           echo
-          echo "=== RESOLVED NITRO PRESET (frontend/.output/nitro.json) ==="
-          if [ -f frontend/.output/nitro.json ]; then
-            cat frontend/.output/nitro.json
-          else
-            echo "frontend/.output/nitro.json MISSING"
-          fi
+          echo "=== nitro.json (wherever the preset placed it) ==="
+          for candidate in \
+            frontend/.output/nitro.json \
+            frontend/.netlify/functions-internal/nitro.json \
+            frontend/dist/nitro.json; do
+            if [ -f "$candidate" ]; then
+              echo "--- $candidate ---"
+              cat "$candidate"
+              echo
+            fi
+          done
+          find frontend -maxdepth 4 -name nitro.json -not -path "*/node_modules/*" 2>/dev/null || true
 
           echo
           echo "=============================================================="
-          echo "frontend/dist"
+          echo "frontend/dist  (the configured publish directory)"
           echo "=============================================================="
-          echo "--- ls -ld (is it a symlink?) ---"
           ls -ld frontend/dist 2>/dev/null || echo "frontend/dist DOES NOT EXIST"
           if [ -L frontend/dist ]; then
-            echo "!! frontend/dist IS A SYMLINK -> $(readlink frontend/dist)"
-            echo "!! resolves to: $(readlink -f frontend/dist)"
+            echo "!! frontend/dist IS A SYMLINK -> $(readlink -f frontend/dist)"
           else
             echo "frontend/dist is NOT a symlink"
           fi
-          echo "--- ls -la ---"
+          echo "--- top level ---"
           ls -la frontend/dist 2>/dev/null || true
-          echo "--- files (maxdepth 3) ---"
-          find frontend/dist -maxdepth 3 -type f 2>/dev/null | sort | head -200 || true
           echo "--- regular file count ---"
           echo "count: $(find frontend/dist -type f 2>/dev/null | wc -l)"
-          # NOTE: -f follows symlinks, so this can report EXISTS even when the
-          # deploy walker sees nothing. The symlink check above is decisive.
-          if [ -f frontend/dist/index.html ]; then
-            echo "frontend/dist/index.html EXISTS (via -f, which follows symlinks)"
-          else
-            echo "frontend/dist/index.html MISSING"
-          fi
+          echo "--- sample of files (first 60, maxdepth 3) ---"
+          find frontend/dist -maxdepth 3 -type f 2>/dev/null | sort | head -60 || true
+
+          echo
+          echo "--- expected site entrypoints ---"
           for f in index.html 200.html 404.html; do
             if [ -f "frontend/dist/$f" ]; then echo "  present: $f"; else echo "  absent : $f"; fi
           done
-          if [ -d frontend/dist/_nuxt ]; then echo "  present: _nuxt/"; else echo "  absent : _nuxt/"; fi
-
-          echo
-          echo "=============================================================="
-          echo "frontend/.output/public"
-          echo "=============================================================="
-          ls -ld frontend/.output/public 2>/dev/null || echo "frontend/.output/public DOES NOT EXIST"
-          echo "--- ls -la ---"
-          ls -la frontend/.output/public 2>/dev/null || true
-          echo "--- files (maxdepth 3) ---"
-          find frontend/.output/public -maxdepth 3 -type f 2>/dev/null | sort | head -200 || true
-          echo "--- regular file count ---"
-          echo "count: $(find frontend/.output/public -type f 2>/dev/null | wc -l)"
-          if [ -f frontend/.output/public/index.html ]; then
-            echo "frontend/.output/public/index.html EXISTS"
+          if [ -d frontend/dist/_nuxt ]; then
+            echo "  present: _nuxt/ ($(find frontend/dist/_nuxt -type f | wc -l) files)"
           else
-            echo "frontend/.output/public/index.html MISSING"
+            echo "  absent : _nuxt/"
           fi
-          for f in index.html 200.html 404.html; do
-            if [ -f "frontend/.output/public/$f" ]; then echo "  present: $f"; else echo "  absent : $f"; fi
-          done
-          if [ -d frontend/.output/public/_nuxt ]; then echo "  present: _nuxt/"; else echo "  absent : _nuxt/"; fi
 
           echo
-          echo "=== symlinks directly under frontend/ ==="
-          find frontend -maxdepth 2 -type l -exec ls -ld {} \; 2>/dev/null || true
-
-      # ---------------------------------------------------------------------
-      # Materialise the configured publish directory ONLY if the build did not
-      # produce a real, usable one. Conditional and self-proving: it activates
-      # only when frontend/dist is genuinely unusable while .output/public is
-      # valid. Touches gitignored runner build artifacts only — never the repo.
-      # ---------------------------------------------------------------------
-      - name: Ensure configured publish directory is a real directory
-        shell: bash
-        run: |
-          if [ -d frontend/dist ] && [ ! -L frontend/dist ] && [ -f frontend/dist/index.html ]; then
-            echo "frontend/dist is already a real directory containing index.html — no action taken."
-            exit 0
-          fi
-
-          if [ -f frontend/.output/public/index.html ]; then
-            if [ -L frontend/dist ]; then
-              echo "::warning::frontend/dist is a SYMLINK to $(readlink -f frontend/dist). Replacing it with a real copy of the generated static output."
-              rm -f frontend/dist
-            elif [ ! -e frontend/dist ]; then
-              echo "::warning::frontend/dist was not produced by the build. Copying the generated static output into it."
+          echo "--- Netlify-specific generated artifacts ---"
+          for f in _redirects _headers; do
+            if [ -f "frontend/dist/$f" ]; then
+              echo "  present: $f"
+              echo "  ----- $f (first 40 lines) -----"
+              head -40 "frontend/dist/$f"
             else
-              echo "::warning::frontend/dist exists but contains no usable index.html. Replacing it with the generated static output."
-              rm -rf frontend/dist
+              echo "  absent : $f"
             fi
-            mkdir -p frontend/dist
-            cp -a frontend/.output/public/. frontend/dist/
-            echo "Copied .output/public -> dist. Regular files now in frontend/dist: $(find frontend/dist -type f | wc -l)"
+          done
+
+          echo
+          echo "=============================================================="
+          echo "frontend/.output/public  (reported only — NOT the deploy source)"
+          echo "=============================================================="
+          if [ -e frontend/.output/public ]; then
+            ls -ld frontend/.output/public
+            echo "regular file count: $(find frontend/.output/public -type f 2>/dev/null | wc -l)"
+            if [ -f frontend/.output/public/index.html ]; then
+              echo "frontend/.output/public/index.html EXISTS"
+            else
+              echo "frontend/.output/public/index.html MISSING"
+            fi
           else
-            echo "No usable static output at frontend/.output/public — leaving frontend/dist untouched for the guard to report."
+            echo "frontend/.output/public DOES NOT EXIST"
           fi
 
+          echo
+          echo "=== .netlify directory produced by the build, if any ==="
+          ls -la frontend/.netlify 2>/dev/null || echo "(no frontend/.netlify)"
+
       # ---------------------------------------------------------------------
-      # GUARD: never publish a knowingly broken artifact.
+      # GUARD. Fails BEFORE any deploy. There is deliberately no fallback copy
+      # from .output/public — this test must prove the Netlify preset itself
+      # produces the native artifact.
       # ---------------------------------------------------------------------
-      - name: Validate publish directory before deploying
+      - name: Verify Netlify-native artifact before deploying
         shell: bash
         run: |
+          LOG="$RUNNER_TEMP/build.log"
           FAIL=0
+
+          PRESET=""
+          if [ -f "$LOG" ]; then
+            PRESET="$(sed 's/\x1b\[[0-9;]*m//g' "$LOG" \
+              | grep -oiE "Nitro preset:[[:space:]]*[A-Za-z0-9._-]+" \
+              | head -n 1 \
+              | sed -E 's/.*:[[:space:]]*//')"
+          fi
+          echo "Detected Nitro preset: '${PRESET:-<unknown>}'"
+
+          case "$PRESET" in
+            static)
+              echo "::error::Nitro resolved preset 'static'. NETLIFY=true did not switch the provider, so the build is NOT Netlify-native."
+              FAIL=1
+              ;;
+            netlify-edge)
+              echo "::error::Nitro resolved preset 'netlify-edge'. Edge Functions are explicitly not wanted for this project."
+              FAIL=1
+              ;;
+            netlify*)
+              echo "OK: Netlify-native preset '$PRESET' (not edge)."
+              ;;
+            "")
+              echo "::warning::Could not determine the Nitro preset from the build log. Falling back to artifact checks only."
+              ;;
+            *)
+              echo "::error::Unexpected Nitro preset '$PRESET' — expected a netlify* preset."
+              FAIL=1
+              ;;
+          esac
+
+          # Artifact checks against the configured publish directory.
           if [ ! -d frontend/dist ]; then
             echo "::error::frontend/dist does not exist after the Netlify build."
             FAIL=1
           elif [ -L frontend/dist ]; then
-            echo "::error::frontend/dist is still a symlink. The Netlify deploy walker would upload nothing and the site would 404."
+            echo "::error::frontend/dist is a symlink, not a native directory. The deploy walker would upload nothing."
             FAIL=1
           elif [ ! -f frontend/dist/index.html ]; then
             echo "::error::frontend/dist/index.html is missing after the Netlify build."
             FAIL=1
-          elif [ "$(find frontend/dist -type f | wc -l)" -lt 2 ]; then
-            echo "::error::frontend/dist contains fewer than 2 files — not a usable static build."
-            FAIL=1
+          else
+            COUNT="$(find frontend/dist -type f | wc -l)"
+            echo "frontend/dist regular file count: $COUNT"
+            if [ "$COUNT" -lt 10 ]; then
+              echo "::error::frontend/dist contains only $COUNT file(s) — that is a stub, not the generated website."
+              FAIL=1
+            fi
           fi
 
           if [ "$FAIL" -ne 0 ]; then
-            echo "::error::Refusing to create another broken draft deploy. See the diagnostics step above."
+            echo "::error::Netlify-native artifact verification failed. Not deploying. See the diagnostics step above."
             exit 1
           fi
-          echo "Publish directory validated: $(find frontend/dist -type f | wc -l) files, index.html present, not a symlink."
+          echo "Verified: Netlify-native build produced a usable frontend/dist."
 
       # ---------------------------------------------------------------------
       # DRAFT deploy. --no-build because the build already ran above.
@@ -217,7 +260,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
           NETLIFY_CLI_TELEMETRY_DISABLED: '1'
-          DEPLOY_MESSAGE: 'Draft deploy — GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
+          DEPLOY_MESSAGE: 'Draft deploy (Netlify-native build) — GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
         run: |
           netlify deploy \
             --no-build \
@@ -234,7 +277,7 @@ jobs:
           [ -f "$LOG" ] || exit 0
           DRAFT_URL="$(grep -Eio 'https://[a-z0-9-]+--[a-z0-9._-]+\.netlify\.app' "$LOG" | head -n 1 || true)"
           {
-            echo "### Netlify draft deploy"
+            echo "### Netlify draft deploy (Netlify-native build)"
             echo ""
             if [ -n "$DRAFT_URL" ]; then
               echo "Draft URL: <$DRAFT_URL>"
