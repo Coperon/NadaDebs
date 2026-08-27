@@ -273,6 +273,14 @@ jobs:
 
       # ---------------------------------------------------------------------
       # DRAFT deploy. --no-build because the build already ran above.
+      #
+      # Deliberately NO --context here: the CLI rejects it with
+      #   "--context flag is only available when using the --build flag"
+      # because --context selects the environment-variable context for a build,
+      # and this step performs no build. The production context was already
+      # applied by `netlify build --context production` above, so the artifact
+      # being uploaded is already the production-context build. Do not re-add.
+      #
       # No --prod: nadadebs.com is not touched.
       # ---------------------------------------------------------------------
       - name: Draft-deploy to Netlify
@@ -285,7 +293,6 @@ jobs:
         run: |
           netlify deploy \
             --no-build \
-            --context production \
             --site "$NETLIFY_SITE_ID" \
             --auth "$NETLIFY_AUTH_TOKEN" \
             --message "$DEPLOY_MESSAGE" 2>&1 | tee "$RUNNER_TEMP/deploy.log"
