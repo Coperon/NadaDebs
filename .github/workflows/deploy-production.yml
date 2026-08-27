@@ -1,25 +1,24 @@
 name: Deploy Netlify (DRAFT — production context)
 
-# Manual-only. This workflow currently performs a DRAFT deploy: it builds with
-# the production environment-variable context but does NOT publish over
-# nadadebs.com. Switching to a live production deploy is a deliberate, separate
-# change (add `--prod`) made only after the draft URL has been verified.
+# Manual-only. DRAFT deploy: builds with the production environment-variable
+# context but never publishes over nadadebs.com. There is deliberately no
+# `--prod` anywhere in this workflow.
+#
+# This revision splits build and deploy apart so the generated artifact can be
+# inspected, because a previous draft deployed successfully but served 404 at /.
 on:
   workflow_dispatch:
 
-# Least privilege: the job only needs to read the repository contents.
 permissions:
   contents: read
 
-# Never let two deploys against this site race. Queue instead of cancelling, so
-# an in-flight deploy is always allowed to finish cleanly.
 concurrency:
   group: nada-debs-production
   cancel-in-progress: false
 
 jobs:
   deploy:
-    name: Build and draft-deploy to Netlify
+    name: Build, inspect, then draft-deploy
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -30,9 +29,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Netlify production pins NODE_VERSION = "20" (see git history of
-      # netlify.toml). The build runs on THIS runner, not in Netlify's build
-      # image, so the runner must supply the matching Node version.
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
@@ -50,8 +46,6 @@ jobs:
           fi
           echo "NETLIFY_SITE_ID is present."
 
-      # The Netlify build base directory is `frontend`, so dependencies must be
-      # installed there. `npm ci` honours frontend/package-lock.json exactly.
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm ci
@@ -59,27 +53,165 @@ jobs:
       - name: Install Netlify CLI
         run: npm install --global netlify-cli@27.4.0
 
-      # DRAFT deploy. Notes on the exact flags:
-      #
-      #   * No `--build`: that flag does not exist in current Netlify CLI.
-      #     `netlify deploy` runs the build by DEFAULT (`--no-build` opts out).
-      #   * `--context production` is REQUIRED, not optional. The CLI's
-      #     `--context` default is `dev`, so without this the build would read
-      #     the wrong environment-variable context and validateEnv.js could
-      #     fail or bake dev values into the static output.
-      #   * No `--prod`: this is deliberate. Omitting it produces a unique
-      #     draft deploy URL and leaves nadadebs.com untouched.
-      #
-      # Run from the repository ROOT so the root netlify.toml (the
-      # /api/send -> /.netlify/functions/send redirect) is picked up, exactly
-      # as Netlify's own buildbot does. Base directory, build command, publish
-      # directory and functions directory all come from the linked site's
-      # settings, and the site's own build environment variables are injected
-      # — so no application secrets need to live in GitHub.
-      #
-      # `shell: bash` is set explicitly so that `-o pipefail` applies and a
-      # failing deploy still fails the job through the `tee` pipe.
-      - name: Build and draft-deploy to Netlify
+      # ---------------------------------------------------------------------
+      # BUILD ONLY. Separated from the deploy so the artifact can be inspected
+      # before anything is uploaded.
+      # ---------------------------------------------------------------------
+      - name: Netlify build (production context)
+        shell: bash
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+          NETLIFY_CLI_TELEMETRY_DISABLED: '1'
+        run: |
+          netlify build --context production 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      # ---------------------------------------------------------------------
+      # DIAGNOSTICS. No environment variable VALUES are printed here, only the
+      # non-secret build markers that determine which Nitro preset is selected.
+      # ---------------------------------------------------------------------
+      - name: Diagnose build output
+        if: always()
+        shell: bash
+        run: |
+          echo "=============================================================="
+          echo "Netlify build resolution (non-sensitive lines from build log)"
+          echo "=============================================================="
+          grep -iE "(Base directory|Build command|Publish directory|Functions directory|Configuration file|Current directory|Config file|Context)" \
+            "$RUNNER_TEMP/build.log" || echo "(resolution lines not found; see full build log above)"
+
+          echo
+          echo "=== Environment markers that select the Nitro preset ==="
+          echo "NETLIFY = '${NETLIFY:-<unset>}'   (Netlify's own buildbot sets this to 'true')"
+          echo "CONTEXT = '${CONTEXT:-<unset>}'"
+          echo "node    = $(node -v)"
+
+          echo
+          echo "=== RESOLVED NITRO PRESET (frontend/.output/nitro.json) ==="
+          if [ -f frontend/.output/nitro.json ]; then
+            cat frontend/.output/nitro.json
+          else
+            echo "frontend/.output/nitro.json MISSING"
+          fi
+
+          echo
+          echo "=============================================================="
+          echo "frontend/dist"
+          echo "=============================================================="
+          echo "--- ls -ld (is it a symlink?) ---"
+          ls -ld frontend/dist 2>/dev/null || echo "frontend/dist DOES NOT EXIST"
+          if [ -L frontend/dist ]; then
+            echo "!! frontend/dist IS A SYMLINK -> $(readlink frontend/dist)"
+            echo "!! resolves to: $(readlink -f frontend/dist)"
+          else
+            echo "frontend/dist is NOT a symlink"
+          fi
+          echo "--- ls -la ---"
+          ls -la frontend/dist 2>/dev/null || true
+          echo "--- files (maxdepth 3) ---"
+          find frontend/dist -maxdepth 3 -type f 2>/dev/null | sort | head -200 || true
+          echo "--- regular file count ---"
+          echo "count: $(find frontend/dist -type f 2>/dev/null | wc -l)"
+          # NOTE: -f follows symlinks, so this can report EXISTS even when the
+          # deploy walker sees nothing. The symlink check above is decisive.
+          if [ -f frontend/dist/index.html ]; then
+            echo "frontend/dist/index.html EXISTS (via -f, which follows symlinks)"
+          else
+            echo "frontend/dist/index.html MISSING"
+          fi
+          for f in index.html 200.html 404.html; do
+            if [ -f "frontend/dist/$f" ]; then echo "  present: $f"; else echo "  absent : $f"; fi
+          done
+          if [ -d frontend/dist/_nuxt ]; then echo "  present: _nuxt/"; else echo "  absent : _nuxt/"; fi
+
+          echo
+          echo "=============================================================="
+          echo "frontend/.output/public"
+          echo "=============================================================="
+          ls -ld frontend/.output/public 2>/dev/null || echo "frontend/.output/public DOES NOT EXIST"
+          echo "--- ls -la ---"
+          ls -la frontend/.output/public 2>/dev/null || true
+          echo "--- files (maxdepth 3) ---"
+          find frontend/.output/public -maxdepth 3 -type f 2>/dev/null | sort | head -200 || true
+          echo "--- regular file count ---"
+          echo "count: $(find frontend/.output/public -type f 2>/dev/null | wc -l)"
+          if [ -f frontend/.output/public/index.html ]; then
+            echo "frontend/.output/public/index.html EXISTS"
+          else
+            echo "frontend/.output/public/index.html MISSING"
+          fi
+          for f in index.html 200.html 404.html; do
+            if [ -f "frontend/.output/public/$f" ]; then echo "  present: $f"; else echo "  absent : $f"; fi
+          done
+          if [ -d frontend/.output/public/_nuxt ]; then echo "  present: _nuxt/"; else echo "  absent : _nuxt/"; fi
+
+          echo
+          echo "=== symlinks directly under frontend/ ==="
+          find frontend -maxdepth 2 -type l -exec ls -ld {} \; 2>/dev/null || true
+
+      # ---------------------------------------------------------------------
+      # Materialise the configured publish directory ONLY if the build did not
+      # produce a real, usable one. Conditional and self-proving: it activates
+      # only when frontend/dist is genuinely unusable while .output/public is
+      # valid. Touches gitignored runner build artifacts only — never the repo.
+      # ---------------------------------------------------------------------
+      - name: Ensure configured publish directory is a real directory
+        shell: bash
+        run: |
+          if [ -d frontend/dist ] && [ ! -L frontend/dist ] && [ -f frontend/dist/index.html ]; then
+            echo "frontend/dist is already a real directory containing index.html — no action taken."
+            exit 0
+          fi
+
+          if [ -f frontend/.output/public/index.html ]; then
+            if [ -L frontend/dist ]; then
+              echo "::warning::frontend/dist is a SYMLINK to $(readlink -f frontend/dist). Replacing it with a real copy of the generated static output."
+              rm -f frontend/dist
+            elif [ ! -e frontend/dist ]; then
+              echo "::warning::frontend/dist was not produced by the build. Copying the generated static output into it."
+            else
+              echo "::warning::frontend/dist exists but contains no usable index.html. Replacing it with the generated static output."
+              rm -rf frontend/dist
+            fi
+            mkdir -p frontend/dist
+            cp -a frontend/.output/public/. frontend/dist/
+            echo "Copied .output/public -> dist. Regular files now in frontend/dist: $(find frontend/dist -type f | wc -l)"
+          else
+            echo "No usable static output at frontend/.output/public — leaving frontend/dist untouched for the guard to report."
+          fi
+
+      # ---------------------------------------------------------------------
+      # GUARD: never publish a knowingly broken artifact.
+      # ---------------------------------------------------------------------
+      - name: Validate publish directory before deploying
+        shell: bash
+        run: |
+          FAIL=0
+          if [ ! -d frontend/dist ]; then
+            echo "::error::frontend/dist does not exist after the Netlify build."
+            FAIL=1
+          elif [ -L frontend/dist ]; then
+            echo "::error::frontend/dist is still a symlink. The Netlify deploy walker would upload nothing and the site would 404."
+            FAIL=1
+          elif [ ! -f frontend/dist/index.html ]; then
+            echo "::error::frontend/dist/index.html is missing after the Netlify build."
+            FAIL=1
+          elif [ "$(find frontend/dist -type f | wc -l)" -lt 2 ]; then
+            echo "::error::frontend/dist contains fewer than 2 files — not a usable static build."
+            FAIL=1
+          fi
+
+          if [ "$FAIL" -ne 0 ]; then
+            echo "::error::Refusing to create another broken draft deploy. See the diagnostics step above."
+            exit 1
+          fi
+          echo "Publish directory validated: $(find frontend/dist -type f | wc -l) files, index.html present, not a symlink."
+
+      # ---------------------------------------------------------------------
+      # DRAFT deploy. --no-build because the build already ran above.
+      # No --prod: nadadebs.com is not touched.
+      # ---------------------------------------------------------------------
+      - name: Draft-deploy to Netlify
         shell: bash
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -88,12 +220,12 @@ jobs:
           DEPLOY_MESSAGE: 'Draft deploy — GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
         run: |
           netlify deploy \
+            --no-build \
             --context production \
             --site "$NETLIFY_SITE_ID" \
             --auth "$NETLIFY_AUTH_TOKEN" \
             --message "$DEPLOY_MESSAGE" 2>&1 | tee "$RUNNER_TEMP/deploy.log"
 
-      # Surface the draft URL in the run summary so it is easy to find and test.
       - name: Publish draft deploy URL to summary
         if: always()
         shell: bash
