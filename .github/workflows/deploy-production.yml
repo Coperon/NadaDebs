@@ -2,25 +2,29 @@ name: Deploy Netlify (DRAFT — production context)
 
 # Manual-only. DRAFT deploy: builds with the production environment-variable
 # context but never publishes over nadadebs.com. There is deliberately no
-# `--prod` anywhere in this workflow.
+# executable `--prod` anywhere in this workflow.
 #
-# This revision makes the GitHub runner produce a NETLIFY-NATIVE Nitro build,
-# instead of copying .output/public into dist as a workaround.
+# This revision tests ONE mechanism in isolation: forcing the Nitro preset with
+# NITRO_PRESET=netlify-static.
 #
-# Background (proven by run 33059359770):
-#   * On the runner, Nitro auto-detected preset `static` and wrote to
-#     frontend/.output/public. Only 1 file was hashed from frontend/dist,
-#     so the draft served 404.
-#   * `netlify build` does NOT set NETLIFY=true itself — that is why the
-#     hosted build and the runner build diverged.
+# Findings so far:
+#   * Run 33059359770: Nitro auto-detected preset `static`, wrote the site to
+#     frontend/.output/public, and left frontend/dist as a symlink. Only 1 file
+#     was hashed, so the draft served 404.
+#   * Next run: setting NETLIFY=true did NOT switch the provider — Nitro still
+#     resolved `static` and frontend/dist was still a symlink. The guard caught
+#     it and refused to deploy. So provider auto-detection via the NETLIFY
+#     environment variable does not work in this GitHub Actions environment,
+#     and NETLIFY=true has been removed.
 #
-# Mechanism: nitropack 2.13.0 detects the Netlify provider via std-env 3.10.0,
-# which keys off the NETLIFY environment variable. Setting NETLIFY=true
-# reproduces Netlify's hosted build environment exactly and lets Nitro resolve
-# the same preset production resolves. NITRO_PRESET is also supported by this
-# version, but forcing `netlify` would override the static resolution that
-# `nuxt generate` produces on Netlify, making the build LESS faithful, so it is
-# deliberately not used. netlify-edge is explicitly rejected by the guard below.
+# Therefore this test sets the preset explicitly. nitropack 2.13.0 supports the
+# NITRO_PRESET environment variable and ships the `netlify-static` preset,
+# which is the correct variant for `nuxt generate` (statically generated site)
+# and which sets the Nitro publicDir to `dist` — matching the Netlify project's
+# configured publish directory of frontend/dist.
+#
+# NETLIFY=true is deliberately NOT set alongside it, so this run isolates the
+# explicit-preset mechanism.
 on:
   workflow_dispatch:
 
@@ -33,7 +37,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Netlify-native build, verify, then draft-deploy
+    name: Netlify-static build, verify, then draft-deploy
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -44,6 +48,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Node 20 matches the NODE_VERSION Netlify production pins. The runner's
+      # "Node 20 actions are deprecated" warning refers to the JavaScript
+      # runtime used by actions/checkout and actions/setup-node themselves, not
+      # to the Node version used to build the site, and is unrelated to the
+      # Nitro preset failure. It is deliberately not changed here.
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
@@ -69,24 +78,24 @@ jobs:
         run: npm install --global netlify-cli@27.4.0
 
       # ---------------------------------------------------------------------
-      # BUILD ONLY, with NETLIFY=true so Nitro selects the Netlify provider
-      # exactly as it does in Netlify's hosted build.
+      # BUILD ONLY, with the Nitro preset forced explicitly.
+      # NOTE: NETLIFY=true is intentionally absent — see header comment.
       # ---------------------------------------------------------------------
-      - name: Netlify build (production context, Netlify-native preset)
+      - name: Netlify build (production context, NITRO_PRESET=netlify-static)
         shell: bash
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
           NETLIFY_CLI_TELEMETRY_DISABLED: '1'
-          # Reproduces Netlify's hosted build environment for Nitro's provider
-          # auto-detection (std-env). This is what makes the build produce the
-          # native `dist` artifact instead of `.output/public`.
-          NETLIFY: 'true'
+          # The single mechanism under test in this run.
+          NITRO_PRESET: netlify-static
         run: |
+          echo "NITRO_PRESET is set to: '$NITRO_PRESET'"
           netlify build --context production 2>&1 | tee "$RUNNER_TEMP/build.log"
 
       # ---------------------------------------------------------------------
-      # DIAGNOSTICS. No environment variable VALUES are printed.
+      # DIAGNOSTICS. No environment variable VALUES are printed except the
+      # non-secret preset markers.
       # ---------------------------------------------------------------------
       - name: Diagnose build output
         if: always()
@@ -98,31 +107,25 @@ jobs:
           echo "Resolved Nitro preset"
           echo "=============================================================="
           if [ -f "$LOG" ]; then
-            # Strip ANSI colour codes before matching.
             sed 's/\x1b\[[0-9;]*m//g' "$LOG" | grep -iE "Nitro preset:" || echo "(no 'Nitro preset:' line found)"
           else
             echo "(build log missing)"
           fi
 
           echo
-          echo "=== Environment markers that drive Nitro provider detection ==="
-          echo "NETLIFY = '${NETLIFY:-<unset>}'"
-          echo "CONTEXT = '${CONTEXT:-<unset>}'"
-          echo "node    = $(node -v)"
+          echo "=== Preset-related environment markers ==="
+          echo "NITRO_PRESET = '${NITRO_PRESET:-<unset>}'   (expected: netlify-static)"
+          echo "NETLIFY      = '${NETLIFY:-<unset>}'        (expected: <unset> for this test)"
+          echo "CONTEXT      = '${CONTEXT:-<unset>}'"
+          echo "node         = $(node -v)"
 
           echo
           echo "=== nitro.json (wherever the preset placed it) ==="
-          for candidate in \
-            frontend/.output/nitro.json \
-            frontend/.netlify/functions-internal/nitro.json \
-            frontend/dist/nitro.json; do
-            if [ -f "$candidate" ]; then
-              echo "--- $candidate ---"
-              cat "$candidate"
-              echo
-            fi
+          find frontend -maxdepth 4 -name nitro.json -not -path "*/node_modules/*" 2>/dev/null | while read -r nj; do
+            echo "--- $nj ---"
+            cat "$nj"
+            echo
           done
-          find frontend -maxdepth 4 -name nitro.json -not -path "*/node_modules/*" 2>/dev/null || true
 
           echo
           echo "=============================================================="
@@ -153,7 +156,7 @@ jobs:
           fi
 
           echo
-          echo "--- Netlify-specific generated artifacts ---"
+          echo "--- Netlify-specific generated artifacts (reported, not enforced) ---"
           for f in _redirects _headers; do
             if [ -f "frontend/dist/$f" ]; then
               echo "  present: $f"
@@ -185,16 +188,19 @@ jobs:
           ls -la frontend/.netlify 2>/dev/null || echo "(no frontend/.netlify)"
 
       # ---------------------------------------------------------------------
-      # GUARD. Fails BEFORE any deploy. There is deliberately no fallback copy
-      # from .output/public — this test must prove the Netlify preset itself
-      # produces the native artifact.
+      # GUARD. Runs BEFORE any deploy.
+      # There is deliberately NO fallback: nothing copies .output/public into
+      # dist and nothing replaces a symlink. If netlify-static does not natively
+      # produce the correct artifact, this fails and reports.
       # ---------------------------------------------------------------------
-      - name: Verify Netlify-native artifact before deploying
+      - name: Verify netlify-static artifact before deploying
         shell: bash
         run: |
           LOG="$RUNNER_TEMP/build.log"
+          EXPECTED_PRESET="netlify-static"
           FAIL=0
 
+          # Primary source: the build log line printed by Nuxt.
           PRESET=""
           if [ -f "$LOG" ]; then
             PRESET="$(sed 's/\x1b\[[0-9;]*m//g' "$LOG" \
@@ -202,53 +208,68 @@ jobs:
               | head -n 1 \
               | sed -E 's/.*:[[:space:]]*//')"
           fi
-          echo "Detected Nitro preset: '${PRESET:-<unknown>}'"
 
-          case "$PRESET" in
-            static)
-              echo "::error::Nitro resolved preset 'static'. NETLIFY=true did not switch the provider, so the build is NOT Netlify-native."
-              FAIL=1
-              ;;
-            netlify-edge)
-              echo "::error::Nitro resolved preset 'netlify-edge'. Edge Functions are explicitly not wanted for this project."
-              FAIL=1
-              ;;
-            netlify*)
-              echo "OK: Netlify-native preset '$PRESET' (not edge)."
-              ;;
-            "")
-              echo "::warning::Could not determine the Nitro preset from the build log. Falling back to artifact checks only."
-              ;;
-            *)
-              echo "::error::Unexpected Nitro preset '$PRESET' — expected a netlify* preset."
-              FAIL=1
-              ;;
-          esac
+          # Secondary source: the preset recorded in nitro.json.
+          if [ -z "$PRESET" ]; then
+            for nj in $(find frontend -maxdepth 4 -name nitro.json -not -path "*/node_modules/*" 2>/dev/null); do
+              PRESET="$(grep -o '"preset"[[:space:]]*:[[:space:]]*"[^"]*"' "$nj" \
+                | head -n 1 | sed -E 's/.*"([^"]*)"$/\1/')"
+              [ -n "$PRESET" ] && break
+            done
+          fi
 
-          # Artifact checks against the configured publish directory.
-          if [ ! -d frontend/dist ]; then
-            echo "::error::frontend/dist does not exist after the Netlify build."
+          echo "Expected Nitro preset: '$EXPECTED_PRESET'"
+          echo "Detected Nitro preset: '${PRESET:-<undetermined>}'"
+
+          # CRITICAL 1: preset must be exactly netlify-static.
+          if [ -z "$PRESET" ]; then
+            echo "::error::Could not determine the resolved Nitro preset from the build log or nitro.json. Refusing to deploy unverified output."
             FAIL=1
-          elif [ -L frontend/dist ]; then
-            echo "::error::frontend/dist is a symlink, not a native directory. The deploy walker would upload nothing."
-            FAIL=1
-          elif [ ! -f frontend/dist/index.html ]; then
-            echo "::error::frontend/dist/index.html is missing after the Netlify build."
+          elif [ "$PRESET" != "$EXPECTED_PRESET" ]; then
+            echo "::error::Nitro resolved preset '$PRESET', expected '$EXPECTED_PRESET'. NITRO_PRESET did not take effect as intended."
             FAIL=1
           else
+            echo "OK: preset is exactly '$EXPECTED_PRESET'."
+          fi
+
+          # CRITICAL 2: frontend/dist must exist.
+          if [ ! -e frontend/dist ]; then
+            echo "::error::frontend/dist does not exist after the Netlify build."
+            FAIL=1
+          # CRITICAL 3: frontend/dist must be a real directory, not a symlink.
+          elif [ -L frontend/dist ]; then
+            echo "::error::frontend/dist is a symlink (-> $(readlink -f frontend/dist)), not a native directory. The deploy walker would upload nothing."
+            FAIL=1
+          elif [ ! -d frontend/dist ]; then
+            echo "::error::frontend/dist exists but is not a directory."
+            FAIL=1
+          else
+            echo "OK: frontend/dist is a real directory and not a symlink."
+
+            # CRITICAL 4: index.html must exist.
+            if [ ! -f frontend/dist/index.html ]; then
+              echo "::error::frontend/dist/index.html is missing after the Netlify build."
+              FAIL=1
+            else
+              echo "OK: frontend/dist/index.html exists."
+            fi
+
+            # CRITICAL 5: realistic file count (the broken artifact had 1).
             COUNT="$(find frontend/dist -type f | wc -l)"
             echo "frontend/dist regular file count: $COUNT"
-            if [ "$COUNT" -lt 10 ]; then
-              echo "::error::frontend/dist contains only $COUNT file(s) — that is a stub, not the generated website."
+            if [ "$COUNT" -le 10 ]; then
+              echo "::error::frontend/dist contains only $COUNT file(s) — that is a stub, not a generated website."
               FAIL=1
+            else
+              echo "OK: frontend/dist contains $COUNT files."
             fi
           fi
 
           if [ "$FAIL" -ne 0 ]; then
-            echo "::error::Netlify-native artifact verification failed. Not deploying. See the diagnostics step above."
+            echo "::error::netlify-static artifact verification FAILED. Not deploying. No fallback will be attempted — see the diagnostics step above."
             exit 1
           fi
-          echo "Verified: Netlify-native build produced a usable frontend/dist."
+          echo "All critical checks passed. Proceeding to draft deploy."
 
       # ---------------------------------------------------------------------
       # DRAFT deploy. --no-build because the build already ran above.
@@ -260,7 +281,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
           NETLIFY_CLI_TELEMETRY_DISABLED: '1'
-          DEPLOY_MESSAGE: 'Draft deploy (Netlify-native build) — GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
+          DEPLOY_MESSAGE: 'Draft deploy (netlify-static preset) — GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
         run: |
           netlify deploy \
             --no-build \
@@ -277,7 +298,7 @@ jobs:
           [ -f "$LOG" ] || exit 0
           DRAFT_URL="$(grep -Eio 'https://[a-z0-9-]+--[a-z0-9._-]+\.netlify\.app' "$LOG" | head -n 1 || true)"
           {
-            echo "### Netlify draft deploy (Netlify-native build)"
+            echo "### Netlify draft deploy (netlify-static preset)"
             echo ""
             if [ -n "$DRAFT_URL" ]; then
               echo "Draft URL: <$DRAFT_URL>"
