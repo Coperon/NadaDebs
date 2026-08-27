@@ -1,0 +1,76 @@
+name: Deploy Production (Netlify)
+
+# Manual-only for now. Automatic deploys on push to `main` are intentionally
+# NOT enabled yet — this workflow is verified by hand first.
+on:
+  workflow_dispatch:
+
+# Least privilege: the job only needs to read the repository contents.
+permissions:
+  contents: read
+
+# Never let two production deploys race. Queue instead of cancelling, so an
+# in-flight deploy is always allowed to finish cleanly.
+concurrency:
+  group: nada-debs-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy to Netlify production
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    # Provides NETLIFY_AUTH_TOKEN (secret) and NETLIFY_SITE_ID (variable).
+    environment: nada-debs-prod
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Netlify production pins NODE_VERSION = "20" (see git history of
+      # netlify.toml). `netlify build` runs on THIS runner, not in Netlify's
+      # build image, so the runner must supply the matching Node version.
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Verify Netlify site ID is configured
+        env:
+          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+        run: |
+          if [ -z "$NETLIFY_SITE_ID" ]; then
+            echo "::error::NETLIFY_SITE_ID is not set in the nada-debs-prod environment."
+            exit 1
+          fi
+          echo "NETLIFY_SITE_ID is present."
+
+      # The Netlify build base directory is `frontend`, so dependencies must be
+      # installed there. `npm ci` honours frontend/package-lock.json exactly.
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Install Netlify CLI
+        run: npm install --global netlify-cli@27.4.0
+
+      # Run from the repository ROOT so that the root netlify.toml (the
+      # /api/send -> /.netlify/functions/send redirect) is picked up, exactly
+      # like Netlify's own buildbot does. Base directory, build command,
+      # publish directory and functions directory all come from the linked
+      # site's settings, and `--build` injects that site's environment
+      # variables into the build — so no application secrets need to live in
+      # GitHub. `--prod` deploys to the production context of the existing site.
+      #
+      # Secrets are passed via `env:` (never interpolated into the shell
+      # command) so they cannot be echoed into the logs.
+      - name: Build and deploy to Netlify (production)
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+          NETLIFY_CLI_TELEMETRY_DISABLED: '1'
+          DEPLOY_MESSAGE: 'GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
+        run: netlify deploy --build --prod --message "$DEPLOY_MESSAGE"
