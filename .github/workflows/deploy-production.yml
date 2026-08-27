@@ -1,30 +1,34 @@
-name: Deploy Netlify (DRAFT — production context)
+name: Deploy Nada Debs Production
 
-# Manual-only. DRAFT deploy: builds with the production environment-variable
-# context but never publishes over nadadebs.com. There is deliberately no
-# executable `--prod` anywhere in this workflow.
+# MANUAL PRODUCTION DEPLOY. This workflow publishes to nadadebs.com.
 #
-# This revision tests ONE mechanism in isolation: forcing the Nitro preset with
-# NITRO_PRESET=netlify-static.
+# It is deliberately workflow_dispatch-only: a human must click "Run workflow".
+# Automatic deployment on push to main is NOT enabled yet, and will only be
+# considered after this manual production deployment has been verified.
 #
-# Findings so far:
+# The build is unchanged from the draft workflow that was proven working:
+# `netlify build --context production` with NITRO_PRESET=netlify-static,
+# followed by a --no-build deploy of the verified frontend/dist artifact.
+#
+# Findings that produced this configuration:
 #   * Run 33059359770: Nitro auto-detected preset `static`, wrote the site to
 #     frontend/.output/public, and left frontend/dist as a symlink. Only 1 file
-#     was hashed, so the draft served 404.
+#     was hashed, so the deploy served 404.
 #   * Next run: setting NETLIFY=true did NOT switch the provider — Nitro still
 #     resolved `static` and frontend/dist was still a symlink. The guard caught
 #     it and refused to deploy. So provider auto-detection via the NETLIFY
 #     environment variable does not work in this GitHub Actions environment,
 #     and NETLIFY=true has been removed.
 #
-# Therefore this test sets the preset explicitly. nitropack 2.13.0 supports the
+# Therefore the preset is set explicitly. nitropack 2.13.0 supports the
 # NITRO_PRESET environment variable and ships the `netlify-static` preset,
 # which is the correct variant for `nuxt generate` (statically generated site)
 # and which sets the Nitro publicDir to `dist` — matching the Netlify project's
-# configured publish directory of frontend/dist.
+# configured publish directory of frontend/dist. This was verified working:
+# preset resolved to netlify-static, frontend/dist was a real directory with
+# 1660 files, and .output/public was never created.
 #
-# NETLIFY=true is deliberately NOT set alongside it, so this run isolates the
-# explicit-preset mechanism.
+# NETLIFY=true is deliberately NOT set alongside it.
 on:
   workflow_dispatch:
 
@@ -37,7 +41,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Netlify-static build, verify, then draft-deploy
+    name: Build, verify, then deploy to production
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -269,10 +273,15 @@ jobs:
             echo "::error::netlify-static artifact verification FAILED. Not deploying. No fallback will be attempted — see the diagnostics step above."
             exit 1
           fi
-          echo "All critical checks passed. Proceeding to draft deploy."
+          echo "All critical checks passed. Proceeding to production deploy."
 
       # ---------------------------------------------------------------------
-      # DRAFT deploy. --no-build because the build already ran above.
+      # PRODUCTION deploy. This publishes to nadadebs.com.
+      #
+      # --no-build because the build already ran above and its artifact has
+      # been verified by the guard.
+      #
+      # --prod publishes the deploy to the site's production URL.
       #
       # Deliberately NO --context here: the CLI rejects it with
       #   "--context flag is only available when using the --build flag"
@@ -280,38 +289,79 @@ jobs:
       # and this step performs no build. The production context was already
       # applied by `netlify build --context production` above, so the artifact
       # being uploaded is already the production-context build. Do not re-add.
-      #
-      # No --prod: nadadebs.com is not touched.
       # ---------------------------------------------------------------------
-      - name: Draft-deploy to Netlify
+      - name: Deploy to Netlify production
         shell: bash
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
           NETLIFY_CLI_TELEMETRY_DISABLED: '1'
-          DEPLOY_MESSAGE: 'Draft deploy (netlify-static preset) — GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
+          DEPLOY_MESSAGE: 'Production deploy — GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
         run: |
           netlify deploy \
             --no-build \
+            --prod \
             --site "$NETLIFY_SITE_ID" \
             --auth "$NETLIFY_AUTH_TOKEN" \
             --message "$DEPLOY_MESSAGE" 2>&1 | tee "$RUNNER_TEMP/deploy.log"
 
-      - name: Publish draft deploy URL to summary
+      # Reports the production deployment result. This step is informational
+      # only: it never fails the job, and it never masks a deploy failure —
+      # the deploy step above fails on its own (shell: bash sets -o pipefail,
+      # so a non-zero netlify exit code survives the `tee` pipe).
+      #
+      # Netlify labels its output URLs differently depending on the deploy
+      # type, so several known labels are tried and whatever is present is
+      # reported. A missing informational label is not treated as an error.
+      - name: Publish production deploy result to summary
         if: always()
         shell: bash
         run: |
           LOG="$RUNNER_TEMP/deploy.log"
-          [ -f "$LOG" ] || exit 0
-          DRAFT_URL="$(grep -Eio 'https://[a-z0-9-]+--[a-z0-9._-]+\.netlify\.app' "$LOG" | head -n 1 || true)"
+          if [ ! -f "$LOG" ]; then
+            {
+              echo "### Netlify production deploy"
+              echo ""
+              echo "The deploy step produced no output log — it likely failed before running."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          CLEAN="$RUNNER_TEMP/deploy.clean.log"
+          sed 's/\x1b\[[0-9;]*m//g' "$LOG" > "$CLEAN" 2>/dev/null || cp "$LOG" "$CLEAN"
+
+          # Pull the first https:// URL from a line beginning with the label.
+          # Angle brackets are stripped: the CLI prints "Label: <https://...>".
+          url_for_label() {
+            grep -iE "^[[:space:]]*$1:" "$CLEAN" 2>/dev/null \
+              | head -n 1 \
+              | grep -oE 'https://[^[:space:]<>]+' 2>/dev/null \
+              | head -n 1 || true
+          }
+
+          WEBSITE_URL="$(url_for_label 'Website URL')"
+          UNIQUE_URL="$(url_for_label 'Unique Deploy URL')"
+          DEPLOY_URL="$(url_for_label 'Deploy URL')"
+          LOGS_URL="$(url_for_label 'Build logs')"
+          # Last-resort fallback so something useful is always reported.
+          ANY_URL="$(grep -oE 'https://[a-z0-9._-]+\.netlify\.app[^[:space:]<>]*' "$CLEAN" 2>/dev/null | head -n 1 || true)"
+
           {
-            echo "### Netlify draft deploy (netlify-static preset)"
+            echo "### Netlify production deploy"
             echo ""
-            if [ -n "$DRAFT_URL" ]; then
-              echo "Draft URL: <$DRAFT_URL>"
-            else
-              echo "No draft URL found in the deploy output — check the deploy step logs."
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Run: ${GITHUB_RUN_ID}"
+            echo ""
+            FOUND=0
+            if [ -n "$WEBSITE_URL" ]; then echo "- **Website URL:** <$WEBSITE_URL>"; FOUND=1; fi
+            if [ -n "$UNIQUE_URL" ]; then echo "- Unique deploy URL: <$UNIQUE_URL>"; FOUND=1; fi
+            if [ -n "$DEPLOY_URL" ] && [ "$DEPLOY_URL" != "$UNIQUE_URL" ]; then echo "- Deploy URL: <$DEPLOY_URL>"; FOUND=1; fi
+            if [ "$FOUND" -eq 0 ] && [ -n "$ANY_URL" ]; then echo "- Deployed URL: <$ANY_URL>"; FOUND=1; fi
+            if [ "$FOUND" -eq 0 ]; then
+              echo "- No deployment URL label was found in the CLI output. Check the deploy step logs; this alone does not mean the deploy failed."
             fi
+            if [ -n "$LOGS_URL" ]; then echo "- Netlify deploy logs: <$LOGS_URL>"; fi
             echo ""
-            echo "_Production (nadadebs.com) was NOT modified by this run._"
+            echo "_This run published to the production Netlify site._"
           } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
