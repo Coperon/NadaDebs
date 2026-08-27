@@ -1,7 +1,9 @@
-name: Deploy Production (Netlify)
+name: Deploy Netlify (DRAFT — production context)
 
-# Manual-only for now. Automatic deploys on push to `main` are intentionally
-# NOT enabled yet — this workflow is verified by hand first.
+# Manual-only. This workflow currently performs a DRAFT deploy: it builds with
+# the production environment-variable context but does NOT publish over
+# nadadebs.com. Switching to a live production deploy is a deliberate, separate
+# change (add `--prod`) made only after the draft URL has been verified.
 on:
   workflow_dispatch:
 
@@ -9,15 +11,15 @@ on:
 permissions:
   contents: read
 
-# Never let two production deploys race. Queue instead of cancelling, so an
-# in-flight deploy is always allowed to finish cleanly.
+# Never let two deploys against this site race. Queue instead of cancelling, so
+# an in-flight deploy is always allowed to finish cleanly.
 concurrency:
   group: nada-debs-production
   cancel-in-progress: false
 
 jobs:
   deploy:
-    name: Build and deploy to Netlify production
+    name: Build and draft-deploy to Netlify
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -29,8 +31,8 @@ jobs:
         uses: actions/checkout@v4
 
       # Netlify production pins NODE_VERSION = "20" (see git history of
-      # netlify.toml). `netlify build` runs on THIS runner, not in Netlify's
-      # build image, so the runner must supply the matching Node version.
+      # netlify.toml). The build runs on THIS runner, not in Netlify's build
+      # image, so the runner must supply the matching Node version.
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
@@ -57,20 +59,56 @@ jobs:
       - name: Install Netlify CLI
         run: npm install --global netlify-cli@27.4.0
 
-      # Run from the repository ROOT so that the root netlify.toml (the
-      # /api/send -> /.netlify/functions/send redirect) is picked up, exactly
-      # like Netlify's own buildbot does. Base directory, build command,
-      # publish directory and functions directory all come from the linked
-      # site's settings, and `--build` injects that site's environment
-      # variables into the build — so no application secrets need to live in
-      # GitHub. `--prod` deploys to the production context of the existing site.
+      # DRAFT deploy. Notes on the exact flags:
       #
-      # Secrets are passed via `env:` (never interpolated into the shell
-      # command) so they cannot be echoed into the logs.
-      - name: Build and deploy to Netlify (production)
+      #   * No `--build`: that flag does not exist in current Netlify CLI.
+      #     `netlify deploy` runs the build by DEFAULT (`--no-build` opts out).
+      #   * `--context production` is REQUIRED, not optional. The CLI's
+      #     `--context` default is `dev`, so without this the build would read
+      #     the wrong environment-variable context and validateEnv.js could
+      #     fail or bake dev values into the static output.
+      #   * No `--prod`: this is deliberate. Omitting it produces a unique
+      #     draft deploy URL and leaves nadadebs.com untouched.
+      #
+      # Run from the repository ROOT so the root netlify.toml (the
+      # /api/send -> /.netlify/functions/send redirect) is picked up, exactly
+      # as Netlify's own buildbot does. Base directory, build command, publish
+      # directory and functions directory all come from the linked site's
+      # settings, and the site's own build environment variables are injected
+      # — so no application secrets need to live in GitHub.
+      #
+      # `shell: bash` is set explicitly so that `-o pipefail` applies and a
+      # failing deploy still fails the job through the `tee` pipe.
+      - name: Build and draft-deploy to Netlify
+        shell: bash
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
           NETLIFY_CLI_TELEMETRY_DISABLED: '1'
-          DEPLOY_MESSAGE: 'GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
-        run: netlify deploy --build --prod --message "$DEPLOY_MESSAGE"
+          DEPLOY_MESSAGE: 'Draft deploy — GitHub Actions run ${{ github.run_id }} @ ${{ github.sha }}'
+        run: |
+          netlify deploy \
+            --context production \
+            --site "$NETLIFY_SITE_ID" \
+            --auth "$NETLIFY_AUTH_TOKEN" \
+            --message "$DEPLOY_MESSAGE" 2>&1 | tee "$RUNNER_TEMP/deploy.log"
+
+      # Surface the draft URL in the run summary so it is easy to find and test.
+      - name: Publish draft deploy URL to summary
+        if: always()
+        shell: bash
+        run: |
+          LOG="$RUNNER_TEMP/deploy.log"
+          [ -f "$LOG" ] || exit 0
+          DRAFT_URL="$(grep -Eio 'https://[a-z0-9-]+--[a-z0-9._-]+\.netlify\.app' "$LOG" | head -n 1 || true)"
+          {
+            echo "### Netlify draft deploy"
+            echo ""
+            if [ -n "$DRAFT_URL" ]; then
+              echo "Draft URL: <$DRAFT_URL>"
+            else
+              echo "No draft URL found in the deploy output — check the deploy step logs."
+            fi
+            echo ""
+            echo "_Production (nadadebs.com) was NOT modified by this run._"
+          } >> "$GITHUB_STEP_SUMMARY"
