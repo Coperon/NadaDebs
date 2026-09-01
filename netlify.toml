@@ -30,3 +30,25 @@
 [context.hybrid-draft.environment]
   NITRO_PRESET = "netlify"
   HYBRID_NEWS  = "true"
+
+  # Netlify injects environment variables per CONTEXT. 'hybrid-draft' is not one
+  # of the built-in context names, so the site's configured variables are NOT
+  # injected for it — run 33485069253 failed with "[@nuxtjs/sanity] No Sanity
+  # project found" and a 500 on "/" for exactly this reason.
+  #
+  # Every variable below is public: they live in runtimeConfig.public (see
+  # frontend/nuxt.config.ts) and are therefore already served in the client
+  # bundle on nadadebs.com. No secret is introduced here.
+  #
+  # Deliberately absent: RESEND_API_KEY, KLAVIYO_*, MAILCHIMP_*. Those are real
+  # secrets, are read only by the Netlify Functions at runtime, and are not
+  # needed to build.
+  APP_ENV                         = "production"
+  SANITY_PROJECT_ID               = "vo2kiy27"
+  SANITY_PROJECT_DATASET          = "production"
+  SANITY_API_VERSION              = "2024-02-01"
+  NUXT_PUBLIC_SITE_URL            = "https://nadadebs.com"
+  # app.vue awaits initShopify() before ANY route renders, so an empty domain or
+  # token throws and every page 500s. Required even though News is not commerce.
+  SHOPIFY_STORE_DOMAIN            = "nadadebs.myshopify.com"
+  SHOPIFY_STOREFRONT_ACCESS_TOKEN = "93206ed9d5b2b23a2722a36a67ca4980"
