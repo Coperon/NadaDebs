@@ -1,0 +1,376 @@
+name: Deploy Nada Debs Hybrid DRAFT
+
+# HYBRID/ISR DRAFT DEPLOY. This workflow CANNOT publish to nadadebs.com.
+#
+# It is a test rig for the hybrid rendering proof of concept on the
+# sanity-runtime-test branch. The deploy step deliberately omits --prod, so the
+# result is always a draft deploy on its own preview URL. Production is
+# untouched.
+#
+# WHAT IS DIFFERENT FROM deploy-production.yml
+#   * NITRO_PRESET=netlify        (SSR) instead of netlify-static (fully static)
+#   * HYBRID_NEWS=true            enables the ISR routeRules for /news/latest/**
+#   * build command is `npm run build`, not `npm run generate`
+#   * the deploy is a DRAFT (no --prod)
+#
+# Those first three come from the [context.hybrid-draft] block in netlify.toml,
+# selected below by `netlify build --context hybrid-draft`. That context name is
+# not one of Netlify's built-in names, so no automatic build can ever select it.
+#
+# WHY A SEPARATE WORKFLOW
+# deploy-production.yml is proven working and is left completely alone. Nothing
+# here can alter it.
+#
+# EXPECTED RESULT, verified locally before this workflow was written:
+#   * Nitro preset resolves to `netlify`
+#   * frontend/dist is a real directory, ~1509 files, 702 .html
+#   * frontend/dist/news/latest DOES NOT EXIST — those pages are served on
+#     demand by the server function, which is what makes new Sanity posts
+#     resolve without a rebuild
+#   * frontend/dist/news/awards and /news/press DO exist (still static)
+#   * frontend/.netlify/functions-internal/server/server.mjs exists
+#   * sitemap.xml still contains the 72 news URLs, supplied by
+#     frontend/server/api/__sitemap__/urls.ts
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nada-debs-hybrid-draft
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    name: Build hybrid, verify, then DRAFT deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    # Reuses the same environment as production purely for credentials
+    # (NETLIFY_AUTH_TOKEN secret, NETLIFY_SITE_ID variable). The deploy below is
+    # still a draft: the environment does not grant production publishing.
+    environment: nada-debs-prod
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Verify Netlify site ID is configured
+        env:
+          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+        run: |
+          if [ -z "$NETLIFY_SITE_ID" ]; then
+            echo "::error::NETLIFY_SITE_ID is not set in the nada-debs-prod environment."
+            exit 1
+          fi
+          echo "NETLIFY_SITE_ID is present."
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Install Netlify CLI
+        run: npm install --global netlify-cli@27.4.0
+
+      # ---------------------------------------------------------------------
+      # BUILD. The hybrid-draft context supplies the build command
+      # (`npm run build`) and the two environment variables, so they are not
+      # duplicated here. NETLIFY=true is deliberately absent, matching the
+      # production workflow's finding that it does not switch the provider.
+      # ---------------------------------------------------------------------
+      - name: Netlify build (hybrid-draft context, NITRO_PRESET=netlify)
+        shell: bash
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+          NETLIFY_CLI_TELEMETRY_DISABLED: '1'
+        run: |
+          netlify build --context hybrid-draft 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      - name: Diagnose hybrid build output
+        if: always()
+        shell: bash
+        run: |
+          LOG="$RUNNER_TEMP/build.log"
+
+          echo "=============================================================="
+          echo "Resolved Nitro preset"
+          echo "=============================================================="
+          if [ -f "$LOG" ]; then
+            sed 's/\x1b\[[0-9;]*m//g' "$LOG" | grep -iE "Nitro preset:" || echo "(no 'Nitro preset:' line found)"
+          else
+            echo "(build log missing)"
+          fi
+
+          echo
+          echo "=== Environment markers (non-secret) ==="
+          echo "NITRO_PRESET = '${NITRO_PRESET:-<unset in step env; expected to come from netlify.toml>}'"
+          echo "HYBRID_NEWS  = '${HYBRID_NEWS:-<unset in step env; expected to come from netlify.toml>}'"
+          echo "node         = $(node -v)"
+
+          echo
+          echo "=== nitro.json ==="
+          find frontend -maxdepth 4 -name nitro.json -not -path "*/node_modules/*" 2>/dev/null | while read -r nj; do
+            echo "--- $nj ---"; cat "$nj"; echo
+          done
+
+          echo
+          echo "=============================================================="
+          echo "frontend/dist"
+          echo "=============================================================="
+          ls -ld frontend/dist 2>/dev/null || echo "frontend/dist DOES NOT EXIST"
+          echo "regular files: $(find frontend/dist -type f 2>/dev/null | wc -l)"
+          echo "html files   : $(find frontend/dist -name '*.html' 2>/dev/null | wc -l)"
+
+          echo
+          echo "--- the hybrid split (this is the whole point of the test) ---"
+          if [ -e frontend/dist/news/latest ]; then
+            echo "  news/latest : PRESENT  <-- unexpected, ISR did not take effect"
+          else
+            echo "  news/latest : absent   <-- correct, served on demand"
+          fi
+          for d in news/awards news/press; do
+            if [ -e "frontend/dist/$d" ]; then echo "  $d : present  <-- correct, still static"
+            else echo "  $d : ABSENT   <-- unexpected"; fi
+          done
+
+          echo
+          echo "--- server function ---"
+          if [ -f frontend/.netlify/functions-internal/server/server.mjs ]; then
+            echo "  present: .netlify/functions-internal/server/server.mjs"
+            echo "  --- inline routing config ---"
+            sed -n '1,20p' frontend/.netlify/functions-internal/server/server.mjs
+          else
+            echo "  ABSENT: no server function was emitted"
+          fi
+          echo "  functions-internal tree:"
+          ls -la frontend/.netlify/functions-internal 2>/dev/null || echo "  (no functions-internal directory)"
+
+          echo
+          echo "--- sitemap ---"
+          if [ -f frontend/dist/sitemap.xml ]; then
+            echo "  sitemap.xml present"
+            echo "  news URLs in sitemap: $(grep -o 'news/latest/' frontend/dist/sitemap.xml 2>/dev/null | wc -l)  (expected: ~72)"
+          else
+            echo "  sitemap.xml ABSENT"
+          fi
+
+          echo
+          echo "--- _redirects (should NOT contain '/* /404.html 404') ---"
+          if [ -f frontend/dist/_redirects ]; then cat frontend/dist/_redirects; else echo "  (none)"; fi
+
+          echo
+          echo "=== .output/public (reported only — NOT the deploy source) ==="
+          if [ -e frontend/.output/public ]; then
+            echo "EXISTS with $(find frontend/.output/public -type f 2>/dev/null | wc -l) files"
+          else
+            echo "frontend/.output/public DOES NOT EXIST (expected)"
+          fi
+
+      # ---------------------------------------------------------------------
+      # GUARD. Runs BEFORE the deploy. No fallbacks, no repairs — if the
+      # hybrid build did not produce the expected shape, this fails and reports.
+      # ---------------------------------------------------------------------
+      - name: Verify hybrid artifact before deploying
+        shell: bash
+        run: |
+          LOG="$RUNNER_TEMP/build.log"
+          EXPECTED_PRESET="netlify"
+          FAIL=0
+
+          PRESET=""
+          if [ -f "$LOG" ]; then
+            PRESET="$(sed 's/\x1b\[[0-9;]*m//g' "$LOG" \
+              | grep -oiE "Nitro preset:[[:space:]]*[A-Za-z0-9._-]+" \
+              | head -n 1 | sed -E 's/.*:[[:space:]]*//')"
+          fi
+          if [ -z "$PRESET" ]; then
+            for nj in $(find frontend -maxdepth 4 -name nitro.json -not -path "*/node_modules/*" 2>/dev/null); do
+              PRESET="$(grep -o '"preset"[[:space:]]*:[[:space:]]*"[^"]*"' "$nj" | head -n 1 | sed -E 's/.*"([^"]*)"$/\1/')"
+              [ -n "$PRESET" ] && break
+            done
+          fi
+
+          echo "Expected Nitro preset: '$EXPECTED_PRESET'"
+          echo "Detected Nitro preset: '${PRESET:-<undetermined>}'"
+
+          # 1. preset must be exactly `netlify` (NOT netlify-static, NOT static).
+          if [ -z "$PRESET" ]; then
+            echo "::error::Could not determine the resolved Nitro preset. Refusing to deploy unverified output."
+            FAIL=1
+          elif [ "$PRESET" != "$EXPECTED_PRESET" ]; then
+            echo "::error::Nitro resolved preset '$PRESET', expected '$EXPECTED_PRESET'. The hybrid-draft context did not take effect."
+            FAIL=1
+          else
+            echo "OK: preset is exactly '$EXPECTED_PRESET'."
+          fi
+
+          # 2. dist must be a real, populated directory.
+          if [ ! -e frontend/dist ]; then
+            echo "::error::frontend/dist does not exist."
+            FAIL=1
+          elif [ -L frontend/dist ]; then
+            echo "::error::frontend/dist is a symlink (-> $(readlink -f frontend/dist)). The deploy walker would upload nothing."
+            FAIL=1
+          elif [ ! -d frontend/dist ]; then
+            echo "::error::frontend/dist exists but is not a directory."
+            FAIL=1
+          else
+            echo "OK: frontend/dist is a real directory."
+            if [ ! -f frontend/dist/index.html ]; then
+              echo "::error::frontend/dist/index.html is missing."
+              FAIL=1
+            else
+              echo "OK: frontend/dist/index.html exists."
+            fi
+            COUNT="$(find frontend/dist -type f | wc -l)"
+            echo "frontend/dist regular file count: $COUNT"
+            if [ "$COUNT" -le 10 ]; then
+              echo "::error::frontend/dist contains only $COUNT file(s) — a stub, not a website."
+              FAIL=1
+            else
+              echo "OK: frontend/dist contains $COUNT files."
+            fi
+          fi
+
+          # 3. THE HYBRID ASSERTION: news must NOT be prerendered.
+          #    If it is, ISR did not take effect and this is just a slower
+          #    static build — deploying it would prove nothing.
+          if [ -e frontend/dist/news/latest ]; then
+            echo "::error::frontend/dist/news/latest exists — News was prerendered, so the ISR routeRules did not apply. HYBRID_NEWS likely did not reach the build."
+            FAIL=1
+          else
+            echo "OK: frontend/dist/news/latest is absent — News will be served on demand."
+          fi
+
+          # 4. the rest of News must still be static (proves scope is contained).
+          for d in news/awards news/press; do
+            if [ ! -e "frontend/dist/$d" ]; then
+              echo "::error::frontend/dist/$d is missing — the change affected more than /news/latest/**."
+              FAIL=1
+            fi
+          done
+          [ "$FAIL" -eq 0 ] && echo "OK: /news/awards and /news/press are still static."
+
+          # 5. the server function must exist, or nothing can render on demand.
+          if [ ! -f frontend/.netlify/functions-internal/server/server.mjs ]; then
+            echo "::error::No server function at frontend/.netlify/functions-internal/server/server.mjs. Without it, /news/latest/** would 404."
+            FAIL=1
+          else
+            echo "OK: server function is present."
+          fi
+
+          # 6. the sitemap must still carry the news URLs.
+          if [ -f frontend/dist/sitemap.xml ]; then
+            NEWSURLS="$(grep -o 'news/latest/' frontend/dist/sitemap.xml 2>/dev/null | wc -l)"
+            echo "news URLs in sitemap.xml: $NEWSURLS"
+            if [ "$NEWSURLS" -lt 1 ]; then
+              echo "::error::sitemap.xml contains no /news/latest/ URLs. The Sanity sitemap source did not run — this would silently drop 72 pages from search engines."
+              FAIL=1
+            else
+              echo "OK: sitemap.xml still lists the news URLs."
+            fi
+          else
+            echo "::error::frontend/dist/sitemap.xml is missing."
+            FAIL=1
+          fi
+
+          if [ "$FAIL" -ne 0 ]; then
+            echo "::error::Hybrid artifact verification FAILED. Not deploying. See the diagnostics step above."
+            exit 1
+          fi
+          echo "All checks passed. Proceeding to DRAFT deploy."
+
+      # ---------------------------------------------------------------------
+      # DRAFT deploy. There is deliberately NO --prod flag here.
+      #
+      # Without --prod the Netlify CLI creates a draft deploy on its own URL and
+      # does not touch the site's production URL. --alias gives that URL a
+      # stable, readable name so repeated runs land in the same place.
+      #
+      # As in the production workflow, --context is NOT passed: the CLI rejects
+      # it alongside --no-build. The hybrid-draft context was already applied by
+      # `netlify build --context hybrid-draft` above, so the artifact being
+      # uploaded is already the hybrid build.
+      # ---------------------------------------------------------------------
+      - name: DRAFT deploy to Netlify (never production)
+        shell: bash
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+          NETLIFY_CLI_TELEMETRY_DISABLED: '1'
+          DEPLOY_MESSAGE: 'Hybrid/ISR DRAFT — run ${{ github.run_id }} @ ${{ github.sha }}'
+        run: |
+          netlify deploy \
+            --no-build \
+            --site "$NETLIFY_SITE_ID" \
+            --auth "$NETLIFY_AUTH_TOKEN" \
+            --alias hybrid-news \
+            --message "$DEPLOY_MESSAGE" 2>&1 | tee "$RUNNER_TEMP/deploy.log"
+
+      - name: Publish draft deploy result to summary
+        if: always()
+        shell: bash
+        run: |
+          LOG="$RUNNER_TEMP/deploy.log"
+          if [ ! -f "$LOG" ]; then
+            {
+              echo "### Netlify hybrid DRAFT deploy"
+              echo ""
+              echo "The deploy step produced no output log — it likely failed before running."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          CLEAN="$RUNNER_TEMP/deploy.clean.log"
+          sed 's/\x1b\[[0-9;]*m//g' "$LOG" > "$CLEAN" 2>/dev/null || cp "$LOG" "$CLEAN"
+
+          url_for_label() {
+            grep -iE "^[[:space:]]*$1:" "$CLEAN" 2>/dev/null \
+              | head -n 1 | grep -oE 'https://[^[:space:]<>]+' 2>/dev/null | head -n 1 || true
+          }
+
+          DRAFT_URL="$(url_for_label 'Website draft URL')"
+          DEPLOY_URL="$(url_for_label 'Deploy URL')"
+          UNIQUE_URL="$(url_for_label 'Unique Deploy URL')"
+          LOGS_URL="$(url_for_label 'Build logs')"
+          ANY_URL="$(grep -oE 'https://[a-z0-9._-]+\.netlify\.app[^[:space:]<>]*' "$CLEAN" 2>/dev/null | head -n 1 || true)"
+
+          {
+            echo "### Netlify hybrid DRAFT deploy"
+            echo ""
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Run: ${GITHUB_RUN_ID}"
+            echo ""
+            FOUND=0
+            if [ -n "$DRAFT_URL" ];  then echo "- **Draft URL:** <$DRAFT_URL>"; FOUND=1; fi
+            if [ -n "$DEPLOY_URL" ] && [ "$DEPLOY_URL" != "$DRAFT_URL" ]; then echo "- Deploy URL: <$DEPLOY_URL>"; FOUND=1; fi
+            if [ -n "$UNIQUE_URL" ] && [ "$UNIQUE_URL" != "$DRAFT_URL" ]; then echo "- Unique deploy URL: <$UNIQUE_URL>"; FOUND=1; fi
+            if [ "$FOUND" -eq 0 ] && [ -n "$ANY_URL" ]; then echo "- Deployed URL: <$ANY_URL>"; FOUND=1; fi
+            if [ "$FOUND" -eq 0 ]; then
+              echo "- No deployment URL label was found in the CLI output. Check the deploy step logs."
+            fi
+            if [ -n "$LOGS_URL" ]; then echo "- Netlify deploy logs: <$LOGS_URL>"; fi
+            echo ""
+            echo "#### What to check on that URL"
+            echo ""
+            echo "1. Open \`/news/latest\` — the listing should render."
+            echo "2. Open any existing article, e.g. \`/news/latest/a-home-away-from-home\`."
+            echo "   It was NOT prerendered, so it is being generated on demand."
+            echo "3. Publish a NEW post in Sanity, then open its URL directly."
+            echo "   It should resolve within about 60 seconds **with no deploy**."
+            echo "   That is the entire point of this test."
+            echo "4. Open a nonsense slug, e.g. \`/news/latest/does-not-exist\` — expect a 404, not a 500."
+            echo "5. Spot-check \`/\`, \`/shop/objects\`, \`/news/awards\` — these are still static and should be unchanged."
+            echo ""
+            echo "_This was a DRAFT deploy. nadadebs.com was not modified._"
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0

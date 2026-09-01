@@ -3,3 +3,30 @@
   to     = "/.netlify/functions/send"
   status = 200
   force  = true
+
+# ---------------------------------------------------------------------------
+# HYBRID/ISR DRAFT TEST CONTEXT — inert by default.
+#
+# This block applies ONLY when a build explicitly asks for it with
+# `netlify build --context hybrid-draft`. It is NOT one of Netlify's built-in
+# context names (production / deploy-preview / branch-deploy), so no automatic
+# build — including production — will ever select it.
+#
+# It exists because `netlify build` otherwise runs the site's UI-configured
+# command (`npm run generate`), which produces a fully static site. The hybrid
+# build needs `npm run build` plus the SSR preset.
+#
+# Verified locally against NITRO_PRESET=netlify:
+#   * publish dir is `dist` (NOT `.output/public` — that is never created)
+#   * the server function is emitted to .netlify/functions-internal/server
+#   * routing is declared inline on the function (path:"/*", preferStatic:true),
+#     so static pages still serve from the CDN and only unbuilt paths invoke it.
+# ---------------------------------------------------------------------------
+[context.hybrid-draft]
+  base    = "frontend"
+  command = "npm run build"
+  publish = "frontend/dist"
+
+[context.hybrid-draft.environment]
+  NITRO_PRESET = "netlify"
+  HYBRID_NEWS  = "true"
