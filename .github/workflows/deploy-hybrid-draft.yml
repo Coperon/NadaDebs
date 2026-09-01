@@ -73,6 +73,46 @@ jobs:
           fi
           echo "NETLIFY_SITE_ID is present."
 
+      # ---------------------------------------------------------------------
+      # PREFLIGHT. Run 33485069253 was launched against main by mistake, where
+      # none of the hybrid configuration exists. Netlify silently fell back to
+      # the UI build command (npm run generate), Nitro resolved the static
+      # preset, and the failure looked like a build bug rather than a wrong
+      # branch. This step makes that mistake obvious and cheap.
+      # ---------------------------------------------------------------------
+      - name: Preflight — confirm this ref carries the hybrid configuration
+        shell: bash
+        run: |
+          FAIL=0
+          echo "Running against ref: ${GITHUB_REF_NAME}"
+
+          if ! grep -q "[context.hybrid-draft]" netlify.toml; then
+            echo "::error::netlify.toml on this ref has no [context.hybrid-draft] block, so `netlify build --context hybrid-draft` would silently fall back to the UI build command (npm run generate) and produce a fully static site."
+            FAIL=1
+          else
+            echo "OK: netlify.toml defines [context.hybrid-draft]."
+          fi
+
+          if ! grep -q "HYBRID_NEWS" frontend/nuxt.config.ts; then
+            echo "::error::frontend/nuxt.config.ts on this ref has no HYBRID_NEWS handling, so the ISR routeRules do not exist here."
+            FAIL=1
+          else
+            echo "OK: nuxt.config.ts carries the HYBRID_NEWS routeRules."
+          fi
+
+          if [ ! -f frontend/server/api/__sitemap__/urls.ts ]; then
+            echo "::error::frontend/server/api/__sitemap__/urls.ts is missing on this ref; the sitemap would lose the news URLs."
+            FAIL=1
+          else
+            echo "OK: the Sanity sitemap source is present."
+          fi
+
+          if [ "$FAIL" -ne 0 ]; then
+            echo "::error::This ref does not carry the hybrid configuration. Re-run this workflow and select the sanity-runtime-test branch in the Run workflow dropdown."
+            exit 1
+          fi
+          echo "Preflight passed — this ref carries the hybrid configuration."
+
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm ci
