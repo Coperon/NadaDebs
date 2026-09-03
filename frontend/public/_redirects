@@ -1,2 +1,23 @@
 #redirect example: https://llos-nuxt.netlify.app/* https://llos.xyz/:splat 301!
 /api/send  /.netlify/functions/send  200
+
+# ---------------------------------------------------------------------------
+# SPA fallback for News, scoped deliberately narrowly.
+#
+# A post published after the last build has no HTML file on the CDN, so Nitro's
+# generated "/* /404.html 404" rule would return a 404 before any JavaScript
+# runs — and you cannot fetch your way out of a page that never loaded.
+#
+# This serves the app shell instead for unbuilt News URLs. Vue Router then
+# resolves /news/latest/[id] in the browser and useAsyncData fetches the post
+# from Sanity, because getCachedData is disabled for News (see data/post.js).
+#
+# Netlify serves an existing static file in preference to a redirect (there is
+# no "!" force flag here), so the ~72 already-built articles keep serving their
+# prerendered HTML with full OG tags. Only unbuilt URLs reach this rule.
+#
+# KNOWN TRADE-OFF: an invalid News URL now returns HTTP 200 with a
+# client-rendered error page instead of a real 404 — a "soft 404". Scoped to
+# /news/latest/* so the rest of the site keeps returning proper 404s.
+# ---------------------------------------------------------------------------
+/news/latest/*  /200.html  200
