@@ -14,5 +14,6 @@ export const getInteriorsPage = async () => {
     const { data } = await useAsyncData('interiorsPage', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

@@ -24,6 +24,7 @@ export const getPositionBySlug = async positionSlug => {
     const { data } = await useAsyncData(key, () =>
         $sanity.fetch(query, { positionSlug: positionSlug }),
     )
+    liveRefetch(data, query, { positionSlug: positionSlug })
 
     // throw 404 if position doesn't exist
     if (!data.value || Object.keys(data.value).length === 0) {

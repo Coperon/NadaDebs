@@ -42,6 +42,7 @@ export const getCraftBySlug = async craftSlug => {
     const { data } = await useAsyncData(key, () =>
         $sanity.fetch(query, { craftSlug: craftSlug }),
     )
+    liveRefetch(data, query, { craftSlug: craftSlug })
 
     // throw 404 if project doesn't exist
     if (!data.value || Object.keys(data.value).length === 0) {

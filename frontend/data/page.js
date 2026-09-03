@@ -19,6 +19,7 @@ export const getPageBySlug = async pageSlug => {
     const { data } = await useAsyncData(key, () =>
         $sanity.fetch(query, { pageSlug: pageSlug }),
     )
+    liveRefetch(data, query, { pageSlug: pageSlug })
 
     // throw 404 if project doesn't exist
     if (!data.value || Object.keys(data.value).length === 0) {

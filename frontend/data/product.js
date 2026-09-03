@@ -135,6 +135,7 @@ export const getProductBySlug = async productSlug => {
     const { data } = await useAsyncData(key, () =>
         $sanity.fetch(query, { productSlug: productSlug }),
     )
+    liveRefetch(data, query, { productSlug: productSlug })
 
     // throw 404 if project doesn't exist
     if (!data.value || Object.keys(data.value).length === 0) {

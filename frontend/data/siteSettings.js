@@ -45,5 +45,6 @@ export const siteSettings = async () => {
     const { data } = await useAsyncData('siteSettings', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

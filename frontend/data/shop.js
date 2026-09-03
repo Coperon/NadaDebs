@@ -34,5 +34,6 @@ export const getProducts = async () => {
   }`
 
     const { data } = await useAsyncData('products', () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
 }

@@ -14,5 +14,6 @@ export const getCraftsPage = async () => {
     const { data } = await useAsyncData('craftsPage', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

@@ -22,5 +22,6 @@ export const getAwards = async () => {
     const { data } = await useAsyncData('awards', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

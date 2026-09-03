@@ -43,6 +43,7 @@ export const getProducts = async (categoryType) => {
         }
     }`
     const { data } = await useAsyncData(`${categoryType}Products`, () => $sanity.fetch(query, { pageId }))
+    liveRefetch(data, query, { pageId })
     return data
 }
 
@@ -57,6 +58,7 @@ export const getCategoryPage = async (pageId) => {
         },
     }`
     const { data } = await useAsyncData(`${pageId}Page`, () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
 }
 
@@ -72,6 +74,7 @@ export const getCategories = async (categoryType) => {
         "parentCategory": parentType
     }`
     const { data } = await useAsyncData(`${categoryType}Categories`, () => $sanity.fetch(query))
+    liveRefetch(data, query)
     
     const mainTypes = data.value.filter(type => !type.isSubType)
     const subTypes = data.value.filter(type => type.isSubType)
