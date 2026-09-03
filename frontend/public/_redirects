@@ -2,22 +2,42 @@
 /api/send  /.netlify/functions/send  200
 
 # ---------------------------------------------------------------------------
-# SPA fallback for News, scoped deliberately narrowly.
+# SPA fallback for Sanity-driven dynamic routes.
 #
-# A post published after the last build has no HTML file on the CDN, so Nitro's
-# generated "/* /404.html 404" rule would return a 404 before any JavaScript
-# runs — and you cannot fetch your way out of a page that never loaded.
-#
-# This serves the app shell instead for unbuilt News URLs. Vue Router then
-# resolves /news/latest/[id] in the browser and useAsyncData fetches the post
-# from Sanity, because getCachedData is disabled for News (see data/post.js).
+# A document published after the last build has no HTML file on the CDN, so
+# Nitro's generated "/* /404.html 404" rule would answer before any JavaScript
+# runs — and you cannot fetch your way out of a page that never loaded. These
+# rules serve the app shell instead, letting Vue Router resolve the route and
+# liveRefetch() pull the document straight from Sanity.
 #
 # Netlify serves an existing static file in preference to a redirect (there is
-# no "!" force flag here), so the ~72 already-built articles keep serving their
-# prerendered HTML with full OG tags. Only unbuilt URLs reach this rule.
+# no "!" force flag here), so every already-built page keeps serving its
+# prerendered HTML with full OG tags. Only URLs with no file reach these rules.
 #
-# KNOWN TRADE-OFF: an invalid News URL now returns HTTP 200 with a
-# client-rendered error page instead of a real 404 — a "soft 404". Scoped to
-# /news/latest/* so the rest of the site keeps returning proper 404s.
+# One prefix per dynamic page component in pages/:
+#   /shop/*                    shop/[id].vue and shop/collections/[id].vue
+#   /studio/collaborations/*   studio/collaborations/[id].vue
+#   /studio/interiors/*        studio/interiors/[id].vue
+#   /our-world/crafts/*        our-world/crafts/[id].vue
+#   /news/latest/*             news/latest/[id].vue
+#   /work/*                    work/[id].vue
+#   /work-with-us/*            work-with-us/[id].vue
+#   /info/*                    info/[id].vue
+#
+# DELIBERATELY ABSENT: a catch-all for pages/[id].vue. That component matches
+# any single-segment path, so a "/*" fallback would make EVERY mistyped URL on
+# the site return 200 instead of 404. New top-level Sanity pages therefore
+# still need a rebuild — a deliberate trade to keep real 404s working.
+#
+# KNOWN TRADE-OFF: an invalid URL under any prefix below now returns HTTP 200
+# with a client-rendered error page rather than a real 404 (a "soft 404").
+# Search engines treat those less favourably than a true 404.
 # ---------------------------------------------------------------------------
-/news/latest/*  /200.html  200
+/shop/*                   /200.html  200
+/studio/collaborations/*  /200.html  200
+/studio/interiors/*       /200.html  200
+/our-world/crafts/*       /200.html  200
+/news/latest/*            /200.html  200
+/work/*                   /200.html  200
+/work-with-us/*           /200.html  200
+/info/*                   /200.html  200

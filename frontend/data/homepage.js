@@ -43,5 +43,6 @@ export const getHomepageData = async () => {
     }
     `
     const { data } = await useAsyncData('homepage', () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
 }

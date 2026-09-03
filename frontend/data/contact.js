@@ -17,5 +17,6 @@ export const getContact = async () => {
     const { data } = await useAsyncData('contact', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

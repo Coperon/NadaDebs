@@ -9,5 +9,6 @@ export const getInfoPages = async () => {
     }`
 
     const { data } = await useAsyncData('infoPages', () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
 }

@@ -14,5 +14,6 @@ export const getCollaborations = async () => {
     }`
 
     const { data } = await useAsyncData('collaborations', () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
 }

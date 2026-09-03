@@ -16,5 +16,6 @@ export const getFindUs = async () => {
     const { data } = await useAsyncData('findUs', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

@@ -9,5 +9,6 @@ export const getInteriorCategories = async () => {
     }`
 
     const { data } = await useAsyncData('interiorCategories', () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
 }

@@ -13,5 +13,6 @@ export const getProjectsArchiveMeta = async () => {
     const { data } = await useAsyncData('projectsArchiveMeta', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

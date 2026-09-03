@@ -26,5 +26,6 @@ export const getCollectionsPage = async () => {
     const { data } = await useAsyncData('collectionsPage', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

@@ -17,5 +17,6 @@ export const getApply = async () => {
     const { data } = await useAsyncData('apply', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

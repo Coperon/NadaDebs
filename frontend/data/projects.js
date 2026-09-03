@@ -20,5 +20,6 @@ export const getProjects = async () => {
     }`
 
     const { data } = await useAsyncData('projects', () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
   }

@@ -17,5 +17,6 @@ export const getTrade = async () => {
     const { data } = await useAsyncData('trade', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }
