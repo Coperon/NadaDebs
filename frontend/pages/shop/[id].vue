@@ -74,7 +74,22 @@
                                                 ]" 
                                             />
                                         </div>
-                                        <div class="text-p2">{{ product?.optionName }}</div>
+                                        <div class="text-p2">
+                                            <!--
+                                              Sighted users see just the option
+                                              name next to the swatch, which is
+                                              all the context they need. But as
+                                              link text alone it is useless:
+                                              "pink" pointed at six unrelated
+                                              products, and the Sep 2026 audit
+                                              flagged 270 pages competing on
+                                              identical anchor text. Naming the
+                                              product here gives crawlers and
+                                              screen readers a real anchor
+                                              without changing the design.
+                                            -->
+                                            <span class="sr-only">{{ product?.product?.store?.title }} — </span>{{ product?.optionName }}
+                                        </div>
                                     </NuxtLink>
                                 </div>  
                             </template>

@@ -132,6 +132,12 @@ export default defineNuxtConfig({
             ignore: ['/dev/email-preview'],
         },
     },
+    sitemap: {
+        // The prerender ignore above stops the page being built, but the
+        // sitemap module enumerates routes from pages/ regardless — so it kept
+        // advertising a URL that now 404s. Exclude it from both.
+        exclude: ['/dev/**'],
+    },
     runtimeConfig: {
         public: {
             appEnv: process.env.APP_ENV,
