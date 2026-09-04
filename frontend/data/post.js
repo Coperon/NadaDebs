@@ -1,5 +1,5 @@
 import groq from 'groq'
-import { imageQuery, seoQuery } from "./fragments"
+import { imageQuery, seoQuery, contentGridQuery } from "./fragments"
 
 export const getPostBySlug = async postSlug => {
     const { $sanity } = useNuxtApp()
@@ -15,7 +15,9 @@ export const getPostBySlug = async postSlug => {
         },
         date,
         text,
-        content
+        content[]{
+            ${contentGridQuery}
+        }
     }`
     const key = `post-${postSlug}`
     const { data } = await useAsyncData(key, () =>

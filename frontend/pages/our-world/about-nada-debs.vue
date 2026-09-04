@@ -26,5 +26,5 @@ import { getAboutData } from '@/data/about'
 
 const aboutData = await getAboutData()
 
-useSeoObject(aboutData?.seo, aboutData?.title)
+useSeoObject(aboutData?.value?.seo, aboutData?.value?.title)
 </script>

@@ -12,8 +12,11 @@
 </template>
 
 <script setup>
+import { useSeoObject } from '@/composables/seo'
 import { getInfoPageBySlug } from '@/data/infoPage'
 
 const route = useRoute()
 const infoPageData = await getInfoPageBySlug(route.params.id)
+
+useSeoObject(infoPageData?.value?.seo, infoPageData?.value?.title)
 </script>

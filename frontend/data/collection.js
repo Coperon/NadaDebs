@@ -1,5 +1,5 @@
 import groq from 'groq'
-import { imageQuery, seoQuery } from "./fragments"
+import { imageQuery, seoQuery, contentGridQuery } from "./fragments"
 
 export const getCollectionBySlug = async collectionSlug => {
     const { $sanity } = useNuxtApp()
@@ -16,9 +16,20 @@ export const getCollectionBySlug = async collectionSlug => {
         },
         tags,
         aboutTheCollection,
-        lifestyleImages,
+        lifestyleImages[]{
+            ...,
+            asset-> {
+                _id,
+                metadata,
+                url,
+                altText,
+                originalFilename
+            }
+        },
         featuredText,
-        imagesGrid,
+        imagesGrid[]{
+            ${contentGridQuery}
+        },
         crafts[]->{
             ...,
         },

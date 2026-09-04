@@ -24,6 +24,7 @@
 
 <script setup>
 import { useSeoObject } from '@/composables/seo'
+import { useArticleSchema } from '@/composables/structuredData'
 import { getPostBySlug } from '@/data/post'
 import { getNextPosts } from '@/data/news'
 
@@ -41,5 +42,7 @@ useSeoObject(
     postData?.value?.seo,
     postData?.value?.title,
     postData?.value?.cover || postData?.value?.thumbnail,
+    'article',
 )
+useArticleSchema(postData?.value)
 </script>

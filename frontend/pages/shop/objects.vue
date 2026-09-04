@@ -17,5 +17,5 @@ const objectsPageData = await getObjectsPage()
 const categories = await getObjectsCategories()
 const allProducts = await getObjects()
 
-useSeoObject(objectsPageData?.seo, objectsPageData?.title)
+useSeoObject(objectsPageData?.value?.seo, objectsPageData?.value?.title)
 </script>

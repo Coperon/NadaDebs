@@ -19,5 +19,5 @@ import { getNews } from '@/data/news'
 const newsPageData = await getNewsPage()
 const newsData = await getNews()
 
-useSeoObject(newsPageData?.seo, newsPageData?.title)
+useSeoObject(newsPageData?.value?.seo, newsPageData?.value?.title)
 </script>

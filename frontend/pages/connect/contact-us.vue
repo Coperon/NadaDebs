@@ -41,5 +41,5 @@ const inquiryProductId = String(route.query.inquiryProductId || '')
 
 const contactData = await getContact()
 
-useSeoObject(contactData?.seo, contactData?.title)
+useSeoObject(contactData?.value?.seo, contactData?.value?.title)
 </script>

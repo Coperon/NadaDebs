@@ -70,5 +70,5 @@ const getPersonImageClass = (index) => {
     return 'aspect-[3/4] sm:aspect-square xl:aspect-[3/4]'
 }
 
-useSeoObject(workWithUsData?.seo, workWithUsData?.title)
+useSeoObject(workWithUsData?.value?.seo, workWithUsData?.value?.title)
 </script>
