@@ -11,6 +11,23 @@ export default defineNuxtConfig({
     dev: isDev,
     devtools: { enabled: false },
     css: ['@/assets/styles/global.css'],
+    // Make every <NuxtLink> emit a trailing slash.
+    //
+    // The host serves /shop/objects/ and 301s /shop/objects to it, and
+    // useSeoObject() has always declared the trailing-slash form as canonical.
+    // But every internal link pointed at the non-slash form, so essentially
+    // every link on the site was a redirect: 1,267 of them in the Sep 2026
+    // audit, which is also why 1,770 of 2,534 crawled URLs came back
+    // "uncheckable". Fixing site.trailingSlash corrected the sitemap only —
+    // the links are the far larger source, and the second crawl barely moved
+    // because of it.
+    experimental: {
+        defaults: {
+            nuxtLink: {
+                trailingSlash: 'append',
+            },
+        },
+    },
     /* TODO: Refactor to use the new preview mode for Nuxt 3 to improve consistency (so we can have server rendering for both previews and production) */
     ssr: !isPreview, // Use client rendering for preview mode to avoid caching issues
     app: {
