@@ -2,6 +2,35 @@
 /api/send  /.netlify/functions/send  200
 
 # ---------------------------------------------------------------------------
+# Legacy collection and interior URLs, retired 04/09/2026.
+#
+# Ten documents had the raw title sitting in the slug field, so their URLs
+# carried capitals and — in four cases — trailing spaces. That produced 9 hard
+# 404s, 12 redirect loops (the lowercase URL resolved but its canonical pointed
+# at the mixed-case one, and back) and 6 canonical errors in the Sep 2026 SEO
+# audit. The slugs are now normalised in Sanity; these preserve any link
+# equity and stop the old addresses 404ing.
+#
+# Forced with "!" so they win even if a stale file lingers on the CDN, and
+# placed above the SPA fallbacks below, which would otherwise answer first with
+# a soft 200. Rules match top-down.
+#
+# Netlify matches the decoded path, so a literal space is written here as %20.
+# ---------------------------------------------------------------------------
+/shop/collections/Coming%20to%20Life    /shop/collections/coming-to-life/    301!
+/shop/collections/coming%20to%20life    /shop/collections/coming-to-life/    301!
+/shop/collections/Crafted%20Laminate    /shop/collections/crafted-laminate/  301!
+/shop/collections/crafted%20laminate    /shop/collections/crafted-laminate/  301!
+/shop/collections/arabian%20nights      /shop/collections/arabian-nights/    301!
+/shop/collections/bling%20bling         /shop/collections/bling-bling/       301!
+/shop/collections/Coffee%20Bean         /shop/collections/coffee-bean/       301!
+/shop/collections/Star                  /shop/collections/star/              301!
+/shop/collections/Dervish               /shop/collections/dervish/           301!
+/shop/collections/Floating              /shop/collections/floating/          301!
+/shop/collections/Serra                 /shop/collections/serra/             301!
+/studio/interiors/OkhunguzarMosque      /studio/interiors/okhunguzar-mosque/ 301!
+
+# ---------------------------------------------------------------------------
 # SPA fallback for Sanity-driven dynamic routes.
 #
 # A document published after the last build has no HTML file on the CDN, so
