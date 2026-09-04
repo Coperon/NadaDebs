@@ -186,6 +186,7 @@
 
 <script setup>
 import { useSeoObject } from '@/composables/seo'
+import { useProductSchema } from '@/composables/structuredData'
 import { getProductBySlug } from '@/data/product'
 
 const route = useRoute()
@@ -344,11 +345,22 @@ definePageMeta({
     scrollToTop: true,
 })
 
+// store.title first, because that is what the <h1> above renders. The Sanity
+// `title` is the generic parent name ("Angular Vase") shared by every variant,
+// while store.title is the specific one ("Ochaya Walnut Angular Vase") — so
+// preferring `title` gave three variants the same <title> while showing three
+// different headings.
+//
+// This only takes effect where seo.ogtitle is empty. The variants flagged as
+// duplicates in the Sep 2026 audit have ogtitle explicitly set to the same
+// generic string, which correctly still wins; those have to be cleared or
+// differentiated in Sanity. See .docs/seo-sanity-tasks.md.
 useSeoObject(
     productData?.value?.seo,
-    productData?.value?.title || productData?.value?.store?.title,
+    productData?.value?.store?.title || productData?.value?.title,
     productData?.value?.featuredImage,
 )
+useProductSchema(productData?.value)
 </script>
 
 <style scoped>

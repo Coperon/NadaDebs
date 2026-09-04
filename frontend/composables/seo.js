@@ -1,6 +1,16 @@
 import { useSiteStore } from '@/stores/site'
+import { useBreadcrumbSchema } from '@/composables/structuredData'
 
-export function useSeoObject(seoData, title, image = null) {
+const SITE_NAME = 'Nada Debs'
+
+/**
+ * @param {object} seoData  the `seo` object from the document
+ * @param {string} title    fallback title when seo.ogtitle is empty
+ * @param {object} [image]  fallback share image when seo.ogimage is empty
+ * @param {string} [type]   Open Graph type — 'article' for news posts, so
+ *                          shares render as an article rather than a website
+ */
+export function useSeoObject(seoData, title, image = null, type = 'website') {
     const route = useRoute()
     const site = useSiteStore()
 
@@ -39,16 +49,45 @@ export function useSeoObject(seoData, title, image = null) {
             },
         ],
     }))
+    const resolvedTitle = seoData?.ogtitle || title
+    const resolvedDescription = seoData?.ogdescription
+    const resolvedImage = seoData?.ogimage
+        ? `${seoData?.ogimage?.asset?.url}?w=1200&auto=format`
+        : image
+        ? `${image?.asset?.url}?w=1200&auto=format`
+        : null
+
     const seoMeta = {
-        title: seoData?.ogtitle || title,
-        ogTitle: seoData?.ogtitle || title,
-        description: seoData?.ogdescription,
-        ogDescription: seoData?.ogdescription,
-        ogImage: seoData?.ogimage
-            ? `${seoData?.ogimage?.asset?.url}?w=1200&auto=format`
-            : image
-            ? `${image?.asset?.url}?w=1200&auto=format`
-            : null,
+        title: resolvedTitle,
+        ogTitle: resolvedTitle,
+        description: resolvedDescription,
+        ogDescription: resolvedDescription,
+        ogImage: resolvedImage,
+
+        // Everything below was missing entirely. Without og:url and
+        // og:site_name a shared link shows no source; without twitter:card,
+        // X renders the small square card instead of the wide one, whatever
+        // size the image is.
+        ogUrl: canonicalUrl,
+        ogType: type,
+        ogSiteName: SITE_NAME,
+        ogLocale: 'en',
+        ...(resolvedImage
+            ? {
+                  ogImageWidth: 1200,
+                  ogImageAlt: resolvedTitle,
+                  twitterCard: 'summary_large_image',
+                  twitterImage: resolvedImage,
+                  twitterImageAlt: resolvedTitle,
+              }
+            : { twitterCard: 'summary' }),
+        twitterTitle: resolvedTitle,
+        twitterDescription: resolvedDescription,
     }
     useSeoMeta(seoMeta)
+
+    // Every page with SEO also gets a breadcrumb trail. Doing it here rather
+    // than per-page means the 751 pages the audit flagged as 3+ clicks deep all
+    // gain an explicit hierarchy without touching 30 components.
+    useBreadcrumbSchema(resolvedTitle)
 }

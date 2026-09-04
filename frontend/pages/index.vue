@@ -123,6 +123,7 @@
 <script setup>
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/vue/24/solid'
 import { useSeoObject } from '@/composables/seo'
+import { useOrganizationSchema } from '@/composables/structuredData'
 import { getHomepageData } from '@/data/homepage'
 import { ref, computed, onMounted } from 'vue'
 
@@ -203,6 +204,10 @@ definePageMeta({
 })
 
 useSeoObject(homeData?.value?.seo, homeData?.value?.title)
+
+// Organization/Person on the homepage only — it is the entity anchor the rest
+// of the site's JSON-LD refers back to via @id.
+useOrganizationSchema(unref(inject('siteSettingsData')))
 </script>
 
 <style scoped>

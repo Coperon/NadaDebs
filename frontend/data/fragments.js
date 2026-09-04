@@ -10,6 +10,20 @@ crop,
 hotspot,
 `
 
+// Blocks rendered by <CommonContentGrid>. The image MUST be projected through
+// imageQuery: without it the asset stays an unresolved reference, so altText and
+// originalFilename are undefined and <CommonMediaImage> falls all the way through
+// to an empty alt. That was 108 pages shipping alt="" in the Sep 2026 audit.
+export const contentGridQuery = `
+...,
+_type == 'contentMedia' => {
+    ...,
+    image {
+        ${imageQuery}
+    }
+}
+`
+
 export const linkQuery = `
 title,
 isInternalLink,
