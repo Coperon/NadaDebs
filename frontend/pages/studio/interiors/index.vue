@@ -31,5 +31,5 @@ const interiorsPageData = await getInteriorsPage()
 const interiorsData = await getInteriors()
 const categories = await getInteriorCategories()
 
-useSeoObject(interiorsPageData?.seo, interiorsPageData?.title)
+useSeoObject(interiorsPageData?.value?.seo, interiorsPageData?.value?.title)
 </script>

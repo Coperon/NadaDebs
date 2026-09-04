@@ -35,5 +35,5 @@ import { getPress } from '@/data/press'
 
 const pressData = await getPress()
 
-useSeoObject(pressData?.seo, pressData?.title)
+useSeoObject(pressData?.value?.seo, pressData?.value?.title)
 </script>

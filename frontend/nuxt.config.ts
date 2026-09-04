@@ -35,7 +35,11 @@ export default defineNuxtConfig({
     },
     vite: {
         build: {
-          minify: false
+          // Was `false`, which shipped an unminified 756 kB entry chunk that
+          // Seobility flagged as an oversized file. If a build problem ever
+          // requires readable output again, set it false locally rather than
+          // committing it.
+          minify: true
         }
     },
     postcss: {
@@ -94,6 +98,23 @@ export default defineNuxtConfig({
         // '@nuxtjs/google-fonts',
         '@nuxtjs/sanity',
     ],
+    // Consumed by @nuxtjs/sitemap and @nuxtjs/robots via nuxt-site-config.
+    //
+    // trailingSlash matters more than it looks: useSeoObject() always emits a
+    // canonical ending in "/", and the deployed site 301s to that form. Without
+    // this, the sitemap advertised 774 URLs that immediately redirect, so the
+    // sitemap and the canonicals disagreed on every page but the homepage.
+    site: {
+        url: process.env.NUXT_PUBLIC_SITE_URL,
+        trailingSlash: true,
+    },
+    nitro: {
+        prerender: {
+            // Internal preview route with no content — was being built and
+            // indexed as an empty page.
+            ignore: ['/dev/email-preview'],
+        },
+    },
     runtimeConfig: {
         public: {
             appEnv: process.env.APP_ENV,

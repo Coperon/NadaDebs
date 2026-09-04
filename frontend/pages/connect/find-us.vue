@@ -62,5 +62,5 @@ import { getFindUs } from '@/data/findUs'
 
 const findUsData = await getFindUs()
 
-useSeoObject(findUsData?.seo, findUsData?.title)
+useSeoObject(findUsData?.value?.seo, findUsData?.value?.title)
 </script>

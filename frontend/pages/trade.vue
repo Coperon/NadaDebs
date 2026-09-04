@@ -21,5 +21,5 @@ import { COUNTRIES } from '@/utils/countries'
 
 const tradeData = await getTrade()
 
-useSeoObject(tradeData?.seo, tradeData?.title)
+useSeoObject(tradeData?.value?.seo, tradeData?.value?.title)
 </script>

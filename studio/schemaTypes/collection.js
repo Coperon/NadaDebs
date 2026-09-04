@@ -3,6 +3,7 @@ import { IoMdAnalytics } from 'react-icons/io'
 import contentGridField from './fields/contentGrid'
 import relatedCraftsField from './fields/relatedCrafts'
 import relatedProductsField from './fields/relatedProducts'
+import { slugify, validateSlug } from './fields/slugRules'
 
 export default {
     name: 'collection',
@@ -35,9 +36,10 @@ export default {
             type: 'slug',
             description:
                 'The slug for the page, it must be unique. Click on "Generate" to create a slug automatically based on the title.',
-            validation: (Rule) => Rule.required(),
+            validation: validateSlug,
             options: {
                 source: 'title',
+                slugify,
             },
             group: 'content',
         },

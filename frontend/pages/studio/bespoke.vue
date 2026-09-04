@@ -70,5 +70,5 @@ import { getBespokePage } from '@/data/bespoke'
 
 const bespokeData = await getBespokePage()
 
-useSeoObject(bespokeData?.seo, bespokeData?.title)
+useSeoObject(bespokeData?.value?.seo, bespokeData?.value?.title)
 </script>

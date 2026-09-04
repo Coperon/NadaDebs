@@ -59,7 +59,7 @@ definePageMeta({
 
 useSeoObject(
     positionData?.value?.seo,
-    positionData?.value?.title,
+    positionData?.value?.position,
     positionData?.value?.image,
 )
 </script>

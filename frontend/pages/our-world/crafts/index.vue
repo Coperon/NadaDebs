@@ -17,5 +17,5 @@ import { getCrafts } from '@/data/crafts'
 const craftsPageData = await getCraftsPage()
 const craftsData = await getCrafts()
 
-useSeoObject(craftsPageData?.seo, craftsPageData?.title)
+useSeoObject(craftsPageData?.value?.seo, craftsPageData?.value?.title)
 </script>

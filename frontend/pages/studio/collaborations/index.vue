@@ -28,5 +28,5 @@ import { getCollaborations } from '@/data/collaborations'
 const collaborationsPageData = await getCollaborationsPage()
 const collaborationsData = await getCollaborations()
 
-useSeoObject(collaborationsPageData?.seo, collaborationsPageData?.title)
+useSeoObject(collaborationsPageData?.value?.seo, collaborationsPageData?.value?.title)
 </script>

@@ -45,5 +45,5 @@ import { getAwards } from '@/data/awards'
 
 const awardsData = await getAwards()
 
-useSeoObject(awardsData?.seo, awardsData?.title)
+useSeoObject(awardsData?.value?.seo, awardsData?.value?.title)
 </script>
