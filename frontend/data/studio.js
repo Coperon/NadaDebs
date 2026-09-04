@@ -37,5 +37,6 @@ export const getStudioData = async () => {
     }
     `
     const { data } = await useAsyncData('studio', () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
 }

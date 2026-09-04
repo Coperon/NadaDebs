@@ -1,6 +1,7 @@
 import { RiProfileLine } from 'react-icons/ri'
 import { IoMdAnalytics } from 'react-icons/io'
 import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
+import { slugify, validateSlug } from './fields/slugRules'
 
 export default {
     name: 'interior',
@@ -35,9 +36,10 @@ export default {
             type: 'slug',
             description:
                 'The slug for the page, it must be unique. Click on "Generate" to create a slug automatically based on the title.',
-            validation: (Rule) => Rule.required(),
+            validation: validateSlug,
             options: {
                 source: 'title',
+                slugify,
             },
             group: 'content',
         },

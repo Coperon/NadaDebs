@@ -14,5 +14,8 @@ export const getNewsPage = async () => {
     const { data } = await useAsyncData('newsPage', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
+
+
     return data
 }

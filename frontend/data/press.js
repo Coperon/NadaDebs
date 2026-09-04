@@ -23,5 +23,6 @@ export const getPress = async () => {
     const { data } = await useAsyncData('press', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

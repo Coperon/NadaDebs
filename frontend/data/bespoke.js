@@ -30,5 +30,6 @@ export const getBespokePage = async () => {
     const { data } = await useAsyncData('bespokePage', () =>
         $sanity.fetch(query),
     )
+    liveRefetch(data, query)
     return data
 }

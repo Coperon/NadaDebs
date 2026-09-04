@@ -12,5 +12,6 @@ export const getPositions = async () => {
     }`
 
     const { data } = await useAsyncData('positions', () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
 }

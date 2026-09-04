@@ -35,6 +35,7 @@ export const getCollaborationBySlug = async collaborationSlug => {
     const { data } = await useAsyncData(key, () =>
         $sanity.fetch(query, { collaborationSlug: collaborationSlug }),
     )
+    liveRefetch(data, query, { collaborationSlug: collaborationSlug })
 
     // throw 404 if collaboration doesn't exist
     if (!data.value || Object.keys(data.value).length === 0) {

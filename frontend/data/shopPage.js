@@ -38,5 +38,6 @@ export const getShopPageData = async () => {
     }
     `
     const { data } = await useAsyncData('shop', () => $sanity.fetch(query))
+    liveRefetch(data, query)
     return data
 }

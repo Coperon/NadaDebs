@@ -35,5 +35,5 @@ const positionLink = String(route.query.positionLink || '')
 
 const applyData = await getApply()
 
-useSeoObject(applyData?.seo, applyData?.title)
+useSeoObject(applyData?.value?.seo, applyData?.value?.title)
 </script>

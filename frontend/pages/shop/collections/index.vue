@@ -17,5 +17,5 @@ import { getCollectionsPage } from '@/data/collectionsPage'
 
 const collectionsPageData = await getCollectionsPage()
 
-useSeoObject(collectionsPageData?.seo, collectionsPageData?.title)
+useSeoObject(collectionsPageData?.value?.seo, collectionsPageData?.value?.title)
 </script>

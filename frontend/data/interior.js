@@ -35,6 +35,7 @@ export const getInteriorBySlug = async interiorSlug => {
     const { data } = await useAsyncData(key, () =>
         $sanity.fetch(query, { interiorSlug: interiorSlug }),
     )
+    liveRefetch(data, query, { interiorSlug: interiorSlug })
 
     // throw 404 if project doesn't exist
     if (!data.value || Object.keys(data.value).length === 0) {

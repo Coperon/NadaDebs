@@ -1,5 +1,5 @@
 import groq from 'groq'
-import { imageQuery, seoQuery } from "./fragments"
+import { imageQuery, seoQuery, contentGridQuery } from "./fragments"
 
 export const getPostBySlug = async postSlug => {
     const { $sanity } = useNuxtApp()
@@ -15,12 +15,15 @@ export const getPostBySlug = async postSlug => {
         },
         date,
         text,
-        content
+        content[]{
+            ${contentGridQuery}
+        }
     }`
     const key = `post-${postSlug}`
     const { data } = await useAsyncData(key, () =>
         $sanity.fetch(query, { postSlug: postSlug }),
     )
+    liveRefetch(data, query, { postSlug: postSlug })
 
     // throw 404 if project doesn't exist
     if (!data.value || Object.keys(data.value).length === 0) {
@@ -31,6 +34,7 @@ export const getPostBySlug = async postSlug => {
             fatal: true,
         })
     }
+
 
     return data
 }

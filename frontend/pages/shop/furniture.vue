@@ -17,5 +17,5 @@ const furniturePageData = await getFurniturePage()
 const categories = await getFurnitureCategories()
 const allProducts = await getFurniture()
 
-useSeoObject(furniturePageData?.seo, furniturePageData?.title)
+useSeoObject(furniturePageData?.value?.seo, furniturePageData?.value?.title)
 </script>
